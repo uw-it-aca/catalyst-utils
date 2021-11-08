@@ -1,0 +1,17 @@
+version: '3.4'
+
+services:
+  app:
+    environment:
+      ENV: localdev
+      PORT: 8000
+      AUTH: SAML_MOCK
+    restart: always
+    container_name: app-catalyst-utils
+    build:
+      context: .
+      target: app-container
+    volumes:
+      - ./catalyst_utils:/app/catalyst_utils
+    ports:
+      - "8000:8000"

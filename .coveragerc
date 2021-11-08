@@ -1,0 +1,8 @@
+[run]
+source = catalyst-utils
+parallel = True
+
+[paths]
+source =
+  catalyst_utils/
+  /app/catalyst_utils/
