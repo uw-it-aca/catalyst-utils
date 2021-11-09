@@ -15,14 +15,9 @@ RUN . /app/bin/activate && pip install mysqlclient
 
 ADD --chown=acait:acait . /app/
 ADD --chown=acait:acait docker/ project/
-ADD --chown=acait:acait docker/app_start.sh /scripts
-RUN chmod u+x /scripts/app_start.sh
 RUN . /app/bin/activate && python manage.py test
-RUN . /app/bin/activate && pip install nodeenv && nodeenv -p &&\
-    npm install -g npm && ./bin/npm install less@3.13.1 -g
 
-RUN . /app/bin/activate && python manage.py collectstatic --noinput &&\
-    python manage.py compress -f
+RUN . /app/bin/activate && python manage.py collectstatic --noinput
 
 FROM gcr.io/uwit-mci-axdd/django-test-container:1.3.3 as app-test-container
 
