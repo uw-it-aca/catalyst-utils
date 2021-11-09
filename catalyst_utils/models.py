@@ -2,15 +2,12 @@
 # SPDX-License-Identifier: Apache-2.0
 
 from django.db import models
+from uw_pws import PWS
+from uw_gws import GWS
+from restclients_core.exceptions import DataFailureException
 from logging import getLogger
 
 logger = getLogger(__name__)
-
-
-class ObjectAuth(models.Model):
-    object_auth_id = models.IntegerField(primary_key=True)
-    role = models.CharField(max_length=32)
-    group = models.CharField(max_length=100)
 
 
 class PersonManager(models.Manager):
@@ -19,32 +16,76 @@ class PersonManager(models.Manager):
 
 class Person(models.Model):
     person_id = models.IntegerField(primary_key=True)
-    netid = models.CharField(max_length=32)
-    is_entity = models.BooleanField(default=False)
-    first_name = models.CharField(max_length=100, null=True)
-    last_name = models.CharField(max_length=100, null=True)
-    last_login = models.DateTimeField(null=True)
+    login_realm_id = models.IntegerField(default=1)
+    login_name = models.CharField(max_length=128)
+    name = models.CharField(max_length=255, null=True)
+    surname = models.CharField(max_length=255, null=True)
+    system_name = models.CharField(max_length=255, null=True)
+    system_surname = models.CharField(max_length=255, null=True)
+    last_login_date = models.DateTimeField(null=True)
 
     objects = PersonManager()
 
+    class Meta:
+        db_table = 'Person'
+        managed = False
+
+    def is_entity(self):
+        try:
+            entity = PWS().get_entity_by_netid(self.login_name.lower())
+            return True
+        except DataFailureException as err:
+            if err.status == 404:
+                return False
+            else:
+                raise
+
+    def get_uwnetid_admins(self):
+        admins = []
+        group_id = 'u_netid_{}_admins'.format(self.login_name.lower())
+        try:
+            for member in GWS().get_members(group_id):
+                if member.is_uwnetid():
+                    try:
+                        person = Person.objects.get(login_name=member.name)
+                        admins.append(person)
+                    except Person.DoesNotExist:
+                        pass
+        except DataFailureException as err:
+            if err.status == 404:
+                pass
+            else:
+                raise
+        return admins
+
+    def csv_data(self):
+        return [
+            self.login_name,
+            self.name,
+            self.surname,
+            self.last_login_date.isoformat() if (
+                self.last_login_date is not None) else None
+        ]
+
 
 class SurveyManager(models.Manager):
-    pass
+    def get_survey_owners(self):
+        owners = set()
+        for survey in super(SurveyManager, self).all():
+            owners.add(survey.person_id)
+        return owners
 
 
 class Survey(models.Model):
     survey_id = models.IntegerField(primary_key=True)
-    person = models.ForeignKey(Person, on_delete=models.CASCADE)
-    name = models.CharField(max_length=200)
-    created = models.DateTimeField()
-    is_research_confidential = models.BooleanField(default=False)
-    is_research_anonymous = models.BooleanField(default=False)
-    publish_date = models.DateTimeField(null=True)
-    unpublish_date = models.DateTimeField(null=True)
-    security_type = models.SlugField(null=True)
-    object_auth = models.ForeignKey(ObjectAuth, on_delete=models.CASCADE)
+    person_id = models.ForeignKey(Person, on_delete=models.CASCADE)
+    title = models.CharField(max_length=255)
 
     objects = SurveyManager()
+
+    class Meta:
+        db_table = 'Survey'
+        managed = False
 
 
 class GradebookManager(models.Manager):
@@ -53,9 +94,11 @@ class GradebookManager(models.Manager):
 
 class Gradebook(models.Model):
     gradebook_id = models.IntegerField(primary_key=True)
-    person = models.ForeignKey(Person, on_delete=models.CASCADE)
-    name = models.CharField(max_length=200)
-    created = models.DateTimeField()
-    object_auth = models.ForeignKey(ObjectAuth, on_delete=models.CASCADE)
+    owner_id = models.ForeignKey(Person, on_delete=models.CASCADE)
+    name = models.CharField(max_length=512)
 
     objects = GradebookManager()
+
+    class Meta:
+        db_table = 'GradeBook'
+        managed = False
