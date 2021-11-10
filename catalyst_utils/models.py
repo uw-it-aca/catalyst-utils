@@ -71,7 +71,7 @@ class Person(models.Model):
 class SurveyManager(models.Manager):
     def get_survey_owners(self):
         surveys = super(SurveyManager, self).get_queryset().filter(
-            creation_date__year=2019):
+            creation_date__year=2019)
         owners = set()
         for survey in surveys:
             try:
