@@ -70,8 +70,10 @@ class Person(models.Model):
 
 class SurveyManager(models.Manager):
     def get_survey_owners(self):
+        surveys = super(SurveyManager, self).get_queryset().filter(
+            creation_date__year=2019):
         owners = set()
-        for survey in super(SurveyManager, self).all():
+        for survey in surveys:
             try:
                 owners.add(survey.person)
             except Exception as ex:
@@ -83,6 +85,7 @@ class Survey(models.Model):
     survey_id = models.IntegerField(primary_key=True)
     person = models.ForeignKey(Person, on_delete=models.CASCADE)
     title = models.CharField(max_length=255)
+    creation_date = models.DateTimeField()
 
     objects = SurveyManager()
 
