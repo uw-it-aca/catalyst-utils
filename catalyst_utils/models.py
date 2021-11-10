@@ -59,11 +59,16 @@ class Person(models.Model):
         return admins
 
     def csv_data(self):
+        if self.name and self.surname:
+            name = self.name
+            surname = self.surname
+        else:
+            name = self.system_name
+            surname = self.system_surname
+
         return [
-            self.login_name,
-            self.name,
-            self.surname,
-            self.last_login_date.isoformat() if (
+            self.login_name, name, surname,
+            self.last_login_date.strftime('"%Y/%m/%d %H:%M:%S') if (
                 self.last_login_date is not None) else None
         ]
 

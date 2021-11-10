@@ -28,8 +28,7 @@ class Command(BaseCommand):
             'last_login_date'])
 
         for person in survey_owners:
-            if (person.system_name is None and
-                    person.system_surname is None and person.is_entity()):
+            if person.is_entity():
                 for admin in person.get_uwnetid_admins():
                     csv_data = [person.login_name] + admin.csv_data()
                     survey_admin_writer.writerow(csv_data)
