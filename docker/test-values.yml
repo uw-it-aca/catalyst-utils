@@ -1,3 +1,11 @@
+resources:
+  limits:
+    cpu: 500m
+    memory: 768Mi
+  requests:
+    cpu: 50m
+    memory: 256Mi
+targetAverageUtilization: 100
 ingress:
   enabled: false
 lifecycle:

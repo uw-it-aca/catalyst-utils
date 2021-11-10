@@ -3,7 +3,7 @@
 
 from django.core.management.base import BaseCommand, CommandError
 from django.core.files.storage import default_storage
-from catalyst_utils.models import Survey, GradeBook
+from catalyst_utils.models import Survey
 import csv
 
 
