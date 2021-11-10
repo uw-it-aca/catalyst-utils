@@ -72,13 +72,16 @@ class SurveyManager(models.Manager):
     def get_survey_owners(self):
         owners = set()
         for survey in super(SurveyManager, self).all():
-            owners.add(survey.person_id)
+            try:
+                owners.add(survey.person)
+            except Exception as ex:
+                logger.info('person_id {}: {}'.format(survey.person_id, ex))
         return owners
 
 
 class Survey(models.Model):
     survey_id = models.IntegerField(primary_key=True)
-    person_id = models.ForeignKey(Person, on_delete=models.CASCADE)
+    person = models.ForeignKey(Person, on_delete=models.CASCADE)
     title = models.CharField(max_length=255)
 
     objects = SurveyManager()
@@ -94,7 +97,7 @@ class GradebookManager(models.Manager):
 
 class Gradebook(models.Model):
     gradebook_id = models.IntegerField(primary_key=True)
-    owner_id = models.ForeignKey(Person, on_delete=models.CASCADE)
+    owner = models.ForeignKey(Person, on_delete=models.CASCADE)
     name = models.CharField(max_length=512)
 
     objects = GradebookManager()
