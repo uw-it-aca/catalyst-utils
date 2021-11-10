@@ -10,8 +10,9 @@ from logging import getLogger
 logger = getLogger(__name__)
 
 
-class PersonManager(models.Manager):
-    pass
+class PersonAttribute(models.Model):
+    person_id = models.IntegerField(primary_key=True)
+    is_entity = models.BooleanField(default=False)
 
 
 class Person(models.Model):
@@ -24,21 +25,24 @@ class Person(models.Model):
     system_surname = models.CharField(max_length=255, null=True)
     last_login_date = models.DateTimeField(null=True)
 
-    objects = PersonManager()
-
     class Meta:
         db_table = 'Person'
         managed = False
 
     def is_entity(self):
-        try:
-            entity = PWS().get_entity_by_netid(self.login_name.lower())
-            return True
-        except DataFailureException as err:
-            if err.status == 404:
-                return False
-            else:
-                raise
+        entity, created = PersonAttribute.objects.get_or_create(
+            person_id=self.person_id)
+        if created:
+            try:
+                pws_entity = PWS().get_entity_by_netid(self.login_name.lower())
+                entity.is_entity = True
+                entity.save()
+            except DataFailureException as err:
+                if err.status == 404:
+                    pass
+                else:
+                    raise
+        return entity.is_entity
 
     def get_uwnetid_admins(self):
         admins = []

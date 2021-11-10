@@ -11,9 +11,5 @@ ONE_DAY = 60 * 60 * 24
 
 class RestClientsCache(RestclientPymemcacheClient):
     def get_cache_expiration_time(self, service, url, status=None):
-        if 'pws' == service:
-            if re.match(r'^/identity/v\d/entity', url):
-                return ONE_DAY * 30
-
-        if 'gws' == service:
+        if 'pws' == service or 'gws' == service:
             return ONE_DAY
