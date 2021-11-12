@@ -2,79 +2,100 @@
 # SPDX-License-Identifier: Apache-2.0
 
 from django.db import models
+from django.core.exceptions import ObjectDoesNotExist
 from uw_pws import PWS
-from uw_gws import GWS
 from restclients_core.exceptions import DataFailureException
+from catalyst_utils.dao.group import is_current_uwnetid, get_uwnetid_admins
 from logging import getLogger
 
 logger = getLogger(__name__)
 
 
-class PersonAttribute(models.Model):
-    person_id = models.IntegerField(primary_key=True)
-    is_entity = models.BooleanField(default=False)
-
-
 class Person(models.Model):
     person_id = models.IntegerField(primary_key=True)
     login_realm_id = models.IntegerField(default=1)
-    login_name = models.CharField(max_length=128)
+    login_name = models.CharField(max_length=128, unique=True)
     name = models.CharField(max_length=255, null=True)
     surname = models.CharField(max_length=255, null=True)
-    system_name = models.CharField(max_length=255, null=True)
-    system_surname = models.CharField(max_length=255, null=True)
     last_login_date = models.DateTimeField(null=True)
 
     class Meta:
         db_table = 'Person'
         managed = False
 
-    def is_entity(self):
-        entity, created = PersonAttribute.objects.get_or_create(
-            person_id=self.person_id)
-        if created:
-            try:
-                pws_entity = PWS().get_entity_by_netid(self.login_name.lower())
-                entity.is_entity = True
-                entity.save()
-            except DataFailureException as err:
-                if err.status == 404:
-                    pass
-                else:
-                    raise
-        return entity.is_entity
-
-    def get_uwnetid_admins(self):
-        admins = []
-        group_id = 'u_netid_{}_admins'.format(self.login_name.lower())
+    def _update_attr(self):
+        attr, created = PersonAttr.objects.get_or_create(person=self)
         try:
-            for member in GWS().get_members(group_id):
-                if member.is_uwnetid():
-                    try:
-                        person = Person.objects.get(login_name=member.name)
-                        admins.append(person)
-                    except Person.DoesNotExist:
-                        pass
+            pws_person = PWS().get_person_by_netid(self.login_name.lower())
+            attr.is_person = True
+            attr.preferred_name = pws_person.preferred_first_name
+            attr.preferred_surname = pws_person.preferred_surname
         except DataFailureException as err:
             if err.status == 404:
-                pass
+                attr.is_person = False
+                attr.is_current = False
             else:
                 raise
+
+        if attr.is_person:
+            attr.is_current = is_current_uwnetid(self.login_name)
+
+        attr.save()
+        self.personattr = attr
+        if created:
+            self.save()
+
+    @property
+    def is_person(self):
+        try:
+            if self.personattr.is_person is None:
+                self._update_attr()
+        except ObjectDoesNotExist:
+            self._update_attr()
+        return self.personattr.is_person
+
+    @property
+    def is_current(self):
+        try:
+            if self.personattr.is_current is None:
+                self._update_attr()
+        except ObjectDoesNotExist:
+            self._update_attr()
+        return self.personattr.is_current
+
+    def get_admins(self):
+        admins = []
+        if not self.is_person:
+            for uwnetid in get_uwnetid_admins(self.login_name):
+                try:
+                    admins.append(Person.objects.get(login_name=member.name))
+                except Person.DoesNotExist:
+                    pass
         return admins
 
     def csv_data(self):
-        if self.name and self.surname:
+        if (self.personattr.preferred_name and
+                self.personattr.preferred_surname):
+            name = self.personattr.preferred_name
+            surname = self.personattr.preferred_surname
+        else:
             name = self.name
             surname = self.surname
-        else:
-            name = self.system_name
-            surname = self.system_surname
 
         return [
             self.login_name, name, surname,
             self.last_login_date.strftime('"%Y/%m/%d %H:%M:%S') if (
                 self.last_login_date is not None) else None
         ]
+
+
+class PersonAttr(models.Model):
+    person = models.OneToOneField(Person, primary_key=True,
+                                  on_delete=models.CASCADE)
+    is_person = models.BooleanField(null=True)
+    is_current = models.BooleanField(null=True)
+    preferred_name = models.CharField(max_length=255, null=True)
+    preferred_surname = models.CharField(max_length=255, null=True)
 
 
 class SurveyManager(models.Manager):
