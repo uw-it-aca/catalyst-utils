@@ -106,7 +106,7 @@ class Person(models.Model):
 
         return [
             self.login_name, name, surname,
-            self.last_login_date.strftime('"%Y/%m/%d %H:%M:%S') if (
+            self.last_login_date.strftime('%Y/%m/%d %H:%M:%S') if (
                 self.last_login_date is not None) else None
         ]
 
