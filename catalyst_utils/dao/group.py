@@ -4,13 +4,19 @@
 from django.conf import settings
 from uw_gws import GWS
 from restclients_core.exceptions import DataFailureException
+from logging import getLogger
+
+logger = getLogger(__name__)
 
 
 def is_current_uwnetid(uwnetid):
     gws = GWS()
     for group_id in getattr(settings, 'CURRENT_USER_GROUPS', []):
-        if gws.is_direct_member(group_id, uwnetid.lower()):
-            return True
+        try:
+            if gws.is_direct_member(group_id, uwnetid.lower()):
+                return True
+        except DataFailureException as err:
+            logger.info('Group membership check FAILED: {}'.format(err))
     return False
 
 
@@ -25,5 +31,5 @@ def get_uwnetid_admins(uwnetid):
         if err.status == 404:
             pass
         else:
-            raise
+            logger.info('Group membership FAILED: {}'.format(err))
     return admins
