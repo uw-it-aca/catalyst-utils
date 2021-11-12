@@ -10,7 +10,7 @@ def is_current_uwnetid(uwnetid):
     gws = GWS()
     for group_id in getattr(settings, 'CURRENT_USER_GROUPS', []):
         try:
-            if gws.is_member(group_id, uwnetid.lower()):
+            if gws.is_direct_member(group_id, uwnetid.lower()):
                 return True
         except DataFailureException as err:
             if err.status == 404:
@@ -29,6 +29,7 @@ def get_uwnetid_admins(uwnetid):
                 admins.append(member.name)
     except DataFailureException as err:
         if err.status == 404:
-            return admins
+            pass
         else:
             raise
+    return admins

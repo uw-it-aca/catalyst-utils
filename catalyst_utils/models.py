@@ -11,6 +11,11 @@ from logging import getLogger
 logger = getLogger(__name__)
 
 
+class PersonManager(models.Manager):
+    def update_people(self):
+        pass
+
+
 class Person(models.Model):
     person_id = models.IntegerField(primary_key=True)
     login_realm_id = models.IntegerField(default=1)
@@ -18,6 +23,8 @@ class Person(models.Model):
     name = models.CharField(max_length=255, null=True)
     surname = models.CharField(max_length=255, null=True)
     last_login_date = models.DateTimeField(null=True)
+
+    objects = PersonManager()
 
     class Meta:
         db_table = 'Person'
@@ -63,21 +70,36 @@ class Person(models.Model):
             self._update_attr()
         return self.personattr.is_current
 
+    @property
+    def preferred_name(self):
+        try:
+            return self.personattr.preferred_name
+        except ObjectDoesNotExist:
+            self._update_attr()
+            return self.personattr.preferred_name
+
+    @property
+    def preferred_surname(self):
+        try:
+            return self.personattr.preferred_surname
+        except ObjectDoesNotExist:
+            self._update_attr()
+            return self.personattr.preferred_surname
+
     def get_admins(self):
         admins = []
         if not self.is_person:
             for uwnetid in get_uwnetid_admins(self.login_name):
                 try:
-                    admins.append(Person.objects.get(login_name=member.name))
+                    admins.append(Person.objects.get(login_name=uwnetid))
                 except Person.DoesNotExist:
                     pass
         return admins
 
     def csv_data(self):
-        if (self.personattr.preferred_name and
-                self.personattr.preferred_surname):
-            name = self.personattr.preferred_name
-            surname = self.personattr.preferred_surname
+        if self.preferred_name and self.preferred_surname:
+            name = self.preferred_name
+            surname = self.preferred_surname
         else:
             name = self.name
             surname = self.surname
