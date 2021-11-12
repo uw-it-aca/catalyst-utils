@@ -31,8 +31,9 @@ class Command(BaseCommand):
                     survey_owner_writer.writerow(person.csv_data())
             else:
                 for admin in person.get_admins():
-                    csv_data = [person.login_name] + admin.csv_data()
-                    survey_admin_writer.writerow(csv_data)
+                    if admin.is_person and admin.is_current:
+                        csv_data = [person.login_name] + admin.csv_data()
+                        survey_admin_writer.writerow(csv_data)
 
         survey_owner_outfile.close()
         survey_admin_outfile.close()
