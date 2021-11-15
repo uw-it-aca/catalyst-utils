@@ -10,21 +10,21 @@ from logging import getLogger
 
 logger = getLogger(__name__)
 
-
-class PersonManager(models.Manager):
-    def update_people(self):
-        pass
+ADMINISTRATOR_ROLE_ID = 7
 
 
 class Person(models.Model):
+    """
+    Unmanaged read-only Person, data is sourced from solstice.Person table:
+
+    mysqldump -w "login_realm_id = 1" solstice Person > /tmp/person.sql
+    """
     person_id = models.IntegerField(primary_key=True)
     login_realm_id = models.IntegerField(default=1)
     login_name = models.CharField(max_length=128, unique=True)
     name = models.CharField(max_length=255, null=True)
     surname = models.CharField(max_length=255, null=True)
     last_login_date = models.DateTimeField(null=True)
-
-    objects = PersonManager()
 
     class Meta:
         db_table = 'Person'
@@ -111,33 +111,71 @@ class Person(models.Model):
         ]
 
 
-class PersonAttr(models.Model):
-    person = models.OneToOneField(Person, primary_key=True,
-                                  on_delete=models.CASCADE)
-    is_person = models.BooleanField(null=True)
-    is_current = models.BooleanField(null=True)
-    preferred_name = models.CharField(max_length=255, null=True)
-    preferred_surname = models.CharField(max_length=255, null=True)
+class PeopleInCrowd(models.Model):
+    """
+    Unmanaged read-only PeopleInCrowd, data is sourced from
+    solstice.PeopleInCrowd table
+    """
+    crowd_id = models.IntegerField()
+    person = models.ForeignKey(Person, on_delete=models.CASCADE)
+
+    class Meta:
+        db_table = 'PeopleInCrowd'
+        managed = False
+
+
+class GroupWrapper(models.Model):
+    """
+    Unmanaged read-only GroupWrapper, data is sourced from
+    solstice.GroupWrapper table
+    """
+    group_id = models.IntegerField(primary_key=True)
+    source_key = models.CharField(max_length=255)
+    model_package = models.CharField(max_length=255)
+
+    class Meta:
+        db_table = 'GroupWrapper'
+        managed = False
+
+
+class RoleImplementation(models.Model):
+    """
+    Unmanaged read-only RoleImplementation, data is sourced from
+    solstice.RoleImplementation table
+    """
+    role_implementation_id = models.IntegerField(primary_key=True)
+    role_id = models.IntegerField()
+    group = models.ForeignKey(GroupWrapper, on_delete=models.CASCADE)
+    object_auth_id = models.IntegerField()
+
+    class Meta:
+        db_table = 'RoleImplementation'
+        managed = False
 
 
 class SurveyManager(models.Manager):
-    def get_survey_owners(self):
-        surveys = super(SurveyManager, self).get_queryset().filter(
-            creation_date__year=2019)
-        owners = set()
-        for survey in surveys:
-            try:
-                owners.add(survey.person)
-            except Exception as ex:
-                logger.info('person_id {}: {}'.format(survey.person_id, ex))
-        return owners
+    def get_all_surveys(self, year=None):
+        if year:
+            return super(SurveyManager, self).get_queryset().filter(
+                creation_date__year=year)
+        else:
+            return Survey.objects.all()
+
+    def get_surveys_for_person(self, person):
+        pass
 
 
 class Survey(models.Model):
+    """
+    Unmanaged read-only Survey, data is sourced from webq.Survey table:
+
+    mysqldump -w "is_quiz = 0 AND is_deleted = 0" webq Survey > /tmp/survey.sql
+    """
     survey_id = models.IntegerField(primary_key=True)
     person = models.ForeignKey(Person, on_delete=models.CASCADE)
     title = models.CharField(max_length=255)
     creation_date = models.DateTimeField()
+    object_auth_id = models.IntegerField()
 
     objects = SurveyManager()
 
@@ -145,18 +183,80 @@ class Survey(models.Model):
         db_table = 'Survey'
         managed = False
 
+    @property
+    def owner(self):
+        return self.person
+
+    @property
+    def administrators(self):
+        self._administrators = []
+        try:
+            authz = RoleImplementation.objects.get(
+                object_auth_id=self.object_auth_id,
+                role_id=ADMINISTRATOR_ROLE_ID)
+            logger.info('authz: {} {}'.format(
+                authz.group.model_package, authz.group.source_key))
+        except RoleImplementationDoesNotExist:
+            pass
+        return self._administrators
+
 
 class GradebookManager(models.Manager):
-    pass
+    def get_all_gradebooks(self, year=None):
+        if year:
+            return super(GradebookManager, self).get_queryset().filter(
+                creation_date__year=year)
+        else:
+            return Gradebook.objects.all()
+
+    def get_gradebooks_for_person(self, person):
+        pass
 
 
 class Gradebook(models.Model):
+    """
+    Unmanaged read-only Gradebook, data is sourced from gradebook.GradeBook:
+
+    mysqldump -w "is_deleted = 0" gradebook GradeBook > /tmp/gradebook.sql
+    """
     gradebook_id = models.IntegerField(primary_key=True)
     owner = models.ForeignKey(Person, on_delete=models.CASCADE)
     name = models.CharField(max_length=512)
+    create_date = models.DateTimeField()
+    authz_id = models.IntegerField()
 
     objects = GradebookManager()
 
     class Meta:
         db_table = 'GradeBook'
         managed = False
+
+    @property
+    def administrators(self):
+        self._administrators = []
+        try:
+            authz = RoleImplementation.objects.get(
+                object_auth_id=self.authz_id,
+                role_id=ADMINISTRATOR_ROLE_ID)
+            logger.info('authz: {} {}'.format(
+                authz.group.model_package, authz.group.source_key))
+        except RoleImplementationDoesNotExist:
+            pass
+        return self._administrators
+
+
+class PersonAttrManager(models.Manager):
+    def update_person_attrs(self):
+        pass
+
+
+class PersonAttr(models.Model):
+    """
+    Extends solstice.Person data
+    """
+    person = models.OneToOneField(Person, primary_key=True,
+                                  on_delete=models.CASCADE)
+    is_person = models.BooleanField(null=True)
+    is_current = models.BooleanField(null=True)
+    preferred_name = models.CharField(max_length=255, null=True)
+    preferred_surname = models.CharField(max_length=255, null=True)
