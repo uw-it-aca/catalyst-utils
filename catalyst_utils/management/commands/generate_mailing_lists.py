@@ -56,7 +56,6 @@ class Command(BaseCommand):
                     logger.info('Non-personal administrator: {}'.format(
                         administrator.login_name))
 
-
         for person in owners:
             survey_owner_writer.writerow(person.csv_data())
 
