@@ -22,9 +22,10 @@ class Command(BaseCommand):
         survey_admin_writer = csv.writer(
             survey_admin_outfile, dialect='unix_newline')
         survey_admin_writer.writerow([
-            'shared_netid', 'uwnetid', 'first_name', 'last_name',
-            'last_login_date'])
+            'uwnetid', 'first_name', 'last_name', 'last_login_date',
+            'shared_netids'])
 
+        admins = {}
         for person in Survey.objects.get_survey_owners():
             if person.is_person:
                 if person.is_current:
@@ -32,8 +33,19 @@ class Command(BaseCommand):
             else:
                 for admin in person.get_admins():
                     if admin.is_person and admin.is_current:
-                        csv_data = [person.login_name] + admin.csv_data()
-                        survey_admin_writer.writerow(csv_data)
+                        if admin.person_id in admins:
+                            admins[admin.person_id].get(
+                                'shared_netids', []).append(person.login_name)
+                        else:
+                            admins[admin.person_id] = {
+                                'person': admin,
+                                'shared_netids': [person.login_name],
+                            }
+
+        for person_id in admins:
+            csv_data = admins[person_id]['person'].csv_data()
+            csv_data.append(','.join(admins[person_id]['shared_netids']))
+            survey_admin_writer.writerow(csv_data)
 
         survey_owner_outfile.close()
         survey_admin_outfile.close()
