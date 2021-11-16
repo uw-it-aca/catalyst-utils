@@ -2,7 +2,6 @@
 # SPDX-License-Identifier: Apache-2.0
 
 from django.db import models
-from django.core.exceptions import ObjectDoesNotExist
 from uw_pws import PWS
 from restclients_core.exceptions import DataFailureException
 from catalyst_utils.dao.group import is_current_uwnetid, get_group_members
@@ -55,7 +54,7 @@ class Person(models.Model):
         try:
             if self.personattr.is_person is None:
                 self._update_attr()
-        except ObjectDoesNotExist:
+        except PersonAttr.DoesNotExist:
             self._update_attr()
         return self.personattr.is_person
 
@@ -64,7 +63,7 @@ class Person(models.Model):
         try:
             if self.personattr.is_current is None:
                 self._update_attr()
-        except ObjectDoesNotExist:
+        except PersonAttr.DoesNotExist:
             self._update_attr()
         return self.personattr.is_current
 
@@ -72,7 +71,7 @@ class Person(models.Model):
     def preferred_name(self):
         try:
             return self.personattr.preferred_name
-        except ObjectDoesNotExist:
+        except PersonAttr.DoesNotExist:
             self._update_attr()
             return self.personattr.preferred_name
 
@@ -80,7 +79,7 @@ class Person(models.Model):
     def preferred_surname(self):
         try:
             return self.personattr.preferred_surname
-        except ObjectDoesNotExist:
+        except PersonAttr.DoesNotExist:
             self._update_attr()
             return self.personattr.preferred_surname
 
@@ -148,7 +147,7 @@ class GroupWrapper(models.Model):
             for pc in PeopleInCrowd.objects.filter(crowd_id=self.source_key):
                 try:
                     members.append(pc.person)
-                except ObjectDoesNotExist:
+                except Person.DoesNotExist:
                     pass
         elif self.model_package.endswith('GWS'):
             for uwnetid in get_group_members(self.source_key, effective=True):
@@ -167,7 +166,10 @@ class RoleImplementationManager(models.Manager):
 
         people = set()
         for authz in authzs:
-            people.update(authz.group.members)
+            try:
+                people.update(authz.group.members)
+            except GroupWrapper.DoesNotExist:
+                pass
         return people
 
 
@@ -224,7 +226,7 @@ class Survey(models.Model):
     def owner(self):
         try:
             return self.person
-        except ObjectDoesNotExist:
+        except Person.DoesNotExist:
             return None
 
     @property
