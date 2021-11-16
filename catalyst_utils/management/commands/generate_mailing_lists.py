@@ -44,11 +44,11 @@ class Command(BaseCommand):
                     if admin.is_person and admin.is_current:
                         if admin.person_id in netid_admins:
                             netid_admins[admin.person_id].get(
-                                'shared_netids', []).append(owner.login_name)
+                                'shared_netids').add(owner.login_name)
                         else:
                             netid_admins[admin.person_id] = {
                                 'person': admin,
-                                'shared_netids': [owner.login_name],
+                                'shared_netids': {owner.login_name},
                             }
 
             for administrator in survey.administrators:
