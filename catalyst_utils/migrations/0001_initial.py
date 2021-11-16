@@ -17,6 +17,8 @@ class Migration(migrations.Migration):
             fields=[
                 ('gradebook_id', models.IntegerField(primary_key=True, serialize=False)),
                 ('name', models.CharField(max_length=512)),
+                ('create_date', models.DateTimeField()),
+                ('authz_id', models.IntegerField()),
             ],
             options={
                 'db_table': 'GradeBook',
@@ -44,6 +46,7 @@ class Migration(migrations.Migration):
                 ('survey_id', models.IntegerField(primary_key=True, serialize=False)),
                 ('title', models.CharField(max_length=255)),
                 ('creation_date', models.DateTimeField()),
+                ('object_auth_id', models.IntegerField()),
             ],
             options={
                 'db_table': 'Survey',

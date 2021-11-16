@@ -7,10 +7,10 @@ from restclients_core.exceptions import DataFailureException
 from logging import getLogger
 
 logger = getLogger(__name__)
+gws = GWS()
 
 
 def is_current_uwnetid(uwnetid):
-    gws = GWS()
     for group_id in getattr(settings, 'CURRENT_USER_GROUPS', []):
         try:
             if gws.is_direct_member(group_id, uwnetid.lower()):
@@ -20,16 +20,22 @@ def is_current_uwnetid(uwnetid):
     return False
 
 
-def get_uwnetid_admins(uwnetid):
-    admins = []
-    group_id = 'u_netid_{}_admins'.format(uwnetid.lower())
+def get_group_members(group_id, effective=False):
+    uwnetids = []
     try:
-        for member in GWS().get_members(group_id):
+        if effective:
+            members = gws.get_effective_members(group_id.lower())
+        else:
+            members = gws.get_members(group_id.lower())
+
+        for member in members:
             if member.is_uwnetid():
-                admins.append(member.name)
+                uwnetids.append(member.name)
+
     except DataFailureException as err:
-        if err.status == 404:
+        if err.status == 404 or err.status == 401:
             pass
         else:
             logger.info('Group membership FAILED: {}'.format(err))
-    return admins
+
+    return uwnetids

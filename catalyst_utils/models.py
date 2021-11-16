@@ -5,12 +5,10 @@ from django.db import models
 from django.core.exceptions import ObjectDoesNotExist
 from uw_pws import PWS
 from restclients_core.exceptions import DataFailureException
-from catalyst_utils.dao.group import is_current_uwnetid, get_uwnetid_admins
+from catalyst_utils.dao.group import is_current_uwnetid, get_group_members
 from logging import getLogger
 
 logger = getLogger(__name__)
-
-ADMINISTRATOR_ROLE_ID = 7
 
 
 class Person(models.Model):
@@ -86,15 +84,21 @@ class Person(models.Model):
             self._update_attr()
             return self.personattr.preferred_surname
 
-    def get_admins(self):
-        admins = []
-        if not self.is_person:
-            for uwnetid in get_uwnetid_admins(self.login_name):
-                try:
-                    admins.append(Person.objects.get(login_name=uwnetid))
-                except Person.DoesNotExist:
-                    pass
-        return admins
+    @property
+    def admins(self):
+        try:
+            return self._admins
+        except AttributeError:
+            self._admins = []
+            if not self.is_person:
+                group_id = 'u_netid_{}_admins'.format(self.login_name)
+                for uwnetid in get_group_members(group_id):
+                    try:
+                        person = Person.objects.get(login_name=uwnetid)
+                        self._admins.append(person)
+                    except Person.DoesNotExist:
+                        pass
+            return self._admins
 
     def csv_data(self):
         if self.preferred_name and self.preferred_surname:
@@ -137,16 +141,46 @@ class GroupWrapper(models.Model):
         db_table = 'GroupWrapper'
         managed = False
 
+    @property
+    def members(self):
+        members = []
+        if self.model_package.endswith('Crowd'):
+            for pc in PeopleInCrowd.objects.filter(crowd_id=self.source_key):
+                members.append(pc.person)
+        elif self.model_package.endswith('GWS'):
+            for uwnetid in get_group_members(self.source_key, effective=True):
+                try:
+                    members.append(Person.objects.get(login_name=uwnetid))
+                except Person.DoesNotExist:
+                    pass
+        return members
+
+
+class RoleImplementationManager(models.Manager):
+    def get_administrators(self, object_auth_id):
+        authzs = super(RoleImplementationManager, self).get_queryset().filter(
+            object_auth_id=object_auth_id,
+            role_id=RoleImplementation.ADMINISTRATOR_ROLE_ID)
+
+        people = set()
+        for authz in authzs:
+            people.update(authz.group.members)
+        return people
+
 
 class RoleImplementation(models.Model):
     """
     Unmanaged read-only RoleImplementation, data is sourced from
     solstice.RoleImplementation table
     """
+    ADMINISTRATOR_ROLE_ID = 7
+
     role_implementation_id = models.IntegerField(primary_key=True)
     role_id = models.IntegerField()
     group = models.ForeignKey(GroupWrapper, on_delete=models.CASCADE)
     object_auth_id = models.IntegerField()
+
+    objects = RoleImplementationManager()
 
     class Meta:
         db_table = 'RoleImplementation'
@@ -189,16 +223,8 @@ class Survey(models.Model):
 
     @property
     def administrators(self):
-        self._administrators = []
-        try:
-            authz = RoleImplementation.objects.get(
-                object_auth_id=self.object_auth_id,
-                role_id=ADMINISTRATOR_ROLE_ID)
-            logger.info('authz: {} {}'.format(
-                authz.group.model_package, authz.group.source_key))
-        except RoleImplementationDoesNotExist:
-            pass
-        return self._administrators
+        return RoleImplementation.objects.get_administrators(
+            self.object_auth_id)
 
 
 class GradebookManager(models.Manager):
@@ -233,16 +259,7 @@ class Gradebook(models.Model):
 
     @property
     def administrators(self):
-        self._administrators = []
-        try:
-            authz = RoleImplementation.objects.get(
-                object_auth_id=self.authz_id,
-                role_id=ADMINISTRATOR_ROLE_ID)
-            logger.info('authz: {} {}'.format(
-                authz.group.model_package, authz.group.source_key))
-        except RoleImplementationDoesNotExist:
-            pass
-        return self._administrators
+        return RoleImplementation.objects.get_administrators(self.authz_id)
 
 
 class PersonAttrManager(models.Manager):
