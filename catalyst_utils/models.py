@@ -222,7 +222,10 @@ class Survey(models.Model):
 
     @property
     def owner(self):
-        return self.person
+        try:
+            return self.person
+        except ObjectDoesNotExist:
+            return None
 
     @property
     def administrators(self):
@@ -234,7 +237,7 @@ class GradebookManager(models.Manager):
     def get_all_gradebooks(self, year=None):
         if year:
             return super(GradebookManager, self).get_queryset().filter(
-                creation_date__year=year)
+                create_date__year=year)
         else:
             return Gradebook.objects.all()
 
