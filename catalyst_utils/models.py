@@ -146,7 +146,10 @@ class GroupWrapper(models.Model):
         members = []
         if self.model_package.endswith('Crowd'):
             for pc in PeopleInCrowd.objects.filter(crowd_id=self.source_key):
-                members.append(pc.person)
+                try:
+                    members.append(pc.person)
+                except ObjectDoesNotExist:
+                    pass
         elif self.model_package.endswith('GWS'):
             for uwnetid in get_group_members(self.source_key, effective=True):
                 try:

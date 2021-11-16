@@ -56,8 +56,9 @@ class Command(BaseCommand):
                     if administrator.is_current:
                         administrators.add(administrator)
                 else:
-                    logger.info('Non-personal administrator: {}'.format(
-                        administrator.login_name))
+                    for admin in administrator.admins:
+                        if admin.is_person and admin.is_current:
+                            administrators.add(admin)
 
         for person in owners:
             survey_owner_writer.writerow(person.csv_data())
