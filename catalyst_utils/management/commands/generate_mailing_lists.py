@@ -13,20 +13,23 @@ logger = getLogger(__name__)
 class Command(BaseCommand):
     def handle(self, *args, **options):
         csv.register_dialect('unix_newline', lineterminator='\n')
+        header = ['uwnetid', 'first_name', 'last_name', 'last_login_date']
 
         survey_owner_outfile = default_storage.open('survey_owners.csv', 'w')
         survey_owner_writer = csv.writer(
             survey_owner_outfile, dialect='unix_newline')
-        survey_owner_writer.writerow([
-            'uwnetid', 'first_name', 'last_name', 'last_login_date'])
+        survey_owner_writer.writerow(header)
 
         survey_netid_admin_outfile = default_storage.open(
             'survey_netid_admins.csv', 'w')
         survey_netid_admin_writer = csv.writer(
             survey_netid_admin_outfile, dialect='unix_newline')
-        survey_netid_admin_writer.writerow([
-            'uwnetid', 'first_name', 'last_name', 'last_login_date',
-            'shared_netids'])
+        survey_netid_admin_writer.writerow(header + ['shared_netids'])
+
+        survey_admin_outfile = default_storage.open('survey_admins.csv', 'w')
+        survey_admin_writer = csv.writer(
+            survey_admin_outfile, dialect='unix_newline')
+        survey_admin_writer.writerow(header)
 
         owners = set()
         administrators = set()
@@ -37,7 +40,7 @@ class Command(BaseCommand):
                 if owner.is_current:
                     owners.add(owner)
             else:
-                for admin in owner.get_admins():
+                for admin in owner.admins:
                     if admin.is_person and admin.is_current:
                         if admin.person_id in netid_admins:
                             netid_admins[admin.person_id].get(
@@ -59,8 +62,8 @@ class Command(BaseCommand):
         for person in owners:
             survey_owner_writer.writerow(person.csv_data())
 
-        for administrator in administrators:
-            pass
+        for person in administrators:
+            survey_admin_writer.writerow(person.csv_data())
 
         for person_id in netid_admins:
             person = netid_admins[person_id]['person']
@@ -69,4 +72,5 @@ class Command(BaseCommand):
             survey_netid_admin_writer.writerow(csv_data)
 
         survey_owner_outfile.close()
+        survey_admin_outfile.close()
         survey_netid_admin_outfile.close()
