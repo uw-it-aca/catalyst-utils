@@ -1,0 +1,90 @@
+# Copyright 2021 UW-IT, University of Washington
+# SPDX-License-Identifier: Apache-2.0
+
+from django.core.management.base import BaseCommand, CommandError
+from django.core.files.storage import default_storage
+from catalyst_utils.models import Survey, Gradebook
+from logging import getLogger
+import csv
+
+logger = getLogger(__name__)
+
+
+class Command(BaseCommand):
+    def add_arguments(self, parser):
+        parser.add_argument(
+            'app', type=str, help='Application: (webq|gradebook)')
+        parser.add_argument(
+            'year', type=int, help='Year: 2005-2022')
+
+    def handle(self, *args, **options):
+        app = options.get('app').lower()
+        year = options.get('year')
+
+        csv.register_dialect('unix_newline', lineterminator='\n')
+        header = ['uwnetid', 'first_name', 'last_name', 'last_login_date']
+
+        owner_outfile = default_storage.open('{}_owners.csv'.format(app), 'w')
+        owner_writer = csv.writer(owner_outfile, dialect='unix_newline')
+        owner_writer.writerow(header)
+
+        netid_admin_outfile = default_storage.open(
+            '{}_netid_admins.csv'.format(app), 'w')
+        netid_admin_writer = csv.writer(netid_admin_outfile,
+                                        dialect='unix_newline')
+        netid_admin_writer.writerow(header + ['shared_netids'])
+
+        admin_outfile = default_storage.open('{}_admins.csv'.format(app), 'w')
+        admin_writer = csv.writer(admin_outfile, dialect='unix_newline')
+        admin_writer.writerow(header)
+
+        if 'webq' == app:
+            models = Survey.objects.get_all_surveys(year=year)
+        else:
+            models = Gradebook.objects.get_all_gradebooks()
+
+        owners = set()
+        administrators = set()
+        netid_admins = {}
+        for model in models:
+            owner = model.owner
+            if owner:
+                if owner.is_person:
+                    if owner.is_current:
+                        owners.add(owner)
+                else:
+                    for admin in owner.admins:
+                        if admin.is_person and admin.is_current:
+                            if admin.person_id in netid_admins:
+                                netid_admins[admin.person_id].get(
+                                    'shared_netids').add(owner.login_name)
+                            else:
+                                netid_admins[admin.person_id] = {
+                                    'person': admin,
+                                    'shared_netids': {owner.login_name},
+                                }
+
+            for administrator in model.administrators:
+                if administrator.is_person:
+                    if administrator.is_current:
+                        administrators.add(administrator)
+                else:
+                    for admin in administrator.admins:
+                        if admin.is_person and admin.is_current:
+                            administrators.add(admin)
+
+        for person in owners:
+            owner_writer.writerow(person.csv_data())
+
+        for person in administrators:
+            admin_writer.writerow(person.csv_data())
+
+        for person_id in netid_admins:
+            person = netid_admins[person_id]['person']
+            csv_data = person.csv_data()
+            csv_data.append('|'.join(netid_admins[person_id]['shared_netids']))
+            netid_admin_writer.writerow(csv_data)
+
+        owner_outfile.close()
+        admin_outfile.close()
+        netid_admin_outfile.close()

@@ -1,0 +1,139 @@
+resources:
+  limits:
+    cpu: 500m
+    memory: 768Mi
+  requests:
+    cpu: 50m
+    memory: 256Mi
+targetAverageUtilization: 100
+ingress:
+  enabled: false
+lifecycle:
+  enabled: true
+  preStop:
+    enabled: true
+autoscaling:
+  enabled: false
+replicaCount: 1
+affinity:
+   podsSpanNodes: true
+readiness:
+  enabled: true
+securityPolicy:
+  enabled: true
+externalService:
+  enabled: true
+  name: catalyst-db-service
+  type: ClusterIP
+  serviceAddress: 172.18.0.232
+  servicePort: 3306
+database:
+  engine: mysql
+  name: catalyst_test
+  hostname: catalyst-db-service
+  secretName: test.catalyst.uw.edu-sql-secrets
+repo: catalyst
+instance: test
+image:
+  repository: gcr.io/uwit-mci-axdd/catalyst
+  tag: IMAGE_TAG
+memcached:
+  enabled: true
+  replicaCount: 1
+  updateStrategy:
+    type: RollingUpdate
+gcsCredentials:
+  mounted: true
+  secretName: test.catalyst.uw.edu-gcs-credentials
+cronjob:
+  enabled: false
+certs:
+  mounted: true
+  certPath: /certs/test.catalyst.uw.edu-uwca.cert
+  keyPath: /certs/test.catalyst.uw.edu-uwca.key
+  secretName: test.catalyst.uw.edu-uwca-certs
+environmentVariables:
+  - name: ENV
+    value: test
+
+  - name: PWS_ENV
+    value: PROD
+
+  - name: GWS_ENV
+    value: PROD
+  - name: GWS_TIMEOUT
+    value: "10"
+
+  - name: AUTH
+    value: SAML
+  - name: SAML_ENTITY_ID
+    value: https://test.catalyst.uw.edu/saml2
+  - name: CLUSTER_CNAME
+    value: test.catalyst.uw.edu
+
+externalSecrets:
+  enabled: true
+  secrets:
+    - name: test.catalyst.uw.edu-secrets
+      externalKey: axdd/kv/data/catalyst/test/secrets
+      data:
+        - name: django-secret
+          property: django-secret
+        - name: storage-bucket-name
+          property: storage-bucket-name
+    - name: test.catalyst.uw.edu-shared-secrets
+      externalKey: axdd/kv/data/catalyst/shared/secrets
+      data:
+        - name: storage-project-id
+          property: storage-project-id
+    - name: test.catalyst.uw.edu-sql-secrets
+      externalKey: axdd/kv/data/catalyst/shared/sql-secrets
+      data:
+        - name: username
+          property: username
+        - name: password
+          property: password
+    - name: test.catalyst.uw.edu-gcs-credentials
+      externalKey: axdd/kv/data/catalyst/shared/gcs-credentials
+      data:
+        - name: credentials.json
+          property: credentials.json
+    - name: test.catalyst.uw.edu-uwca-certs
+      externalKey: axdd/kv/data/catalyst/test/uwca-certs
+      data:
+        - name: test.catalyst.uw.edu-uwca.cert
+          property: test.catalyst.uw.edu-uwca.cert
+        - name: test.catalyst.uw.edu-uwca.key
+          property: test.catalyst.uw.edu-uwca.key
+    - name: test.catalyst.uw.edu-ic-certs
+      externalKey: axdd/kv/data/catalyst/test/ic-certs
+      data:
+        - name: test.catalyst.uw.edu-ic.cert
+          property: test.catalyst.uw.edu-ic.cert
+    - name: test.catalyst.uw.edu-uw-idp-cert
+      externalKey: axdd/kv/data/idp-cert
+      data:
+        - name: uw-idp-cert
+          property: cert
+
+environmentVariablesSecrets:
+  djangoSecret:
+    name: DJANGO_SECRET
+    secretName: test.catalyst.uw.edu-secrets
+    secretKey: django-secret
+  storageBucketName:
+    name: STORAGE_BUCKET_NAME
+    secretName: test.catalyst.uw.edu-secrets
+    secretKey: storage-bucket-name
+  storageProjectId:
+    name: STORAGE_PROJECT_ID
+    secretName: test.catalyst.uw.edu-shared-secrets
+    secretKey: storage-project-id
+  samlSPCert:
+    name: SP_CERT
+    secretName: test.catalyst.uw.edu-ic-certs
+    secretKey: test.catalyst.uw.edu-ic.cert
+  samlIDPCert:
+    name: IDP_CERT
+    secretName: test.catalyst.uw.edu-uw-idp-cert
+    secretKey: uw-idp-cert
