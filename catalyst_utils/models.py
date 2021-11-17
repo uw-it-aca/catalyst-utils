@@ -3,10 +3,12 @@
 
 from django.db import models
 from django.conf import settings
+from django.utils import timezone
 from uw_pws import PWS
 from restclients_core.exceptions import DataFailureException
 from catalyst_utils.dao.group import is_current_uwnetid, get_group_members
-from datetime import datetime, timedelta
+from dateutil.relativedelta import relativedelta
+from datetime import datetime
 from logging import getLogger
 
 logger = getLogger(__name__)
@@ -239,8 +241,8 @@ class Survey(models.Model):
 
 class GradebookManager(models.Manager):
     def get_all_gradebooks(self):
-        retention = (datetime.now() - timedelta(
-            years=settings.GRADEBOOK_RETENTION_YEARS))
+        retention = timezone.localtime(timezone.now()) - relativedelta(
+            years=settings.GRADEBOOK_RETENTION_YEARS)
         return super(GradebookManager, self).get_queryset().filter(
             create_date__gte=retention)
 
