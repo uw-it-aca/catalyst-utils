@@ -11,13 +11,8 @@ gws = GWS()
 
 
 def is_current_uwnetid(uwnetid):
-    for group_id in getattr(settings, 'CURRENT_USER_GROUPS', []):
-        try:
-            if gws.is_direct_member(group_id, uwnetid.lower()):
-                return True
-        except DataFailureException as err:
-            logger.info('Group membership check FAILED: {}'.format(err))
-    return False
+    return gws.is_effective_member(settings.CURRENT_USER_GROUP,
+                                   uwnetid.lower())
 
 
 def get_group_members(group_id, effective=False):
@@ -36,6 +31,6 @@ def get_group_members(group_id, effective=False):
         if err.status == 404 or err.status == 401:
             pass
         else:
-            logger.info('Group membership FAILED: {}'.format(err))
+            raise
 
     return uwnetids

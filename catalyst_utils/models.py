@@ -2,9 +2,11 @@
 # SPDX-License-Identifier: Apache-2.0
 
 from django.db import models
+from django.conf import settings
 from uw_pws import PWS
 from restclients_core.exceptions import DataFailureException
 from catalyst_utils.dao.group import is_current_uwnetid, get_group_members
+from datetime import datetime, timedelta
 from logging import getLogger
 
 logger = getLogger(__name__)
@@ -119,7 +121,7 @@ class PeopleInCrowd(models.Model):
     Unmanaged read-only PeopleInCrowd, data is sourced from
     solstice.PeopleInCrowd table
     """
-    crowd_id = models.IntegerField()
+    crowd_id = models.IntegerField(primary_key=True)
     person = models.ForeignKey(Person, on_delete=models.CASCADE)
 
     class Meta:
@@ -236,12 +238,11 @@ class Survey(models.Model):
 
 
 class GradebookManager(models.Manager):
-    def get_all_gradebooks(self, year=None):
-        if year:
-            return super(GradebookManager, self).get_queryset().filter(
-                create_date__year=year)
-        else:
-            return Gradebook.objects.all()
+    def get_all_gradebooks(self):
+        retention = (datetime.now() - timedelta(
+            years=settings.GRADEBOOK_RETENTION_YEARS))
+        return super(GradebookManager, self).get_queryset().filter(
+            create_date__gte=retention)
 
     def get_gradebooks_for_person(self, person):
         pass

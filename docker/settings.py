@@ -27,4 +27,5 @@ else:
 #USERSERVICE_VALIDATION_MODULE = 'catalyst_utils.dao.person.is_netid'
 #USERSERVICE_OVERRIDE_AUTH_MODULE = 'catalyst_utils.views.support.can_override_user'
 
-CURRENT_USER_GROUPS = ['uw_staff', 'uw_affiliate', 'uw_student']
+GRADEBOOK_RETENTION_YEARS = 5
+CURRENT_USER_GROUP = 'u_acadev_catalyst_current-users'
