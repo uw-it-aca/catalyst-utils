@@ -41,7 +41,7 @@ class Command(BaseCommand):
         if 'webq' == app:
             models = Survey.objects.get_all_surveys(year=year)
         else:
-            models = Gradebook.objects.get_all_gradebooks(year=year)
+            models = Gradebook.objects.get_all_gradebooks()
 
         owners = set()
         administrators = set()
