@@ -200,9 +200,9 @@ class SurveyManager(models.Manager):
     def get_all_surveys(self, year=None):
         if year:
             return super(SurveyManager, self).get_queryset().filter(
-                creation_date__year=year)
+                creation_date__year=year).order_by('survey_id')
         else:
-            return Survey.objects.all()
+            return Survey.objects.all().order_by('survey_id')
 
     def get_surveys_for_person(self, person):
         pass
@@ -244,7 +244,7 @@ class GradebookManager(models.Manager):
         retention = timezone.localtime(timezone.now()) - relativedelta(
             years=settings.GRADEBOOK_RETENTION_YEARS)
         return super(GradebookManager, self).get_queryset().filter(
-            create_date__gte=retention)
+            create_date__gte=retention).order_by('gradebook_id')
 
     def get_gradebooks_for_person(self, person):
         pass
