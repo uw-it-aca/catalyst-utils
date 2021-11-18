@@ -13,9 +13,9 @@ logger = getLogger(__name__)
 class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument(
-            'app', type=str, help='Application: (webq|gradebook)')
+            'app', type=str, help='Application (webq|gradebook)')
         parser.add_argument(
-            'year', type=int, help='Year: 2005-2022')
+            'year', type=int, help='Year (2005-2022) or 0 for all years')
 
     def handle(self, *args, **options):
         app = options.get('app').lower()
