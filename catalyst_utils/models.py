@@ -181,35 +181,37 @@ class GroupWrapper(models.Model):
 
     @property
     def members(self):
-        members = []
         if self.model_package.endswith('Crowd'):
-            for pc in PeopleInCrowd.objects.filter(crowd_id=self.source_key):
-                try:
-                    members.append(pc.person)
-                except Person.DoesNotExist:
-                    pass
-        elif self.model_package.endswith('GWS'):
-            for uwnetid in get_group_members(self.source_key, effective=True):
-                try:
-                    members.append(Person.objects.get(login_name=uwnetid))
-                except Person.DoesNotExist:
-                    pass
-        return members
+            members = PeopleInCrowd.objects.select_related('person').filter(
+                crowd_id=self.source_key)
+        else:
+            members = PersonGroup.objects.select_related('person').filter(
+                group_id=self.source_key)
+
+        persons = []
+        for member in members:
+            try:
+                people.append(member.person)
+            except Person.DoesNotExist:
+                pass
+        return persons
 
     @transaction.atomic
     def update_membership(self):
-        if self.model_package.endswith('GWS'):
-            members = []
-            for uwnetid in get_group_members(self.source_key, effective=True):
-                try:
-                    person = Person.objects.get(login_name=uwnetid)
-                    pg, _ = PersonGroup.objects.get_or_create(
-                        group_id=self.source_key, person=person)
-                    members.append(person)
-                except Person.DoesNotExist:
-                    pass
-            PersonGroup.objects.filter(group_id=self.source_key).exclude(
-                person__in=[members]).delete()
+        if not self.model_package.endswith('GWS'):
+            raise NotImplementedError(self.model_package)
+
+        members = []
+        for uwnetid in get_group_members(self.source_key, effective=True):
+            try:
+                person = Person.objects.get(login_name=uwnetid)
+                pg, _ = PersonGroup.objects.get_or_create(
+                    group_id=self.source_key, person=person)
+                members.append(person)
+            except Person.DoesNotExist:
+                pass
+        PersonGroup.objects.filter(group_id=self.source_key).exclude(
+            person__in=[members]).delete()
 
 
 class RoleImplementationManager(models.Manager):
@@ -277,12 +279,12 @@ class SurveyManager(models.Manager):
         auth_ids = RoleImplementation.objects.auth_ids_for_person(person)
         return super().get_queryset().filter(object_auth_id__in=auth_ids)
 
-    def update_groups(self):
+    def update_authz_groups(self):
         for survey in self.all():
             for authz in self.authorizations(survey.object_auth_id):
                 try:
                     authz.group.update_membership()
-                except GroupWrapper.DoesNotExist:
+                except (NotImplementedError, GroupWrapper.DoesNotExist):
                     pass
 
 
