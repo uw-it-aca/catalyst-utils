@@ -46,7 +46,41 @@ gcsCredentials:
   mounted: true
   secretName: apps.catalyst.uw.edu-gcs-credentials
 cronjob:
-  enabled: false
+  enabled: true
+  jobs:
+    - name: update-person-attr
+      schedule: "35 15-23 * * 1-5"
+      command: ["/scripts/management_command.sh"]
+      args: ["update_person_attr"]
+      resources:
+        limits:
+          cpu: 500m
+          memory: 256Mi
+        requests:
+          cpu: 25m
+          memory: 64Mi
+    - name: update-netid-admins
+      schedule: "15 12 * * 1,4"
+      command: ["/scripts/management_command.sh"]
+      args: ["update_netid_admins"]
+      resources:
+        limits:
+          cpu: 500m
+          memory: 256Mi
+        requests:
+          cpu: 25m
+          memory: 64Mi
+    - name: update-authz-groups
+      schedule: "45 12 * * 3"
+      command: ["/scripts/management_command.sh"]
+      args: ["update_authz_groups"]
+      resources:
+        limits:
+          cpu: 500m
+          memory: 256Mi
+        requests:
+          cpu: 25m
+          memory: 64Mi
 certs:
   mounted: true
   certPath: /certs/apps.catalyst.uw.edu-uwca.cert
