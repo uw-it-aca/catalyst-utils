@@ -22,8 +22,10 @@ class PersonManager(models.Manager):
             person._update_admins()
 
     def update_person_attr(self):
+        limit = getattr(settings, 'PERSON_UPDATE_LIMIT', 500)
         for person in super().get_queryset().filter(
-                personattr__is_person=True, personattr__is_current=True):
+                personattr__is_person=True,
+                personattr__is_current=True).order_by('last_updated')[:limit]:
             person._update_attr()
 
 
@@ -81,7 +83,7 @@ class Person(models.Model):
                     pass
 
             PersonGroup.objects.filter(group_id=group_id).exclude(
-                person__in=[members]).delete()
+                person__in=members).delete()
 
     @property
     def is_person(self):
@@ -210,8 +212,9 @@ class GroupWrapper(models.Model):
                 members.append(person)
             except Person.DoesNotExist:
                 pass
+
         PersonGroup.objects.filter(group_id=self.source_key).exclude(
-            person__in=[members]).delete()
+            person__in=members).delete()
 
 
 class RoleImplementationManager(models.Manager):
@@ -280,10 +283,15 @@ class SurveyManager(models.Manager):
         return super().get_queryset().filter(object_auth_id__in=auth_ids)
 
     def update_authz_groups(self):
-        for survey in self.all():
-            for authz in self.authorizations(survey.object_auth_id):
+        groups = set()
+        for object_auth_id in super().get_queryset().all().values_list(
+                'object_auth_id', flat=True):
+            for authz in RoleImplementation.objects.authorizations(
+                    object_auth_id):
                 try:
-                    authz.group.update_membership()
+                    if authz.group not in groups:
+                        authz.group.update_membership()
+                        groups.add(authz.group)
                 except (NotImplementedError, GroupWrapper.DoesNotExist):
                     pass
 
@@ -331,6 +339,18 @@ class GradebookManager(models.Manager):
     def by_administrator(self, person):
         pass
 
+    def update_authz_groups(self):
+        groups = set()
+        for authz_id in super().get_queryset().all().values_list(
+                'authz_id', flat=True):
+            for authz in RoleImplementation.objects.authorizations(authz_id):
+                try:
+                    if authz.group not in groups:
+                        authz.group.update_membership()
+                        groups.add(authz.group)
+                except (NotImplementedError, GroupWrapper.DoesNotExist):
+                    pass
+
 
 class Gradebook(models.Model):
     """
@@ -365,6 +385,7 @@ class PersonAttr(models.Model):
     is_current = models.BooleanField(null=True)
     preferred_name = models.CharField(max_length=255, null=True)
     preferred_surname = models.CharField(max_length=255, null=True)
+    last_updated = models.DateTimeField(auto_now=True)
 
 
 class PersonGroup(models.Model):
