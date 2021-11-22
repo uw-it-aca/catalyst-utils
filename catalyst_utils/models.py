@@ -22,10 +22,10 @@ class PersonManager(models.Manager):
             person._update_admins()
 
     def update_person_attr(self):
-        limit = getattr(settings, 'PERSON_UPDATE_LIMIT', 500)
+        limit = getattr(settings, 'PERSON_UPDATE_LIMIT', 250)
         for person in super().get_queryset().filter(
-                personattr__is_person=True,
-                personattr__is_current=True).order_by('last_updated')[:limit]:
+                    personattr__is_person=True, personattr__is_current=True
+                ).order_by('personattr__last_updated')[:limit]:
             person._update_attr()
 
 
