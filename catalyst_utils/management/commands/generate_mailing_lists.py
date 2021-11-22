@@ -39,9 +39,9 @@ class Command(BaseCommand):
         admin_writer.writerow(header)
 
         if 'webq' == app:
-            models = Survey.objects.get_all_surveys(year=year)
+            models = Survey.objects.all(year=year)
         else:
-            models = Gradebook.objects.get_all_gradebooks()
+            models = Gradebook.objects.all()
 
         owners = set()
         administrators = set()
