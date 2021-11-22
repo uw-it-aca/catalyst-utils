@@ -11,3 +11,4 @@ logger = getLogger(__name__)
 class Command(BaseCommand):
     def handle(self, *args, **options):
         Survey.objects.update_authz_groups()
+        Gradebook.objects.update_authz_groups()
