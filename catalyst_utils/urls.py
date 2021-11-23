@@ -3,4 +3,6 @@
 
 from django.urls import re_path
 
-urlpatterns = []
+urlpatterns = [
+    re_path(r'^api/v1/survey$', SurveyList.as_view(), name='survey-list'),
+]
