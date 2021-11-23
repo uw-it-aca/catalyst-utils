@@ -29,6 +29,7 @@ setup(
         'UW-RestClients-GWS>=2.3.5',
         'UW-RestClients-PWS~=2.1',
         'UW-Django-SAML2~=1.5',
+        'Django-SupportTools~=3.5',
     ],
     license='Apache License, Version 2.0',
     description='UW application that supports catalyst',
