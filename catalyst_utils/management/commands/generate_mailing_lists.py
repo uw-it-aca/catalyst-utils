@@ -32,7 +32,7 @@ class Command(BaseCommand):
             '{}_netid_admins.csv'.format(app), 'w')
         netid_admin_writer = csv.writer(netid_admin_outfile,
                                         dialect='unix_newline')
-        netid_admin_writer.writerow(header + ['shared_netids'])
+        netid_admin_writer.writerow(header)
 
         admin_outfile = default_storage.open('{}_admins.csv'.format(app), 'w')
         admin_writer = csv.writer(admin_outfile, dialect='unix_newline')
@@ -45,7 +45,7 @@ class Command(BaseCommand):
 
         owners = set()
         administrators = set()
-        netid_admins = {}
+        netid_admins = set()
         for model in models:
             owner = model.owner
             if owner:
@@ -55,14 +55,7 @@ class Command(BaseCommand):
                 else:
                     for admin in owner.admins:
                         if admin.is_person and admin.is_current:
-                            if admin.person_id in netid_admins:
-                                netid_admins[admin.person_id].get(
-                                    'shared_netids').add(owner.login_name)
-                            else:
-                                netid_admins[admin.person_id] = {
-                                    'person': admin,
-                                    'shared_netids': {owner.login_name},
-                                }
+                            netid_admins.add(admin)
 
             for administrator in model.administrators:
                 if administrator.is_person:
@@ -79,11 +72,8 @@ class Command(BaseCommand):
         for person in administrators:
             admin_writer.writerow(person.csv_data())
 
-        for person_id in netid_admins:
-            person = netid_admins[person_id]['person']
-            csv_data = person.csv_data()
-            csv_data.append('|'.join(netid_admins[person_id]['shared_netids']))
-            netid_admin_writer.writerow(csv_data)
+        for person in netid_admins:
+            netid_admin_writer.writerow(person.csv_data())
 
         owner_outfile.close()
         admin_outfile.close()

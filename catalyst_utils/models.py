@@ -13,6 +13,7 @@ from logging import getLogger
 import re
 
 logger = getLogger(__name__)
+NETID_ADMIN_GROUP = 'u_netid_{}_admins'
 
 
 class PersonManager(models.Manager):
@@ -72,7 +73,7 @@ class Person(models.Model):
     def _update_admins(self):
         if not self.is_person:
             members = []
-            group_id = 'u_netid_{}_admins'.format(self.login_name)
+            group_id = NETID_ADMIN_GROUP.format(self.login_name)
             for uwnetid in get_group_members(group_id):
                 try:
                     person = Person.objects.get(login_name=uwnetid)
@@ -121,11 +122,24 @@ class Person(models.Model):
     def admins(self):
         admins = []
         if not self.is_person:
-            group_id = 'u_netid_{}_admins'.format(self.login_name)
+            group_id = NETID_ADMIN_GROUP.format(self.login_name)
             for pg in PersonGroup.objects.select_related('person').filter(
                     group_id=group_id):
                 admin.append(pg.person)
         return admins
+
+    def json_data(self):
+        if self.preferred_name and self.preferred_surname:
+            name = self.preferred_name
+            surname = self.preferred_surname
+        else:
+            name = self.name
+            surname = self.surname
+
+        return {
+            'login_name': self.login_name,
+            'name': '{} {}'.format(name, surname),
+        }
 
     def csv_data(self):
         if self.preferred_name and self.preferred_surname:
@@ -273,10 +287,17 @@ class SurveyManager(models.Manager):
 
     def by_netid_admin(self, person):
         owners = []
+        pattern = re.compile(NETID_ADMIN_GROUP.format('([a-z0-9]+)'))
         for group_id in PersonGroup.objects.filter(person=person).values_list(
                 'group_id', flat=True):
-            m = re.match(r'^u_netid_([a-z0-9+])_admins$', re.I)
-            netid = m.group(0)
+            m = pattern.match(group_id.lower())
+            if m:
+                try:
+                    owners.append(Person.objects.get(login_name=m.group(1)))
+                except Person.DoesNotExist:
+                    pass
+
+        return super().get_queryset().filter(person__in=owners)
 
     def by_administrator(self, person):
         auth_ids = RoleImplementation.objects.auth_ids_for_person(person)
@@ -324,6 +345,15 @@ class Survey(models.Model):
     @property
     def administrators(self):
         return RoleImplementation.objects.administrators(self.object_auth_id)
+
+    def json_data(self):
+        return {
+            'title': self.title,
+            'creation_date': self.creation_date.isoformat(),
+            'html_url': 'https://catalyst.uw.edu/webq/survey/{}/{}'.format(
+                self.person.login_name, self.survey_id),
+            'owner': self.person.json_data(),
+        }
 
 
 class GradebookManager(models.Manager):
