@@ -4,9 +4,8 @@
 from django.db import models, transaction
 from django.conf import settings
 from django.utils import timezone
-from uw_pws import PWS
-from restclients_core.exceptions import DataFailureException
-from catalyst_utils.dao.group import is_current_uwnetid, get_group_members
+from catalyst_utils.dao.person import get_person_data
+from catalyst_utils.dao.group import get_group_members
 from dateutil.relativedelta import relativedelta
 from datetime import datetime
 from logging import getLogger
@@ -50,24 +49,17 @@ class Person(models.Model):
         managed = False
 
     def _update_attr(self):
-        attr, created = PersonAttr.objects.get_or_create(person=self)
-        try:
-            pws_person = PWS().get_person_by_netid(self.login_name.lower())
-            attr.is_person = True
-            attr.preferred_name = pws_person.preferred_first_name
-            attr.preferred_surname = pws_person.preferred_surname
-        except DataFailureException as err:
-            if err.status == 404:
-                attr.is_person = False
-                attr.is_current = False
-            else:
-                raise
+        data = get_person_data(self.login_name)
 
-        if attr.is_person:
-            attr.is_current = is_current_uwnetid(self.login_name)
-
-        attr.save()
-        self.personattr = attr
+        attr, created = PersonAttr.objects.update_or_create(
+            person=self, defaults={
+                'is_person': data['is_person'],
+                'is_current': data['is_current'],
+                'preferred_name': data['preferred_name'],
+                'preferred_surname': data['preferred_surname'],
+            })
+        if created:
+            self.personattr = attr
 
     @transaction.atomic
     def _update_admins(self):
@@ -125,7 +117,7 @@ class Person(models.Model):
             group_id = NETID_ADMIN_GROUP.format(self.login_name)
             for pg in PersonGroup.objects.select_related('person').filter(
                     group_id=group_id):
-                admin.append(pg.person)
+                admins.append(pg.person)
         return admins
 
     def json_data(self):
@@ -179,6 +171,19 @@ class GroupWrapperManager(models.Manager):
         return super(GroupWrapperManager, self).get_queryset().filter(
             source_key__in=source_keys)
 
+    def by_netid_admin(self, person):
+        owners = []
+        pattern = re.compile(NETID_ADMIN_GROUP.format('([a-z0-9]+)'))
+        for group_id in PersonGroup.objects.filter(person=person).values_list(
+                'group_id', flat=True):
+            m = pattern.match(group_id.lower())
+            if m:
+                try:
+                    owners.append(Person.objects.get(login_name=m.group(1)))
+                except Person.DoesNotExist:
+                    pass
+        return owners
+
 
 class GroupWrapper(models.Model):
     """
@@ -207,7 +212,7 @@ class GroupWrapper(models.Model):
         persons = []
         for member in members:
             try:
-                people.append(member.person)
+                persons.append(member.person)
             except Person.DoesNotExist:
                 pass
         return persons
@@ -282,21 +287,10 @@ class SurveyManager(models.Manager):
                 ).order_by('survey_id')
 
     def by_owner(self, person):
-        return super().get_queryset().filter(person=person).order_by(
-            'survey_id')
+        return super().get_queryset().filter(person=person)
 
     def by_netid_admin(self, person):
-        owners = []
-        pattern = re.compile(NETID_ADMIN_GROUP.format('([a-z0-9]+)'))
-        for group_id in PersonGroup.objects.filter(person=person).values_list(
-                'group_id', flat=True):
-            m = pattern.match(group_id.lower())
-            if m:
-                try:
-                    owners.append(Person.objects.get(login_name=m.group(1)))
-                except Person.DoesNotExist:
-                    pass
-
+        owners = GroupWrapper.objects.by_netid_admin(person)
         return super().get_queryset().filter(person__in=owners)
 
     def by_administrator(self, person):
@@ -337,10 +331,7 @@ class Survey(models.Model):
 
     @property
     def owner(self):
-        try:
-            return self.person
-        except Person.DoesNotExist:
-            return None
+        return self.person
 
     @property
     def administrators(self):
@@ -348,8 +339,8 @@ class Survey(models.Model):
 
     def json_data(self):
         return {
-            'title': self.title,
-            'creation_date': self.creation_date.isoformat(),
+            'name': self.title,
+            'created_date': self.creation_date.isoformat(),
             'html_url': 'https://catalyst.uw.edu/webq/survey/{}/{}'.format(
                 self.person.login_name, self.survey_id),
             'owner': self.person.json_data(),
@@ -364,10 +355,15 @@ class GradebookManager(models.Manager):
             create_date__gte=retention).order_by('gradebook_id')
 
     def by_owner(self, person):
-        pass
+        return super().get_queryset().filter(person=person)
+
+    def by_netid_admin(self, person):
+        owners = GroupWrapper.objects.by_netid_admin(person)
+        return super().get_queryset().filter(person__in=owners)
 
     def by_administrator(self, person):
-        pass
+        auth_ids = RoleImplementation.objects.auth_ids_for_person(person)
+        return super().get_queryset().filter(authz_id__in=auth_ids)
 
     def update_authz_groups(self):
         groups = set()
@@ -403,6 +399,15 @@ class Gradebook(models.Model):
     @property
     def administrators(self):
         return RoleImplementation.objects.administrators(self.authz_id)
+
+    def json_data(self):
+        return {
+            'name': self.name,
+            'created_date': self.create_date.isoformat(),
+            'html_url': 'https://catalyst.uw.edu/gradebook/{}/{}'.format(
+                self.person.login_name, self.gradebook_id),
+            'owner': self.owner.json_data(),
+        }
 
 
 class PersonAttr(models.Model):
