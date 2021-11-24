@@ -4,9 +4,7 @@
 from django.conf import settings
 from uw_gws import GWS
 from restclients_core.exceptions import DataFailureException
-from logging import getLogger
 
-logger = getLogger(__name__)
 gws = GWS()
 
 

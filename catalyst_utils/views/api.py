@@ -51,3 +51,21 @@ class SurveyList(APIView):
         }
 
         return self.json_response(data)
+
+
+class GradebookList(APIView):
+    def get(self, request, *args, **kwargs):
+        try:
+            owned_gradebooks = Gradebook.objects.by_owner(self.person)
+            netid_gradebooks = Gradebook.objects.by_netid_admin(self.person)
+            admin_gradebooks = Gradebook.objects.by_administrator(self.person)
+        except Person.DoesNotExist:
+            return self.json_response(status=204)
+
+        data = {
+            'owned_gradebooks': [s.json_data() for s in owned_gradebooks],
+            'netid_gradebooks': [s.json_data() for s in netid_gradebooks],
+            'admin_gradebooks': [s.json_data() for s in admin_gradebooks],
+        }
+
+        return self.json_response(data)
