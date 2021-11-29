@@ -299,7 +299,8 @@ class SurveyManager(models.Manager):
 
     def by_administrator(self, person):
         auth_ids = RoleImplementation.objects.auth_ids_for_person(person)
-        return super().get_queryset().filter(object_auth_id__in=auth_ids)
+        return super().get_queryset().filter(
+            object_auth_id__in=auth_ids).exclude(person=person)
 
     def update_authz_groups(self):
         groups = set()
@@ -367,7 +368,8 @@ class GradebookManager(models.Manager):
 
     def by_administrator(self, person):
         auth_ids = RoleImplementation.objects.auth_ids_for_person(person)
-        return super().get_queryset().filter(authz_id__in=auth_ids)
+        return super().get_queryset().filter(
+            authz_id__in=auth_ids).exclude(owner=person)
 
     def update_authz_groups(self):
         groups = set()
