@@ -163,10 +163,14 @@ class PeopleInCrowd(models.Model):
 
 class GroupWrapperManager(models.Manager):
     def by_member(self, person):
-        source_keys = PeopleInCrowd.objects.filter(person=person).values_list(
-            'crowd_id', flat=True)
-        source_keys += PersonGroup.objects.filter(person=person).values_list(
-            'group_id', flat=True)
+        source_keys = []
+        for key in PeopleInCrowd.objects.filter(person=person).values_list(
+                'crowd_id', flat=True):
+            source_keys.append(key)
+
+        for key in PersonGroup.objects.filter(person=person).values_list(
+                'group_id', flat=True):
+            source_keys.append(key)
 
         return super(GroupWrapperManager, self).get_queryset().filter(
             source_key__in=source_keys)
@@ -355,11 +359,11 @@ class GradebookManager(models.Manager):
             create_date__gte=retention).order_by('gradebook_id')
 
     def by_owner(self, person):
-        return super().get_queryset().filter(person=person)
+        return super().get_queryset().filter(owner=person)
 
     def by_netid_admin(self, person):
         owners = GroupWrapper.objects.by_netid_admin(person)
-        return super().get_queryset().filter(person__in=owners)
+        return super().get_queryset().filter(owner__in=owners)
 
     def by_administrator(self, person):
         auth_ids = RoleImplementation.objects.auth_ids_for_person(person)
@@ -405,7 +409,7 @@ class Gradebook(models.Model):
             'name': self.name,
             'created_date': self.create_date.isoformat(),
             'html_url': 'https://catalyst.uw.edu/gradebook/{}/{}'.format(
-                self.person.login_name, self.gradebook_id),
+                self.owner.login_name, self.gradebook_id),
             'owner': self.owner.json_data(),
         }
 

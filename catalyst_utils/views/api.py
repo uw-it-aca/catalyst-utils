@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 from django.http import HttpResponse
-from django.views.generic import View
+from django.views import View
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from catalyst_utils.models import Person, Survey, Gradebook
@@ -18,7 +18,8 @@ class APIView(View):
     @property
     def person(self):
         if not hasattr(self, '_person'):
-            self._person = Person.objects.get(UserService().get_user())
+            username = UserService().get_user()
+            self._person = Person.objects.get(login_name=username)
         return self._person
 
     @staticmethod
