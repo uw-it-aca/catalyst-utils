@@ -1,5 +1,5 @@
 ingress:
-  enabled: false
+  enabled: true
   tls:
     catalyst:
       secretName: test.catalyst.uw.edu-ingress-cert
