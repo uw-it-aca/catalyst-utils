@@ -27,7 +27,7 @@ setup(
         'uw-memcached-clients~=1.0',
         'UW-RestClients-Core~=1.3',
         'UW-RestClients-GWS>=2.3.5',
-        'UW-RestClients-PWS~=2.1',
+        'UW-RestClients-PWS>=2.1.5',
         'UW-RestClients-Django-Utils~=2.3',
         'UW-Django-SAML2~=1.5',
         'Django-SupportTools~=3.5',
