@@ -24,8 +24,10 @@ else:
     GS_CREDENTIALS = service_account.Credentials.from_service_account_file(
         '/gcs/credentials.json')
 
-#USERSERVICE_VALIDATION_MODULE = 'catalyst_utils.dao.person.is_netid'
-#USERSERVICE_OVERRIDE_AUTH_MODULE = 'catalyst_utils.views.support.can_override_user'
+USERSERVICE_VALIDATION_MODULE = 'catalyst_utils.dao.person.is_netid'
+USERSERVICE_OVERRIDE_AUTH_MODULE = 'catalyst_utils.views.can_override_user'
+RESTCLIENTS_ADMIN_AUTH_MODULE = 'catalyst_utils.views.can_proxy_restclient'
+PERSISTENT_MESSAGE_AUTH_MODULE = 'catalyst_utils.views.can_manage_persistent_messages'
 
 GRADEBOOK_RETENTION_YEARS = 5
 CURRENT_USER_GROUP = 'u_acadev_catalyst_current-users'
