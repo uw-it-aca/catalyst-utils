@@ -1,11 +1,13 @@
 # Copyright 2021 UW-IT, University of Washington
 # SPDX-License-Identifier: Apache-2.0
 
+from django.conf import settings
 from uw_pws import PWS
-from restclients_core.exceptions import DataFailureException
-from catalyst_utils.dao.group import is_current_uwnetid
+from uw_gws import GWS
+from restclients_core.exceptions import DataFailureException, InvalidNetID
 
 pws = PWS()
+gws = GWS()
 
 
 def get_person_data(uwnetid):
@@ -23,7 +25,8 @@ def get_person_data(uwnetid):
             raise
 
     if data['is_person']:
-        data['is_current'] = is_current_uwnetid(uwnetid)
+        data['is_current'] = gws.is_effective_member(
+            settings.CURRENT_USER_GROUP, uwnetid.lower())
 
     return data
 
@@ -38,7 +41,7 @@ def is_netid(username):
             else:
                 error_msg = "Current netid: {}, Prior netid: ".format(
                     user.uwnetid)
-        except InvalidUser:
+        except InvalidNetID:
             error_msg = "Not a valid UWNetID: "
         except DataFailureException as err:
             error_msg = "Error ({}) {}: ".format(err.status, err.msg)
