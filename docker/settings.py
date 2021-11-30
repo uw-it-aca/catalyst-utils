@@ -4,7 +4,10 @@ import os
 
 INSTALLED_APPS += [
     'catalyst_utils.apps.CatalystUtilsConfig',
+    'supporttools',
     'userservice',
+    'persistent_message',
+    'rc_django',
 ]
 
 MIDDLEWARE += [
