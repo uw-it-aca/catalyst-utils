@@ -10,6 +10,8 @@ ADD --chown=acait:acait requirements.txt /app/
 RUN . /app/bin/activate && pip install -r requirements.txt
 RUN . /app/bin/activate && pip install mysqlclient
 
+ADD --chown=acait:acait . /app/
+ADD --chown=acait:acait docker/ project/
 ADD --chown=acait:acait docker/app_start.sh /scripts
 RUN chmod u+x /scripts/app_start.sh
 
@@ -27,8 +29,6 @@ RUN npx webpack --mode=production
 
 FROM app-prewebpack-container as app-container
 
-ADD --chown=acait:acait . /app/
-ADD --chown=acait:acait docker/ project/
 COPY --chown=acait:acait --from=wpack /app/catalyst_utils/static /static
 
 RUN . /app/bin/activate && python manage.py collectstatic --noinput

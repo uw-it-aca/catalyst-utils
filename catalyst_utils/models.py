@@ -35,18 +35,29 @@ class Person(models.Model):
 
     mysqldump -w "login_realm_id = 1" solstice Person > /tmp/person.sql
     """
-    person_id = models.IntegerField(primary_key=True)
-    login_realm_id = models.IntegerField(default=1)
-    login_name = models.CharField(max_length=128, unique=True)
-    name = models.CharField(max_length=255, null=True)
-    surname = models.CharField(max_length=255, null=True)
-    last_login_date = models.DateTimeField(null=True)
+    person_id = models.AutoField(primary_key=True)
+    login_realm_id = models.IntegerField(blank=True, null=True)
+    login_name = models.CharField(max_length=128)
+    remote_key = models.CharField(max_length=128, blank=True, null=True)
+    name = models.CharField(max_length=255, blank=True, null=True)
+    surname = models.CharField(max_length=255, blank=True, null=True)
+    email = models.CharField(max_length=255, blank=True, null=True)
+    system_name = models.CharField(max_length=255, blank=True, null=True)
+    system_surname = models.CharField(max_length=255, blank=True, null=True)
+    system_email = models.CharField(max_length=255, blank=True, null=True)
+    password = models.CharField(max_length=255, blank=True, null=True)
+    date_created = models.DateTimeField(auto_now_add=True)
+    date_modified = models.DateTimeField(auto_now=True)
+    date_sys_modified = models.DateTimeField(blank=True, null=True)
+    password_reset_ticket = models.CharField(
+        max_length=32, blank=True, null=True)
+    last_login_date = models.DateTimeField(blank=True, null=True)
 
     objects = PersonManager()
 
     class Meta:
-        db_table = 'Person'
         managed = False
+        db_table = 'Person'
 
     def _update_attr(self):
         data = get_person_data(self.login_name)
@@ -157,8 +168,8 @@ class PeopleInCrowd(models.Model):
     person = models.ForeignKey(Person, on_delete=models.CASCADE)
 
     class Meta:
-        db_table = 'PeopleInCrowd'
         managed = False
+        db_table = 'PeopleInCrowd'
 
 
 class GroupWrapperManager(models.Manager):
@@ -194,15 +205,17 @@ class GroupWrapper(models.Model):
     Unmanaged read-only GroupWrapper, data is sourced from
     solstice.GroupWrapper table
     """
-    group_id = models.IntegerField(primary_key=True)
+    group_id = models.AutoField(primary_key=True)
     source_key = models.CharField(max_length=255)
+    authz_id = models.IntegerField(blank=True, null=True)
     model_package = models.CharField(max_length=255)
 
     objects = GroupWrapperManager()
 
     class Meta:
-        db_table = 'GroupWrapper'
         managed = False
+        db_table = 'GroupWrapper'
+        unique_together = (('model_package', 'source_key'),)
 
     @property
     def members(self):
@@ -269,16 +282,16 @@ class RoleImplementation(models.Model):
     """
     ADMINISTRATOR_ROLE_ID = 7
 
-    role_implementation_id = models.IntegerField(primary_key=True)
+    role_implementation_id = models.AutoField(primary_key=True)
     role_id = models.IntegerField()
-    group = models.ForeignKey(GroupWrapper, on_delete=models.CASCADE)
+    group = models.ForeignKey(GroupWrapper, models.DO_NOTHING)
     object_auth_id = models.IntegerField()
 
     objects = RoleImplementationManager()
 
     class Meta:
-        db_table = 'RoleImplementation'
         managed = False
+        db_table = 'RoleImplementation'
 
 
 class SurveyManager(models.Manager):
@@ -322,17 +335,92 @@ class Survey(models.Model):
 
     mysqldump -w "is_quiz = 0 AND is_deleted = 0" webq Survey > /tmp/survey.sql
     """
-    survey_id = models.IntegerField(primary_key=True)
-    person = models.ForeignKey(Person, on_delete=models.CASCADE)
+    survey_id = models.AutoField(primary_key=True)
+    person = models.ForeignKey(Person, models.DO_NOTHING)
+    is_quiz = models.BooleanField(null=True)
+    is_deleted = models.BooleanField(null=True)
     title = models.CharField(max_length=255)
-    creation_date = models.DateTimeField()
-    object_auth_id = models.IntegerField()
+    creation_date = models.DateTimeField(auto_now_add=True)
+    modification_date = models.DateTimeField(auto_now=True)
+    display_screen_title = models.BooleanField(null=True)
+    screen_title = models.CharField(max_length=255, blank=True, null=True)
+    display_screen_subtitle = models.BooleanField(null=True)
+    screen_subtitle = models.CharField(max_length=255, blank=True, null=True)
+    display_screen_name = models.BooleanField(null=True)
+    screen_name = models.CharField(max_length=255, blank=True, null=True)
+    display_screen_email = models.BooleanField(null=True)
+    screen_email = models.CharField(max_length=255, blank=True, null=True)
+    display_confirmation_code = models.BooleanField(null=True)
+    display_closing_content = models.BooleanField(null=True)
+    closing_content = models.TextField(blank=True, null=True)
+    auto_number = models.BooleanField(null=True)
+    auto_number_type_id = models.IntegerField(blank=True, null=True)
+    auto_number_format_id = models.IntegerField(blank=True, null=True)
+    auto_number_prefix = models.CharField(
+        max_length=255, blank=True, null=True)
+    send_notification = models.BooleanField(null=True)
+    announcement_subject = models.TextField(blank=True, null=True)
+    announcement_body = models.TextField(blank=True, null=True)
+    announcement_sent = models.DateTimeField(blank=True, null=True)
+    reminder_subject = models.TextField(blank=True, null=True)
+    reminder_body = models.TextField(blank=True, null=True)
+    reminder_sent = models.DateTimeField(blank=True, null=True)
+    send_announcement = models.BooleanField(null=True)
+    send_reminder = models.BooleanField(null=True)
+    reminder_date = models.DateTimeField(blank=True, null=True)
+    announcement_date = models.DateTimeField(blank=True, null=True)
+    has_time_limit = models.BooleanField(null=True)
+    time_limit_hour = models.CharField(max_length=5, blank=True, null=True)
+    time_limit_min = models.CharField(max_length=5, blank=True, null=True)
+    time_limit = models.IntegerField(blank=True, null=True)
+    reminder_frequency_id = models.IntegerField(blank=True, null=True)
+    tags_match_email = models.BooleanField(null=True)
+    requires_notification = models.DateTimeField(blank=True, null=True)
+    account_copy_sender = models.IntegerField(blank=True, null=True)
+    account_copy_reciever = models.IntegerField(blank=True, null=True)
+    account_copy_date = models.DateTimeField(blank=True, null=True)
+    origin_survey_id = models.IntegerField(blank=True, null=True)
+    rejected_survey_copy = models.BooleanField(null=True)
+    copied_questions = models.BooleanField(null=True)
+    copied_security = models.BooleanField(null=True)
+    copied_announcements = models.BooleanField(null=True)
+    copied_reminders = models.BooleanField(null=True)
+    copied_participant_experience = models.BooleanField(null=True)
+    copied_appearance = models.BooleanField(null=True)
+    copied_custom_name = models.BooleanField(null=True)
+    copied_notification = models.BooleanField(null=True)
+    notification_copied_settings = models.BooleanField(null=True)
+    object_auth_id = models.IntegerField(blank=True, null=True)
+    allows_backtracking = models.BooleanField(null=True)
+    allows_saveforlater = models.BooleanField(null=True)
+    allows_confirm_responses = models.BooleanField(null=True)
+    allows_modifying_finished = models.BooleanField(null=True)
+    allows_multiple_submissions = models.BooleanField(null=True)
+    display_results_summary = models.BooleanField(null=True)
+    display_results_summary_questions = models.BooleanField(null=True)
+    display_results_summary_score = models.BooleanField(null=True)
+    display_results_summary_feedback = models.BooleanField(null=True)
+    display_results_summary_correct_answer = models.BooleanField(null=True)
+    display_results_summary_total_score = models.BooleanField(null=True)
+    display_results_summary_stats = models.BooleanField(null=True)
+    display_results_summary_while_published = models.BooleanField(null=True)
+    display_results_summary_custom_interval = models.BooleanField(null=True)
+    display_results_summary_interval_length = models.BooleanField(null=True)
+    display_results_summary_interval_scale = models.CharField(
+        max_length=3, blank=True, null=True)
+    is_research_confidential = models.BooleanField(null=True)
+    is_research_anonymous = models.BooleanField(null=True)
+    publish_date = models.DateTimeField(blank=True, null=True)
+    unpublish_date = models.DateTimeField(blank=True, null=True)
+    security_type = models.CharField(max_length=13, blank=True, null=True)
+    in_conversion = models.BooleanField(null=True)
+    copied_skip_logic = models.BooleanField(null=True)
 
     objects = SurveyManager()
 
     class Meta:
-        db_table = 'Survey'
         managed = False
+        db_table = 'Survey'
 
     @property
     def owner(self):
@@ -390,17 +478,27 @@ class Gradebook(models.Model):
 
     mysqldump -w "is_deleted = 0" gradebook GradeBook > /tmp/gradebook.sql
     """
-    gradebook_id = models.IntegerField(primary_key=True)
+    gradebook_id = models.AutoField(primary_key=True)
+    name = models.TextField(blank=True, null=True)
     owner = models.ForeignKey(Person, on_delete=models.CASCADE)
-    name = models.CharField(max_length=512)
-    create_date = models.DateTimeField()
-    authz_id = models.IntegerField()
+    authz_id = models.IntegerField(blank=True, null=True)
+    create_date = models.DateTimeField(auto_now_add=True)
+    modification_date = models.DateTimeField(blank=True, null=True)
+    last_init_date = models.DateTimeField(blank=True, null=True)
+    is_deleted = models.BooleanField(null=True)
+    calculate_total_scores = models.BooleanField(null=True)
+    calculate_class_grades = models.BooleanField(null=True)
+    total_score_id = models.IntegerField(blank=True, null=True)
+    class_grade_id = models.IntegerField(blank=True, null=True)
+    count_blanks = models.BooleanField(null=True)
+    lowest_conversion_range_grade = models.TextField(blank=True, null=True)
+    include_dropped_in_stats = models.BooleanField(null=True)
 
     objects = GradebookManager()
 
     class Meta:
-        db_table = 'GradeBook'
         managed = False
+        db_table = 'GradeBook'
 
     @property
     def administrators(self):
@@ -420,18 +518,17 @@ class PersonAttr(models.Model):
     """
     Extends solstice.Person data
     """
-    person = models.OneToOneField(Person, primary_key=True,
-                                  on_delete=models.CASCADE)
+    person = models.OneToOneField(Person, models.DO_NOTHING, primary_key=True)
     is_person = models.BooleanField(null=True)
     is_current = models.BooleanField(null=True)
-    preferred_name = models.CharField(max_length=255, null=True)
-    preferred_surname = models.CharField(max_length=255, null=True)
+    preferred_name = models.CharField(max_length=255, blank=True, null=True)
+    preferred_surname = models.CharField(max_length=255, blank=True, null=True)
     last_updated = models.DateTimeField(auto_now=True)
 
 
 class PersonGroup(models.Model):
     group_id = models.CharField(max_length=255)
-    person = models.ForeignKey(Person, on_delete=models.CASCADE)
+    person = models.ForeignKey(Person, models.DO_NOTHING)
 
     class Meta:
         indexes = [

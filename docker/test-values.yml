@@ -35,7 +35,7 @@ externalService:
   servicePort: 3306
 database:
   engine: mysql
-  name: catalyst_test
+  name: catalyst_utils_test
   hostname: catalyst-db-service
   secretName: test.catalyst.uw.edu-sql-secrets
 repo: catalyst
