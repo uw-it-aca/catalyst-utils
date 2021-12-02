@@ -14,6 +14,12 @@ MIDDLEWARE += [
     'userservice.user.UserServiceMiddleware',
 ]
 
+TEMPLATES[0]['OPTIONS']['context_processors'] += [
+    'supporttools.context_processors.supportools_globals',
+    'catalyst_utils.context_processors.google_analytics',
+    'catalyst_utils.context_processors.django_debug',
+]
+
 if os.getenv('ENV', 'localdev') == 'localdev':
     DEBUG = True
     DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
