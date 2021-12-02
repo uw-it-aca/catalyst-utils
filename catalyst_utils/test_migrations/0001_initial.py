@@ -32,7 +32,7 @@ class Migration(migrations.Migration):
             ],
             options={
                 'db_table': 'GradeBook',
-                'managed': False,
+                # 'managed': False,
             },
         ),
         migrations.CreateModel(
@@ -45,7 +45,7 @@ class Migration(migrations.Migration):
             ],
             options={
                 'db_table': 'GroupWrapper',
-                'managed': False,
+                # 'managed': False,
             },
         ),
         migrations.CreateModel(
@@ -55,7 +55,7 @@ class Migration(migrations.Migration):
             ],
             options={
                 'db_table': 'PeopleInCrowd',
-                'managed': False,
+                # 'managed': False,
             },
         ),
         migrations.CreateModel(
@@ -80,7 +80,7 @@ class Migration(migrations.Migration):
             ],
             options={
                 'db_table': 'Person',
-                'managed': False,
+                # 'managed': False,
             },
         ),
         migrations.CreateModel(
@@ -92,7 +92,7 @@ class Migration(migrations.Migration):
             ],
             options={
                 'db_table': 'RoleImplementation',
-                'managed': False,
+                # 'managed': False,
             },
         ),
         migrations.CreateModel(
@@ -178,7 +178,7 @@ class Migration(migrations.Migration):
             ],
             options={
                 'db_table': 'Survey',
-                'managed': False,
+                # 'managed': False,
             },
         ),
         migrations.CreateModel(
