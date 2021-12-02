@@ -1,6 +1,6 @@
 # catalyst_utils
 
-Replace this description for your new application... lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas eget pulvinar est.
+A set of utilities for supporting Catalyst at the University of Washington.
 
 ## System Requirements
 
@@ -10,7 +10,7 @@ Replace this description for your new application... lorem ipsum dolor sit amet,
 
 ## Development Stack
 
-- Django (2.1 - 2.3)
+- Django (2.2, 3.2)
 - Vue (3.x)
 - Bootstrap (5.x)
 

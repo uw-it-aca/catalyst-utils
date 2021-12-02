@@ -9,8 +9,8 @@ services:
     container_name: catalyst_utils_app
     environment:
       #- GOOGLE_ANALYTICS_KEY=${GOOGLE_ANALYTICS_KEY}
-      #ENV: localdev
-      #PORT: 8000
+      ENV: localdev
+      PORT: 8000
       AUTH: SAML_MOCK
     volumes:
       - ./catalyst_utils:/app/catalyst_utils

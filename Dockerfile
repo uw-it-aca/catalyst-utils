@@ -7,13 +7,11 @@ USER acait
 ADD --chown=acait:acait catalyst_utils/VERSION /app/catalyst_utils/
 ADD --chown=acait:acait setup.py /app/
 ADD --chown=acait:acait requirements.txt /app/
-
 RUN . /app/bin/activate && pip install -r requirements.txt
-
 RUN . /app/bin/activate && pip install mysqlclient
 
-#ADD --chown=acait:acait docker/app_start.sh /scripts
-#RUN chmod u+x /scripts/app_start.sh
+ADD --chown=acait:acait docker/app_start.sh /scripts
+RUN chmod u+x /scripts/app_start.sh
 
 FROM node:14.18.1-stretch AS wpack
 
