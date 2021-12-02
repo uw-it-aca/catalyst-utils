@@ -2,16 +2,40 @@ version: '3.4'
 
 services:
   app:
-    environment:
-      ENV: localdev
-      PORT: 8000
-      AUTH: SAML_MOCK
-    restart: always
-    container_name: app-catalyst-utils
     build:
       context: .
       target: app-container
+    restart: always
+    container_name: catalyst_utils_app
+    environment:
+      #- GOOGLE_ANALYTICS_KEY=${GOOGLE_ANALYTICS_KEY}
+      #ENV: localdev
+      #PORT: 8000
+      AUTH: SAML_MOCK
     volumes:
       - ./catalyst_utils:/app/catalyst_utils
+      - statics-volume:/static
     ports:
-      - "8000:8000"
+      - "${RUNSERVER_PORT:-8000}:8000"
+    stdin_open: true
+    tty: true
+  devtools:
+    build:
+      context: .
+      target: wpack
+    restart: always
+    container_name: catalyst_utils_devtools
+    ports:
+      - "${BUNDLE_ANALYZER_PORT:-8888}:8888" # Required when environment.BUNDLE_ANALYZER is true
+    environment:
+      VUE_DEVTOOLS: "True"
+      BUNDLE_ANALYZER: "True"
+    volumes:
+      - ./catalyst_utils:/app/catalyst_utils # expose main django app so webpack-loader can output bundles here
+      - ./catalyst_utils_vue:/app/catalyst_utils_vue
+      - statics-volume:/static
+    command: npx webpack --watch --mode=development
+    stdin_open: true
+    tty: true
+volumes:
+  statics-volume:

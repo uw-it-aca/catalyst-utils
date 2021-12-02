@@ -8,7 +8,23 @@ INSTALLED_APPS += [
     'userservice',
     'persistent_message',
     'rc_django',
+    'webpack_loader'
 ]
+
+# Location of stats file that can be accessed during local development and 
+# collected from during production build process
+if os.getenv("ENV") == "localdev":
+    WEBPACK_LOADER = {
+        'DEFAULT': {
+            'STATS_FILE': os.path.join(BASE_DIR, 'catalyst_utils/static/webpack-stats.json'),
+        }
+    }
+else:
+    WEBPACK_LOADER = {
+        'DEFAULT': {
+            'STATS_FILE': os.path.join(BASE_DIR, '/static/webpack-stats.json'),
+        }
+    }
 
 MIDDLEWARE += [
     'userservice.user.UserServiceMiddleware',
