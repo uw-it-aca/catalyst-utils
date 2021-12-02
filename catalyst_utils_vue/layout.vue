@@ -35,7 +35,7 @@ export default {
   data() {
     return {
       // minimum application setup overrides
-      appName: 'AXDD Django+Vue',
+      appName: 'Catalyst Utils',
       // automatically set year
       currentYear: new Date().getFullYear(),
     };
