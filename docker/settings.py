@@ -8,6 +8,7 @@ INSTALLED_APPS += [
     'userservice',
     'persistent_message',
     'rc_django',
+    'webpack_loader',
 ]
 
 MIDDLEWARE += [
@@ -24,6 +25,11 @@ if os.getenv('ENV', 'localdev') == 'localdev':
     DEBUG = True
     DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
     MEDIA_ROOT = os.getenv('IMPORT_DATA_ROOT', '/app/csv')
+    WEBPACK_LOADER = {
+        'DEFAULT': {
+            'STATS_FILE': os.path.join(BASE_DIR, 'catalyst_utils/static/webpack-stats.json'),
+        }
+    }
     MIGRATION_MODULES = {
         'catalyst_utils': 'catalyst_utils.test_migrations',
     }
@@ -35,6 +41,11 @@ else:
     GS_LOCATION = os.path.join(os.getenv('STORAGE_DATA_ROOT', ''))
     GS_CREDENTIALS = service_account.Credentials.from_service_account_file(
         '/gcs/credentials.json')
+    WEBPACK_LOADER = {
+        'DEFAULT': {
+            'STATS_FILE': os.path.join(BASE_DIR, '/static/webpack-stats.json'),
+        }
+    }
 
 USERSERVICE_VALIDATION_MODULE = 'catalyst_utils.dao.person.is_netid'
 USERSERVICE_OVERRIDE_AUTH_MODULE = 'catalyst_utils.views.can_override_user'

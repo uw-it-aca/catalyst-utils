@@ -32,6 +32,7 @@ setup(
         'UW-Django-SAML2~=1.5',
         'Django-SupportTools~=3.5',
         'Django-Persistent-Message',
+        "django-webpack-loader",
     ],
     license='Apache License, Version 2.0',
     description='UW application that supports catalyst',
