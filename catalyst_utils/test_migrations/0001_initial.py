@@ -16,29 +16,6 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Gradebook',
-            fields=[
-                ('gradebook_id', models.AutoField(primary_key=True, serialize=False)),
-                ('name', models.TextField(blank=True, null=True)),
-                ('authz_id', models.IntegerField(blank=True, null=True)),
-                ('create_date', models.DateTimeField(auto_now_add=True)),
-                ('modification_date', models.DateTimeField(auto_now=True)),
-                ('last_init_date', models.DateTimeField(blank=True, null=True)),
-                ('is_deleted', models.BooleanField(null=True)),
-                ('calculate_total_scores', models.BooleanField(null=True)),
-                ('calculate_class_grades', models.BooleanField(null=True)),
-                ('total_score_id', models.IntegerField(blank=True, null=True)),
-                ('class_grade_id', models.IntegerField(blank=True, null=True)),
-                ('count_blanks', models.BooleanField(null=True)),
-                ('lowest_conversion_range_grade', models.TextField(blank=True, null=True)),
-                ('include_dropped_in_stats', models.BooleanField(null=True)),
-            ],
-            options={
-                'db_table': 'GradeBook',
-                # 'managed': False,
-            },
-        ),
-        migrations.CreateModel(
             name='GroupWrapper',
             fields=[
                 ('group_id', models.AutoField(primary_key=True, serialize=False)),
@@ -48,16 +25,6 @@ class Migration(migrations.Migration):
             ],
             options={
                 'db_table': 'GroupWrapper',
-                # 'managed': False,
-            },
-        ),
-        migrations.CreateModel(
-            name='PeopleInCrowd',
-            fields=[
-                ('crowd_id', models.IntegerField(primary_key=True, serialize=False)),
-            ],
-            options={
-                'db_table': 'PeopleInCrowd',
                 # 'managed': False,
             },
         ),
@@ -87,6 +54,17 @@ class Migration(migrations.Migration):
             },
         ),
         migrations.CreateModel(
+            name='PeopleInCrowd',
+            fields=[
+                ('crowd_id', models.IntegerField(primary_key=True, serialize=False)),
+                ('person', models.ForeignKey(on_delete=django.db.models.deletion.DO_NOTHING, to='catalyst_utils.Person')),
+            ],
+            options={
+                'db_table': 'PeopleInCrowd',
+                # 'managed': False,
+            },
+        ),
+        migrations.CreateModel(
             name='RoleImplementation',
             fields=[
                 ('role_implementation_id', models.AutoField(primary_key=True, serialize=False)),
@@ -99,9 +77,34 @@ class Migration(migrations.Migration):
             },
         ),
         migrations.CreateModel(
+            name='Gradebook',
+            fields=[
+                ('gradebook_id', models.AutoField(primary_key=True, serialize=False)),
+                ('owner', models.ForeignKey(on_delete=django.db.models.deletion.DO_NOTHING, to='catalyst_utils.Person')),
+                ('name', models.TextField(blank=True, null=True)),
+                ('authz_id', models.IntegerField(blank=True, null=True)),
+                ('create_date', models.DateTimeField(auto_now_add=True)),
+                ('modification_date', models.DateTimeField(auto_now=True)),
+                ('last_init_date', models.DateTimeField(blank=True, null=True)),
+                ('is_deleted', models.BooleanField(null=True)),
+                ('calculate_total_scores', models.BooleanField(null=True)),
+                ('calculate_class_grades', models.BooleanField(null=True)),
+                ('total_score_id', models.IntegerField(blank=True, null=True)),
+                ('class_grade_id', models.IntegerField(blank=True, null=True)),
+                ('count_blanks', models.BooleanField(null=True)),
+                ('lowest_conversion_range_grade', models.TextField(blank=True, null=True)),
+                ('include_dropped_in_stats', models.BooleanField(null=True)),
+            ],
+            options={
+                'db_table': 'GradeBook',
+                # 'managed': False,
+            },
+        ),
+        migrations.CreateModel(
             name='Survey',
             fields=[
                 ('survey_id', models.AutoField(primary_key=True, serialize=False)),
+                ('person', models.ForeignKey(on_delete=django.db.models.deletion.DO_NOTHING, to='catalyst_utils.Person')),
                 ('is_quiz', models.BooleanField(null=True)),
                 ('is_deleted', models.BooleanField(null=True)),
                 ('title', models.CharField(max_length=255)),
@@ -133,7 +136,7 @@ class Migration(migrations.Migration):
                 ('send_reminder', models.BooleanField(null=True)),
                 ('reminder_date', models.DateTimeField(blank=True, null=True)),
                 ('announcement_date', models.DateTimeField(blank=True, null=True)),
-                ('has_time_limit', models.IntegerField()),
+                ('has_time_limit', models.BooleanField(null=True)),
                 ('time_limit_hour', models.CharField(blank=True, max_length=5, null=True)),
                 ('time_limit_min', models.CharField(blank=True, max_length=5, null=True)),
                 ('time_limit', models.IntegerField(blank=True, null=True)),
