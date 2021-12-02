@@ -130,7 +130,7 @@ class Migration(migrations.Migration):
                 ('send_reminder', models.BooleanField(null=True)),
                 ('reminder_date', models.DateTimeField(blank=True, null=True)),
                 ('announcement_date', models.DateTimeField(blank=True, null=True)),
-                ('has_time_limit', models.IntegerField()),
+                ('has_time_limit', models.BooleanField(null=True)),
                 ('time_limit_hour', models.CharField(blank=True, max_length=5, null=True)),
                 ('time_limit_min', models.CharField(blank=True, max_length=5, null=True)),
                 ('time_limit', models.IntegerField(blank=True, null=True)),

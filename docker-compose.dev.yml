@@ -1,0 +1,26 @@
+# This file provides preconfigured containers to run tests
+# in a development environment
+#
+# How to use this:
+# docker-compose -f docker-compose.dev.yml run test
+#
+# You can also run a command in the container by using:
+# docker-compose -f docker-compose.dev.yml run <service-name> <command>
+
+version: '3.4'
+
+services:
+  test:
+    environment:
+      ENV: localdev
+      AUTH: SAML_MOCK
+    restart: always
+    container_name: app-catalyst-utils
+    build:
+      context: .
+      target: app-test-container
+    volumes:
+      - ./catalyst_utils:/app/catalyst_utils
+    stdin_open: true
+    tty: true
+    command: bash -c ". ./docker/test.sh"
