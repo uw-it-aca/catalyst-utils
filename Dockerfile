@@ -1,4 +1,4 @@
-FROM gcr.io/uwit-mci-axdd/django-container:1.3.7 as app-prewebpack-container
+FROM gcr.io/uwit-mci-axdd/django-container:1.3.8 as app-prewebpack-container
 
 USER root
 RUN apt-get update && apt-get install mysql-client libmysqlclient-dev vim -y
@@ -33,7 +33,7 @@ COPY --chown=acait:acait --from=wpack /app/catalyst_utils/static /static
 
 RUN . /app/bin/activate && python manage.py collectstatic --noinput
 
-FROM gcr.io/uwit-mci-axdd/django-test-container:1.3.7 as app-test-container
+FROM gcr.io/uwit-mci-axdd/django-test-container:1.3.8 as app-test-container
 
 COPY --from=app-container /app/ /app/
 COPY --from=app-container /static/ /static/
