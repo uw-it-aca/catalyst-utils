@@ -131,6 +131,10 @@ class Person(models.Model):
                 admins.append(pg.person)
         return admins
 
+    @property
+    def uwnetid(self):
+        return self.login_name
+
     def json_data(self):
         if self.preferred_name and self.preferred_surname:
             name = self.preferred_name
