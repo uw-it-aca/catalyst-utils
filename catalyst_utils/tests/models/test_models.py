@@ -5,6 +5,7 @@ from django.test import TestCase
 from catalyst_utils.models import Person, Survey, Gradebook
 from uw_pws.util import fdao_pws_override
 from uw_gws.utilities import fdao_gws_override
+import mock
 
 
 @fdao_pws_override
@@ -34,19 +35,26 @@ class SurveyModelTest(TestCase):
         survey = Survey.objects.get(survey_id=1)
         self.assertEqual(survey.owner, survey.person)
 
-    def test_json_data(self):
+    @mock.patch('catalyst_utils.models.get_survey')
+    def test_json_data(self, mock_fn):
+        mock_fn.return_value = {'question_count': 1, 'response_count': 27}
         survey = Survey.objects.get(survey_id=1)
         self.assertEqual(survey.json_data(), {
             'created_date': '2018-01-01T00:00:00+00:00',
             'html_url': 'https://catalyst.uw.edu/webq/survey/javerage/1',
             'name': 'Survey Test',
+            'question_count': 1,
+            'response_count': 27,
             'owner': {'login_name': 'javerage', 'name': 'Jamesy McJamesy'}})
 
+        mock_fn.return_value = {'question_count': 8, 'response_count': 10}
         survey = Survey.objects.get(survey_id=2)
         self.assertEqual(survey.json_data(), {
             'created_date': '2017-01-01T00:00:00+00:00',
             'html_url': 'https://catalyst.uw.edu/webq/survey/javerage/2',
             'name': 'Class Survey',
+            'question_count': 8,
+            'response_count': 10,
             'owner': {'login_name': 'javerage', 'name': 'Jamesy McJamesy'}})
 
 
