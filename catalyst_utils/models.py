@@ -6,6 +6,7 @@ from django.conf import settings
 from django.utils import timezone
 from catalyst_utils.dao.person import get_person_data
 from catalyst_utils.dao.group import get_group_members
+from catalyst_utils.dao.catalyst import get_survey_attr
 from dateutil.relativedelta import relativedelta
 from datetime import datetime
 from logging import getLogger
@@ -61,14 +62,8 @@ class Person(models.Model):
 
     def _update_attr(self):
         data = get_person_data(self.login_name)
-
         attr, created = PersonAttr.objects.update_or_create(
-            person=self, defaults={
-                'is_person': data['is_person'],
-                'is_current': data['is_current'],
-                'preferred_name': data['preferred_name'],
-                'preferred_surname': data['preferred_surname'],
-            })
+            person=self, defaults=data)
         if created:
             self.personattr = attr
 
@@ -332,6 +327,12 @@ class SurveyManager(models.Manager):
                 except (NotImplementedError, GroupWrapper.DoesNotExist):
                     pass
 
+    def update_survey_attr(self):
+        limit = getattr(settings, 'SURVEY_UPDATE_LIMIT', 250)
+        for survey in super().get_queryset().all(
+                ).order_by('surveyattr__last_updated')[:limit]:
+            survey._update_attr()
+
 
 class Survey(models.Model):
     """
@@ -434,6 +435,37 @@ class Survey(models.Model):
     def administrators(self):
         return RoleImplementation.objects.administrators(self.object_auth_id)
 
+    @property
+    def question_count(self):
+        try:
+            return self.surveyattr.question_count
+        except SurveyAttr.DoesNotExist:
+            self._update_attr()
+            return self.surveyattr.question_count
+
+    @property
+    def response_count(self):
+        try:
+            return self.surveyattr.response_count
+        except SurveyAttr.DoesNotExist:
+            self._update_attr()
+            return self.surveyattr.response_count
+
+    @property
+    def export_path(self):
+        return '/survey/{}/{}/export.zip'.format(
+            self.person.login_name, self.survey_id)
+
+    @property
+    def responses_path(self):
+        return '/survey/{}/{}/responses.xls'.format(
+            self.person.login_name, self.survey_id)
+
+    @property
+    def code_translation_path(self):
+        return '/survey/{}/{}/code_translation.csv'.format(
+            self.person.login_name, self.survey_id)
+
     def json_data(self):
         return {
             'name': self.title,
@@ -441,7 +473,18 @@ class Survey(models.Model):
             'html_url': 'https://catalyst.uw.edu/webq/survey/{}/{}'.format(
                 self.person.login_name, self.survey_id),
             'owner': self.person.json_data(),
+            'question_count': self.question_count,
+            'response_count': self.response_count,
+            'is_research_confidential': self.is_research_confidential,
+            'is_research_anonymous': self.is_research_anonymous,
         }
+
+    def _update_attr(self):
+        data = get_survey_attr(self)
+        attr, created = SurveyAttr.objects.update_or_create(
+            survey=self, defaults=data)
+        if created:
+            self.surveyattr = attr
 
 
 class GradebookManager(models.Manager):
@@ -508,6 +551,11 @@ class Gradebook(models.Model):
     def administrators(self):
         return RoleImplementation.objects.administrators(self.authz_id)
 
+    @property
+    def export_path(self):
+        return '/gradebook/{}/{}/export.xls'.format(
+            self.owner.login_name, self.gradebook_id)
+
     def json_data(self):
         return {
             'name': self.name,
@@ -516,6 +564,16 @@ class Gradebook(models.Model):
                 self.owner.login_name, self.gradebook_id),
             'owner': self.owner.json_data(),
         }
+
+
+class SurveyAttr(models.Model):
+    """
+    Extends webq.Survey data
+    """
+    survey = models.OneToOneField(Survey, models.DO_NOTHING, primary_key=True)
+    question_count = models.IntegerField(null=True)
+    response_count = models.IntegerField(null=True)
+    last_updated = models.DateTimeField(auto_now=True)
 
 
 class PersonAttr(models.Model):
