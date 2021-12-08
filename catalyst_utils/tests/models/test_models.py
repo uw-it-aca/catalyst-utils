@@ -45,7 +45,7 @@ class SurveyModelTest(TestCase):
             'name': 'Survey Test',
             'question_count': 1,
             'response_count': 27,
-            'is_research_confidential': False,
+            'is_research_confidential': True,
             'is_research_anonymous': False,
             'owner': {'login_name': 'javerage', 'name': 'Jamesy McJamesy'}})
 
