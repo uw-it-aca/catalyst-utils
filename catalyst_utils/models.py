@@ -451,6 +451,21 @@ class Survey(models.Model):
             self._update_attr()
             return self.surveyattr.response_count
 
+    @property
+    def export_path(self):
+        return '/survey/{}/{}/export.zip'.format(
+            self.person.login_name, self.survey_id)
+
+    @property
+    def responses_path(self):
+        return '/survey/{}/{}/responses.xls'.format(
+            self.person.login_name, self.survey_id)
+
+    @property
+    def code_translation_path(self):
+        return '/survey/{}/{}/code_translation.csv'.format(
+            self.person.login_name, self.survey_id)
+
     def json_data(self):
         return {
             'name': self.title,
@@ -460,6 +475,8 @@ class Survey(models.Model):
             'owner': self.person.json_data(),
             'question_count': self.question_count,
             'response_count': self.response_count,
+            'is_research_confidential': self.is_research_confidential,
+            'is_research_anonymous': self.is_research_anonymous,
         }
 
     def _update_attr(self):
