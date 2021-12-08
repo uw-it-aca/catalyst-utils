@@ -127,3 +127,19 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# private connection settings
+constring.txt
+
+# node
+node_modules/
+package-lock.json
+
+# webpack
+bundles/
+webpack_bundles/
+webpack-stats.json
+
+# cypress image snapshots diffs
+screenshots/
+__diff_output__/

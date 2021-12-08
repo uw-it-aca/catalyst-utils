@@ -1,0 +1,76 @@
+[
+    {
+        "model": "catalyst_utils.Person",
+        "pk": 1,
+        "fields": {
+            "login_realm_id": 1,
+            "login_name": "javerage",
+            "name": "J",
+            "surname": "Avg",
+            "date_created": "2018-01-01T00:00:00Z",
+            "date_modified": "2018-01-01T00:00:00Z",
+            "last_login_date": "2020-12-01T00:00:00Z"
+        }
+    },
+    {
+        "model": "catalyst_utils.Person",
+        "pk": 2,
+        "fields": {
+            "login_realm_id": 1,
+            "login_name": "bill",
+            "name": "B",
+            "surname": "Avg",
+            "date_created": "2019-01-01T00:00:00Z",
+            "date_modified": "2019-01-01T00:00:00Z",
+            "last_login_date": null
+        }
+    },
+    {
+        "model": "catalyst_utils.Survey",
+        "pk": 1,
+        "fields": {
+            "person": 1,
+            "title": "Survey Test",
+            "creation_date": "2018-01-01T00:00:00Z",
+            "modification_date": "2018-01-01T00:00:00Z",
+            "object_auth_id": 1,
+            "is_research_confidential": 1,
+            "is_research_anonymous": 0
+        }
+    },
+    {
+        "model": "catalyst_utils.Survey",
+        "pk": 2,
+        "fields": {
+            "person": 1,
+            "title": "Class Survey",
+            "creation_date": "2017-01-01T00:00:00Z",
+            "modification_date": "2019-01-01T00:00:00Z",
+            "object_auth_id": 2,
+            "is_research_confidential": 0,
+            "is_research_anonymous": 0
+        }
+    },
+    {
+        "model": "catalyst_utils.Gradebook",
+        "pk": 1,
+        "fields": {
+            "owner": 1,
+            "name": "CHEM 201 Gradebook",
+            "create_date": "2017-01-01T00:00:00Z",
+            "modification_date": "2017-03-01T00:00:00Z",
+            "authz_id": 5
+        }
+    },
+    {
+        "model": "catalyst_utils.Gradebook",
+        "pk": 2,
+        "fields": {
+            "owner": 1,
+            "name": "CHEM 202 A Gradebook",
+            "create_date": "2019-04-01T00:00:00Z",
+            "modification_date": "2019-06-01T00:00:00Z",
+            "authz_id": 6
+        }
+    }
+]
