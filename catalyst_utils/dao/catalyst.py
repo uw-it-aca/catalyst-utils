@@ -9,7 +9,7 @@ from uw_catalyst.survey import (
 from restclients_core.exceptions import DataFailureException
 
 
-def get_survey(survey):
+def get_survey_attr(survey):
     data = get_survey(survey.survey_id, person=survey.owner)
     return {
         'question_count': data.get('question_count'),

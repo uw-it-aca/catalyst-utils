@@ -6,7 +6,7 @@ from django.conf import settings
 from django.utils import timezone
 from catalyst_utils.dao.person import get_person_data
 from catalyst_utils.dao.group import get_group_members
-from catalyst_utils.dao.catalyst import get_survey
+from catalyst_utils.dao.catalyst import get_survey_attr
 from dateutil.relativedelta import relativedelta
 from datetime import datetime
 from logging import getLogger
@@ -463,7 +463,7 @@ class Survey(models.Model):
         }
 
     def _update_attr(self):
-        data = get_survey(self)
+        data = get_survey_attr(self)
         attr, created = SurveyAttr.objects.update_or_create(
             survey=self, defaults=data)
         if created:
