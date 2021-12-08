@@ -112,6 +112,11 @@ environmentVariables:
   - name: GWS_TIMEOUT
     value: "10"
 
+  - name: CATALYST_ENV
+    value: PROD
+  - name: CATALYST_TIMEOUT
+    value: "10"
+
   - name: AUTH
     value: SAML
   - name: SAML_ENTITY_ID
