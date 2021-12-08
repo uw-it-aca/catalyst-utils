@@ -71,7 +71,7 @@ environmentVariables:
     value: "10"
 
   - name: CATALYST_ENV
-    value: EVAL
+    value: PROD
   - name: CATALYST_TIMEOUT
     value: "10"
 
