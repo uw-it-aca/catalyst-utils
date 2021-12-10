@@ -9,6 +9,11 @@ from uw_catalyst.survey import (
 from restclients_core.exceptions import DataFailureException
 
 
+def write_file(path, data):
+    with default_storage.open(path, mode='wb') as f:
+        f.write(data)
+
+
 def get_survey_attr(survey):
     data = get_survey(survey.survey_id, person=survey.owner)
     return {
@@ -19,20 +24,24 @@ def get_survey_attr(survey):
 
 
 def export_survey(survey):
-    pass
+    response = get_survey_export(
+        survey.survey_id, person=survey.owner)
+    write_file(survey.export_path, response.data)
 
 
 def export_survey_responses(survey):
-    pass
+    response = get_survey_results(
+        survey.survey_id, person=survey.owner)
+    write_file(survey.responses_path, response.data)
 
 
 def export_survey_code_translation(survey):
-    pass
+    response = get_survey_code_translation(
+        survey.survey_id, person=survey.owner)
+    write_file(survey.code_translation_path, response.data)
 
 
 def export_gradebook(gradebook):
     response = get_gradebook_export(
         gradebook.gradebook_id, person=gradebook.owner)
-
-    with default_storage.open(gradebook.export_path, mode='wb') as f:
-        f.write(response.data)
+    write_file(gradebook.export_path, response.data)
