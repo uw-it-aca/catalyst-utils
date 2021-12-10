@@ -46,7 +46,8 @@ class SurveyModelTest(TestCase):
 
     @mock.patch('catalyst_utils.models.get_survey_attr')
     def test_json_data(self, mock_fn):
-        mock_fn.return_value = {'question_count': 1, 'response_count': 27}
+        mock_fn.return_value = {
+            'title': 'Survey Test', 'question_count': 1, 'response_count': 27}
         survey = Survey.objects.get(survey_id=1)
         self.assertEqual(survey.json_data(), {
             'created_date': '2018-01-01T00:00:00+00:00',
@@ -58,7 +59,8 @@ class SurveyModelTest(TestCase):
             'is_research_anonymous': False,
             'owner': {'login_name': 'javerage', 'name': 'Jamesy McJamesy'}})
 
-        mock_fn.return_value = {'question_count': 8, 'response_count': 10}
+        mock_fn.return_value = {
+            'title': 'Class Survey', 'question_count': 8, 'response_count': 10}
         survey = Survey.objects.get(survey_id=2)
         self.assertEqual(survey.json_data(), {
             'created_date': '2017-01-01T00:00:00+00:00',

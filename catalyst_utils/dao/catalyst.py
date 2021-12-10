@@ -12,6 +12,7 @@ from restclients_core.exceptions import DataFailureException
 def get_survey_attr(survey):
     data = get_survey(survey.survey_id, person=survey.owner)
     return {
+        'title': data.get('title'),
         'question_count': data.get('question_count'),
         'response_count': data.get('total_response_count'),
     }
