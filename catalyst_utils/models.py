@@ -437,6 +437,15 @@ class Survey(models.Model):
         return RoleImplementation.objects.administrators(self.object_auth_id)
 
     @property
+    def name(self):
+        # Return the title from SurveyAttr, not Survey
+        try:
+            return self.surveyattr.title
+        except SurveyAttr.DoesNotExist:
+            self._update_attr()
+            return self.surveyattr.title
+
+    @property
     def question_count(self):
         try:
             return self.surveyattr.question_count
@@ -469,7 +478,7 @@ class Survey(models.Model):
 
     def json_data(self):
         return {
-            'name': self.title,
+            'name': self.name,
             'created_date': self.creation_date.isoformat(),
             'html_url': 'https://catalyst.uw.edu/webq/survey/{}/{}'.format(
                 self.person.login_name, self.survey_id),
@@ -577,6 +586,7 @@ class SurveyAttr(models.Model):
     survey = models.OneToOneField(Survey, models.DO_NOTHING, primary_key=True)
     question_count = models.IntegerField(null=True)
     response_count = models.IntegerField(null=True)
+    title = models.CharField(max_length=255, blank=True, null=True)
     last_updated = models.DateTimeField(auto_now=True)
 
 
