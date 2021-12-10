@@ -35,6 +35,15 @@ class SurveyModelTest(TestCase):
         survey = Survey.objects.get(survey_id=1)
         self.assertEqual(survey.owner, survey.person)
 
+    def test_file_paths(self):
+        survey = Survey.objects.get(survey_id=1)
+        self.assertEqual(survey.export_path,
+                         '/survey/javerage/1/export.zip')
+        self.assertEqual(survey.responses_path,
+                         '/survey/javerage/1/responses.csv')
+        self.assertEqual(survey.code_translation_path,
+                         '/survey/javerage/1/code_translation.csv')
+
     @mock.patch('catalyst_utils.models.get_survey_attr')
     def test_json_data(self, mock_fn):
         mock_fn.return_value = {'question_count': 1, 'response_count': 27}
@@ -64,6 +73,15 @@ class SurveyModelTest(TestCase):
 
 class GradebookModelTest(TestCase):
     fixtures = ['test_data.json']
+
+    def test_export_path(self):
+        gradebook = Gradebook.objects.get(gradebook_id=1)
+        self.assertEqual(gradebook.export_path,
+                         '/gradebook/javerage/1/export.xls')
+
+        gradebook = Gradebook.objects.get(gradebook_id=2)
+        self.assertEqual(gradebook.export_path,
+                         '/gradebook/javerage/2/export.xls')
 
     def test_json_data(self):
         gradebook = Gradebook.objects.get(gradebook_id=1)
