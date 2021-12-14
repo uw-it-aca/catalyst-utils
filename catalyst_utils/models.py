@@ -330,9 +330,8 @@ class SurveyManager(models.Manager):
 
     def update_survey_attr(self):
         limit = getattr(settings, 'SURVEY_UPDATE_LIMIT', 250)
-        for survey in super().get_queryset().select_related('person').filter(
-                surveyattr__update_status=200
-                    ).order_by('surveyattr__last_updated')[:limit]:
+        for survey in super().get_queryset().select_related('person').all(
+                ).order_by('surveyattr__last_updated')[:limit]:
             survey._update_attr()
 
 
