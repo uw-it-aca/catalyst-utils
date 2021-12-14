@@ -330,8 +330,9 @@ class SurveyManager(models.Manager):
 
     def update_survey_attr(self):
         limit = getattr(settings, 'SURVEY_UPDATE_LIMIT', 250)
-        for survey in super().get_queryset().select_related('person').all(
-                ).order_by('surveyattr__last_updated')[:limit]:
+        for survey in super().get_queryset().select_related('person').filter(
+                surveyattr__update_status=200
+                    ).order_by('surveyattr__last_updated')[:limit]:
             survey._update_attr()
 
 
@@ -492,12 +493,15 @@ class Survey(models.Model):
     def _update_attr(self):
         try:
             data = get_survey_attr(self)
-            attr, created = SurveyAttr.objects.update_or_create(
-                survey=self, defaults=data)
-            if created:
-                self.surveyattr = attr
+            data['update_status'] = 200
         except DataFailureException as ex:
+            data = {'update_status': ex.status}
             logger.info('Survey update failed: {}'.format(ex))
+
+        attr, created = SurveyAttr.objects.update_or_create(
+            survey=self, defaults=data)
+        if created:
+            self.surveyattr = attr
 
 
 class GradebookManager(models.Manager):
@@ -588,6 +592,12 @@ class SurveyAttr(models.Model):
     response_count = models.IntegerField(null=True)
     title = models.CharField(max_length=255, blank=True, null=True)
     last_updated = models.DateTimeField(auto_now=True)
+    update_status = models.IntegerField(default=200)
+
+    class Meta:
+        indexes = [
+            models.Index(fields=['update_status'], name='update_status_idx'),
+        ]
 
 
 class PersonAttr(models.Model):
