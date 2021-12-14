@@ -63,7 +63,7 @@ cronjob:
   enabled: true
   jobs:
     - name: update-person-attr
-      schedule: "35 15-23 * * 1-5"
+      schedule: "*/20 15-23 * * *"
       command: ["/scripts/management_command.sh"]
       args: ["update_person_attr"]
       resources:
@@ -74,7 +74,7 @@ cronjob:
           cpu: 25m
           memory: 64Mi
     - name: update-survey-attr
-      schedule: "*/10 * * * 1-5"
+      schedule: "*/6 * * * *"
       command: ["/scripts/management_command.sh"]
       args: ["update_survey_attr"]
       resources:
