@@ -64,11 +64,14 @@ class Person(models.Model):
         db_table = 'Person'
 
     def _update_attr(self):
-        data = get_person_data(self.login_name)
-        attr, created = PersonAttr.objects.update_or_create(
-            person=self, defaults=data)
-        if created:
-            self.personattr = attr
+        try:
+            data = get_person_data(self.login_name)
+            attr, created = PersonAttr.objects.update_or_create(
+                person=self, defaults=data)
+            if created:
+                self.personattr = attr
+        except DataFailureException as ex:
+            logger.info('Person update failed: {}'.format(ex))
 
     @transaction.atomic
     def _update_admins(self):
