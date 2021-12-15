@@ -33,6 +33,8 @@ if os.getenv('ENV', 'localdev') == 'localdev':
     MIGRATION_MODULES = {
         'catalyst_utils': 'catalyst_utils.test_migrations',
     }
+    CATALYST_SUPPORT_GROUP = 'u_test_group'
+    CATALYST_ADMIN_GROUP = 'u_test_group'
 else:
     RESTCLIENTS_DAO_CACHE_CLASS = 'catalyst_utils.cache.RestClientsCache'
     DEFAULT_FILE_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
@@ -46,6 +48,8 @@ else:
             'STATS_FILE': os.path.join(BASE_DIR, '/static/webpack-stats.json'),
         }
     }
+    CATALYST_SUPPORT_GROUP = os.getenv('SUPPORT_GROUP', 'u_acadev_catalyst_support-admins')
+    CATALYST_ADMIN_GROUP = os.getenv('ADMIN_GROUP', 'u_acadev_catalyst_admins')
 
 USERSERVICE_VALIDATION_MODULE = 'catalyst_utils.dao.person.is_netid'
 USERSERVICE_OVERRIDE_AUTH_MODULE = 'catalyst_utils.views.can_override_user'
