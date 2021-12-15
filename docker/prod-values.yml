@@ -84,6 +84,17 @@ cronjob:
         requests:
           cpu: 25m
           memory: 64Mi
+    - name: update-gradebook-attr
+      schedule: "*/27 * * * *"
+      command: ["/scripts/management_command.sh"]
+      args: ["update_gradebook_attr"]
+      resources:
+        limits:
+          cpu: 500m
+          memory: 256Mi
+        requests:
+          cpu: 25m
+          memory: 64Mi
     - name: update-netid-admins
       schedule: "15 12 * * 1,4"
       command: ["/scripts/management_command.sh"]
