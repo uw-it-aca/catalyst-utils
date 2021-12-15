@@ -532,34 +532,28 @@ class Survey(models.Model):
 
 
 class GradebookManager(models.Manager):
-    @property
-    def retention(self):
-        return timezone.localtime(timezone.now()) - relativedelta(
+    # Override get_queryset() to enforce the data retention period
+    def get_queryset(self):
+        retention_dt = timezone.localtime(timezone.now()) - relativedelta(
             years=settings.GRADEBOOK_RETENTION_YEARS)
-
-    # Override all() to enforce the data retention period
-    def all(self, order_by='gradebook_id'):
         return super().get_queryset().select_related('owner').filter(
-            create_date__gte=self.retention).order_by(order_by)
+            create_date__gte=retention_dt)
 
     def by_owner(self, person):
-        return super().get_queryset().filter(
-            owner=person, create_date__gte=self.retention)
+        return self.get_queryset().filter(owner=person)
 
     def by_netid_admin(self, person):
         owners = GroupWrapper.objects.by_netid_admin(person)
-        return super().get_queryset().filter(
-            owner__in=owners, create_date__gte=self.retention)
+        return self.get_queryset().filter(owner__in=owners)
 
     def by_administrator(self, person):
         auth_ids = RoleImplementation.objects.auth_ids_for_person(person)
-        return super().get_queryset().filter(
-            authz_id__in=auth_ids, create_date__gte=self.retention).exclude(
-                owner=person)
+        return self.get_queryset().filter(authz_id__in=auth_ids).exclude(
+            owner=person)
 
     def update_authz_groups(self):
         groups = set()
-        for authz_id in super().get_queryset().all().values_list(
+        for authz_id in self.get_queryset().all().values_list(
                 'authz_id', flat=True):
             for authz in RoleImplementation.objects.authorizations(authz_id):
                 try:
@@ -571,14 +565,14 @@ class GradebookManager(models.Manager):
 
     def update_gradebook_attr(self):
         limit = getattr(settings, 'GRADEBOOK_UPDATE_LIMIT', 250)
-        for gradebook in super().get_queryset().all(
-                order_by='gradebookattr__last_updated')[:limit]:
+        for gradebook in self.get_queryset().all(
+                ).order_by('gradebookattr__last_updated')[:limit]:
             survey._update_attr()
 
     def export_files(self):
         limit = getattr(settings, 'GRADEBOOK_EXPORT_LIMIT', 100)
-        for gradebook in super().get_queryset().all(
-                order_by='gradebookattr__last_exported')[:limit]:
+        for gradebook in self.get_queryset().all(
+                ).order_by('gradebookattr__last_exported')[:limit]:
             gradebook._export()
 
 
