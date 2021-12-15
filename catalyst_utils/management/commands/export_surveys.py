@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 from django.core.management.base import BaseCommand, CommandError
-from catalyst_utils.models import Gradebook
+from catalyst_utils.models import Survey
 from logging import getLogger
 
 logger = getLogger(__name__)
@@ -10,4 +10,4 @@ logger = getLogger(__name__)
 
 class Command(BaseCommand):
     def handle(self, *args, **options):
-        Gradebook.objects.export_files()
+        Survey.objects.export_files()

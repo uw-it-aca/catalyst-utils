@@ -2,7 +2,8 @@
 # SPDX-License-Identifier: Apache-2.0
 
 from django.core.files.storage import default_storage
-from uw_catalyst.gradebook import get_gradebook_export
+from uw_catalyst.gradebook import (
+    get_participants_for_gradebook, get_gradebook_export)
 from uw_catalyst.survey import (
     get_survey, get_survey_export, get_survey_results,
     get_survey_code_translation)
@@ -21,6 +22,12 @@ def get_survey_attr(survey):
         'question_count': data.get('question_count'),
         'response_count': data.get('total_response_count'),
     }
+
+
+def get_gradebook_attr(gradebook):
+    participants = get_participants_for_gradebook(
+        gradebook.gradebook_id, person=gradebook.owner)
+    return {'participant_count': len(participants)}
 
 
 def export_survey(survey):

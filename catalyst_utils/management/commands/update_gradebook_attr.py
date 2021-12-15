@@ -10,4 +10,4 @@ logger = getLogger(__name__)
 
 class Command(BaseCommand):
     def handle(self, *args, **options):
-        Gradebook.objects.export_files()
+        Gradebook.objects.update_gradebook_attr()
