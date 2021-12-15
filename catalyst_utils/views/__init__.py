@@ -6,12 +6,10 @@ from uw_saml.utils import is_member_of_group
 
 
 def can_override_user(request):
-    return True
     return is_member_of_group(request, settings.CATALYST_SUPPORT_GROUP)
 
 
 def can_proxy_restclient(request, service, url):
-    return True
     return is_member_of_group(request, settings.CATALYST_SUPPORT_GROUP)
 
 
