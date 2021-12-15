@@ -6,7 +6,9 @@ from django.conf import settings
 from django.utils import timezone
 from catalyst_utils.dao.person import get_person_data
 from catalyst_utils.dao.group import get_group_members
-from catalyst_utils.dao.catalyst import get_survey_attr
+from catalyst_utils.dao.catalyst import (
+    get_gradebook_attr, export_gradebook, get_survey_attr, export_survey,
+    export_survey_responses, export_survey_code_translation)
 from restclients_core.exceptions import DataFailureException
 from dateutil.relativedelta import relativedelta
 from datetime import datetime
@@ -334,6 +336,12 @@ class SurveyManager(models.Manager):
                 ).order_by('surveyattr__last_updated')[:limit]:
             survey._update_attr()
 
+    def export_files(self):
+        limit = getattr(settings, 'SURVEY_EXPORT_LIMIT', 250)
+        for survey in super().get_queryset().select_related('person').all(
+                ).order_by('surveyattr__last_exported')[:limit]:
+            survey._export()
+
 
 class Survey(models.Model):
     """
@@ -497,30 +505,54 @@ class Survey(models.Model):
             data = {'update_status': ex.status}
             logger.info('Survey update failed: {}'.format(ex))
 
+        data['last_updated'] = datetime.utcnow().replace(tzinfo=timezone.utc)
         attr, created = SurveyAttr.objects.update_or_create(
             survey=self, defaults=data)
         if created:
             self.surveyattr = attr
 
+    def _export(self):
+        try:
+            if self.question_count:
+                export_survey(self)
+            if self.response_count:
+                export_survey_responses(self)
+                if self.is_research_confidential:
+                    export_survey_code_translation(self)
+            self.surveyattr.export_status = 200
+        except DataFailureException as ex:
+            self.surveyattr.export_status = ex.status
+            logger.info('Survey export failed: {}'.format(ex))
+
+        self.surveyattr.last_exported = datetime.utcnow()
+        self.surveyattr.save()
+
 
 class GradebookManager(models.Manager):
-    def all(self):
-        retention = timezone.localtime(timezone.now()) - relativedelta(
+    @property
+    def retention(self):
+        return timezone.localtime(timezone.now()) - relativedelta(
             years=settings.GRADEBOOK_RETENTION_YEARS)
+
+    # Override all() to enforce the data retention period
+    def all(self, order_by='gradebook_id'):
         return super().get_queryset().select_related('owner').filter(
-            create_date__gte=retention).order_by('gradebook_id')
+            create_date__gte=self.retention).order_by(order_by)
 
     def by_owner(self, person):
-        return super().get_queryset().filter(owner=person)
+        return super().get_queryset().filter(
+            owner=person, create_date__gte=self.retention)
 
     def by_netid_admin(self, person):
         owners = GroupWrapper.objects.by_netid_admin(person)
-        return super().get_queryset().filter(owner__in=owners)
+        return super().get_queryset().filter(
+            owner__in=owners, create_date__gte=self.retention)
 
     def by_administrator(self, person):
         auth_ids = RoleImplementation.objects.auth_ids_for_person(person)
         return super().get_queryset().filter(
-            authz_id__in=auth_ids).exclude(owner=person)
+            authz_id__in=auth_ids, create_date__gte=self.retention).exclude(
+                owner=person)
 
     def update_authz_groups(self):
         groups = set()
@@ -533,6 +565,18 @@ class GradebookManager(models.Manager):
                         groups.add(authz.group)
                 except (NotImplementedError, GroupWrapper.DoesNotExist):
                     pass
+
+    def update_gradebook_attr(self):
+        limit = getattr(settings, 'GRADEBOOK_UPDATE_LIMIT', 250)
+        for gradebook in super().get_queryset().all(
+                order_by='gradebookattr__last_updated')[:limit]:
+            survey._update_attr()
+
+    def export_files(self):
+        limit = getattr(settings, 'GRADEBOOK_EXPORT_LIMIT', 100)
+        for gradebook in super().get_queryset().all(
+                order_by='gradebookattr__last_exported')[:limit]:
+            gradebook._export()
 
 
 class Gradebook(models.Model):
@@ -568,6 +612,14 @@ class Gradebook(models.Model):
         return RoleImplementation.objects.administrators(self.authz_id)
 
     @property
+    def participant_count(self):
+        try:
+            return self.gradebookattr.participant_count
+        except GradebookAttr.DoesNotExist:
+            self._update_attr()
+            return self.gradebookattr.participant_count
+
+    @property
     def export_path(self):
         return '/gradebook/{}/{}/export.xls'.format(
             self.owner.login_name, self.gradebook_id)
@@ -579,7 +631,34 @@ class Gradebook(models.Model):
             'html_url': 'https://catalyst.uw.edu/gradebook/{}/{}'.format(
                 self.owner.login_name, self.gradebook_id),
             'owner': self.owner.json_data(),
+            'participant_count': self.participant_count,
         }
+
+    def _update_attr(self):
+        try:
+            data = get_gradebook_attr(self)
+            data['update_status'] = 200
+        except DataFailureException as ex:
+            data = {'update_status': ex.status}
+            logger.info('Gradebook update failed: {}'.format(ex))
+
+        data['last_updated'] = datetime.utcnow().replace(tzinfo=timezone.utc)
+        attr, created = GradebookAttr.objects.update_or_create(
+            gradebook=self, defaults=data)
+        if created:
+            self.gradebookattr = attr
+
+    def _export(self):
+        try:
+            if self.participant_count:
+                export_gradebook(self)
+                self.gradebookattr.export_status = 200
+        except DataFailureException as ex:
+            self.gradebookattr.export_status = ex.status
+            logger.info('Gradebook export failed: {}'.format(ex))
+
+        self.gradebookattr.last_exported = datetime.utcnow()
+        self.gradebookattr.save()
 
 
 class SurveyAttr(models.Model):
@@ -590,12 +669,34 @@ class SurveyAttr(models.Model):
     question_count = models.IntegerField(null=True)
     response_count = models.IntegerField(null=True)
     title = models.CharField(max_length=255, blank=True, null=True)
-    last_updated = models.DateTimeField(auto_now=True)
+    last_updated = models.DateTimeField(null=True)
     update_status = models.IntegerField(default=200)
+    last_exported = models.DateTimeField(null=True)
+    export_status = models.IntegerField(default=200)
 
     class Meta:
         indexes = [
-            models.Index(fields=['update_status'], name='update_status_idx'),
+            models.Index(fields=['update_status'], name='s_update_status_idx'),
+            models.Index(fields=['export_status'], name='s_export_status_idx'),
+        ]
+
+
+class GradebookAttr(models.Model):
+    """
+    Extends webq.Gradebook data
+    """
+    gradebook = models.OneToOneField(Gradebook, models.DO_NOTHING,
+                                     primary_key=True)
+    participant_count = models.IntegerField(null=True)
+    last_updated = models.DateTimeField(null=True)
+    update_status = models.IntegerField(default=200)
+    last_exported = models.DateTimeField(null=True)
+    export_status = models.IntegerField(default=200)
+
+    class Meta:
+        indexes = [
+            models.Index(fields=['update_status'], name='g_update_status_idx'),
+            models.Index(fields=['export_status'], name='g_export_status_idx'),
         ]
 
 
