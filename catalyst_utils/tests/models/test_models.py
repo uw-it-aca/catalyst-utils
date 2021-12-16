@@ -2,9 +2,11 @@
 # SPDX-License-Identifier: Apache-2.0
 
 from django.test import TestCase
+from django.utils import timezone
 from catalyst_utils.models import Person, Survey, Gradebook
 from uw_pws.util import fdao_pws_override
 from uw_gws.utilities import fdao_gws_override
+from datetime import datetime
 import mock
 
 
@@ -75,6 +77,24 @@ class SurveyModelTest(TestCase):
 
 class GradebookModelTest(TestCase):
     fixtures = ['test_data.json']
+
+    @mock.patch.object(timezone, 'now')
+    def test_retention_date(self, mock_now):
+        mock_now.return_value = timezone.make_aware(datetime(2013, 7, 1))
+        self.assertEqual(Gradebook.retention_date().isoformat(),
+                         '2008-07-01T00:00:00-07:00')
+
+        mock_now.return_value = timezone.make_aware(datetime(2013, 12, 31))
+        self.assertEqual(Gradebook.retention_date().isoformat(),
+                         '2008-07-01T00:00:00-07:00')
+
+        mock_now.return_value = timezone.make_aware(datetime(2014, 1, 1))
+        self.assertEqual(Gradebook.retention_date().isoformat(),
+                         '2008-07-01T00:00:00-07:00')
+
+        mock_now.return_value = timezone.make_aware(datetime(2014, 6, 30))
+        self.assertEqual(Gradebook.retention_date().isoformat(),
+                         '2008-07-01T00:00:00-07:00')
 
     def test_export_path(self):
         gradebook = Gradebook.objects.get(gradebook_id=1)
