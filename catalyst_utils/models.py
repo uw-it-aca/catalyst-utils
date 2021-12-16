@@ -567,7 +567,7 @@ class GradebookManager(models.Manager):
         limit = getattr(settings, 'GRADEBOOK_UPDATE_LIMIT', 250)
         for gradebook in self.get_queryset().all(
                 ).order_by('gradebookattr__last_updated')[:limit]:
-            survey._update_attr()
+            gradebook._update_attr()
 
     def export_files(self):
         limit = getattr(settings, 'GRADEBOOK_EXPORT_LIMIT', 100)
