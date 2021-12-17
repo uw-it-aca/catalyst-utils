@@ -23,14 +23,14 @@ class PersonManager(models.Manager):
     def update_netid_admins(self):
         for person in super().get_queryset().filter(
                 personattr__is_person=False):
-            person._update_admins()
+            person.update_admins()
 
     def update_person_attr(self):
         limit = getattr(settings, 'PERSON_UPDATE_LIMIT', 250)
         for person in super().get_queryset().filter(
                     personattr__is_person=True, personattr__is_current=True
                 ).order_by('personattr__last_updated')[:limit]:
-            person._update_attr()
+            person.update_attr()
 
 
 class Person(models.Model):
@@ -63,7 +63,7 @@ class Person(models.Model):
         managed = False
         db_table = 'Person'
 
-    def _update_attr(self):
+    def update_attr(self):
         try:
             data = get_person_data(self.login_name)
             attr, created = PersonAttr.objects.update_or_create(
@@ -74,7 +74,7 @@ class Person(models.Model):
             logger.info('Person update failed: {}'.format(ex))
 
     @transaction.atomic
-    def _update_admins(self):
+    def update_admins(self):
         if not self.is_person:
             members = []
             group_id = NETID_ADMIN_GROUP.format(self.login_name)
@@ -95,7 +95,7 @@ class Person(models.Model):
         try:
             return self.personattr.is_person
         except PersonAttr.DoesNotExist:
-            self._update_attr()
+            self.update_attr()
             return self.personattr.is_person
 
     @property
@@ -103,7 +103,7 @@ class Person(models.Model):
         try:
             return self.personattr.is_current
         except PersonAttr.DoesNotExist:
-            self._update_attr()
+            self.update_attr()
             return self.personattr.is_current
 
     @property
@@ -111,7 +111,7 @@ class Person(models.Model):
         try:
             return self.personattr.preferred_name
         except PersonAttr.DoesNotExist:
-            self._update_attr()
+            self.update_attr()
             return self.personattr.preferred_name
 
     @property
@@ -119,7 +119,7 @@ class Person(models.Model):
         try:
             return self.personattr.preferred_surname
         except PersonAttr.DoesNotExist:
-            self._update_attr()
+            self.update_attr()
             return self.personattr.preferred_surname
 
     @property
@@ -337,13 +337,13 @@ class SurveyManager(models.Manager):
         limit = getattr(settings, 'SURVEY_UPDATE_LIMIT', 250)
         for survey in super().get_queryset().select_related('person').all(
                 ).order_by('surveyattr__last_updated')[:limit]:
-            survey._update_attr()
+            survey.update_attr()
 
     def export_files(self):
-        limit = getattr(settings, 'SURVEY_EXPORT_LIMIT', 250)
+        limit = getattr(settings, 'SURVEY_EXPORT_LIMIT', 100)
         for survey in super().get_queryset().select_related('person').all(
                 ).order_by('surveyattr__last_exported')[:limit]:
-            survey._export()
+            survey.export()
 
 
 class Survey(models.Model):
@@ -453,7 +453,7 @@ class Survey(models.Model):
         try:
             return self.surveyattr.title
         except SurveyAttr.DoesNotExist:
-            self._update_attr()
+            self.update_attr()
             return self.surveyattr.title
 
     @property
@@ -461,7 +461,7 @@ class Survey(models.Model):
         try:
             return self.surveyattr.question_count
         except SurveyAttr.DoesNotExist:
-            self._update_attr()
+            self.update_attr()
             return self.surveyattr.question_count
 
     @property
@@ -469,7 +469,7 @@ class Survey(models.Model):
         try:
             return self.surveyattr.response_count
         except SurveyAttr.DoesNotExist:
-            self._update_attr()
+            self.update_attr()
             return self.surveyattr.response_count
 
     @property
@@ -500,7 +500,7 @@ class Survey(models.Model):
             'is_research_anonymous': self.is_research_anonymous,
         }
 
-    def _update_attr(self):
+    def update_attr(self):
         try:
             data = get_survey_attr(self)
             data['update_status'] = 200
@@ -514,7 +514,7 @@ class Survey(models.Model):
         if created:
             self.surveyattr = attr
 
-    def _export(self):
+    def export(self):
         try:
             if self.question_count:
                 export_survey(self)
@@ -534,10 +534,8 @@ class Survey(models.Model):
 class GradebookManager(models.Manager):
     # Override get_queryset() to enforce the data retention period
     def get_queryset(self):
-        retention_dt = timezone.localtime(timezone.now()) - relativedelta(
-            years=settings.GRADEBOOK_RETENTION_YEARS)
         return super().get_queryset().select_related('owner').filter(
-            create_date__gte=retention_dt)
+            create_date__gte=Gradebook.retention_date())
 
     def by_owner(self, person):
         return self.get_queryset().filter(owner=person)
@@ -567,13 +565,13 @@ class GradebookManager(models.Manager):
         limit = getattr(settings, 'GRADEBOOK_UPDATE_LIMIT', 250)
         for gradebook in self.get_queryset().all(
                 ).order_by('gradebookattr__last_updated')[:limit]:
-            gradebook._update_attr()
+            gradebook.update_attr()
 
     def export_files(self):
         limit = getattr(settings, 'GRADEBOOK_EXPORT_LIMIT', 100)
         for gradebook in self.get_queryset().all(
                 ).order_by('gradebookattr__last_exported')[:limit]:
-            gradebook._export()
+            gradebook.export()
 
 
 class Gradebook(models.Model):
@@ -613,7 +611,7 @@ class Gradebook(models.Model):
         try:
             return self.gradebookattr.participant_count
         except GradebookAttr.DoesNotExist:
-            self._update_attr()
+            self.update_attr()
             return self.gradebookattr.participant_count
 
     @property
@@ -631,7 +629,7 @@ class Gradebook(models.Model):
             'participant_count': self.participant_count,
         }
 
-    def _update_attr(self):
+    def update_attr(self):
         try:
             data = get_gradebook_attr(self)
             data['update_status'] = 200
@@ -645,7 +643,7 @@ class Gradebook(models.Model):
         if created:
             self.gradebookattr = attr
 
-    def _export(self):
+    def export(self):
         try:
             if self.participant_count:
                 export_gradebook(self)
@@ -656,6 +654,16 @@ class Gradebook(models.Model):
 
         self.gradebookattr.last_exported = datetime.utcnow()
         self.gradebookattr.save()
+
+    @staticmethod
+    def retention_date():
+        now = timezone.localtime(timezone.now())
+        cutoff = timezone.make_aware(datetime(now.year, 7, 1),
+                                     timezone.get_default_timezone())
+        interval = getattr(settings, 'GRADEBOOK_RETENTION_YEARS', 5)
+        if now < cutoff:
+            interval += 1
+        return cutoff - relativedelta(years=interval)
 
 
 class SurveyAttr(models.Model):
