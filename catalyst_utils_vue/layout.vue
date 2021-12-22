@@ -1,31 +1,40 @@
 <template>
   <!-- layout.vue: this is where you override the layout -->
-  <div class="col-lg-8 mx-auto p-3 py-md-5" :app-name="appName" :page-title="pageTitle">
-    <header class="d-flex align-items-center pb-3 mb-5 h4 border-bottom">
-      <a href="/" class="text-reset text-decoration-none">{{ appName }}</a>
-    </header>
-
-    <h1>
+  <topbar
+    :app-name="appName"
+    :app-root-url="appRootUrl"
+    :page-title="pageTitle"
+    :user-name="userName"
+    :sign-out-url="signOutUrl"
+  >
+    <template #header></template>
+    <template #main>
+      <!-- main section override -->
       <slot name="title">
-        {{ pageTitle }}
+        <h1>{{ pageTitle }}</h1>
       </slot>
-    </h1>
-
-    <slot name="description" />
-
-    <hr class="mb-5 w-25 d-inline-block" />
-
-    <slot name="content" />
-
-    <footer class="pt-5 my-5 text-muted border-top">
-      Copyright &copy; {{ currentYear }} University of Washington
-    </footer>
-  </div>
+      <slot name="content"></slot>
+    </template>
+    <template #footer>
+      <div class="bg-dark">
+        <div class="container-xl py-3 small">
+          <div
+            class="text-white font-weight-light"
+          >Copyright &copy; {{ new Date().getFullYear() }} University of Washington</div>
+        </div>
+      </div>
+    </template>
+  </topbar>
 </template>
 
 <script>
+import { Topbar } from 'axdd-components';
+
 export default {
-  components: {},
+  name: 'Catalyst Utilities',
+  components: {
+    'topbar': Topbar,
+  },
   props: {
     pageTitle: {
       type: String,
@@ -35,14 +44,14 @@ export default {
   data() {
     return {
       // minimum application setup overrides
-      appName: 'Catalyst Utils',
+      appName: 'Catalyst Utilities',
+      appRootUrl: '/',
+      userName: 'javerage',
+      signOutUrl: document.body.getAttribute('data-logout-url'),
+
       // automatically set year
       currentYear: new Date().getFullYear(),
     };
-  },
-  created: function() {
-    // constructs page title in the following format "Page Title - AppName"
-    document.title = this.pageTitle + ' - ' + this.appName;
   },
 };
 </script>
