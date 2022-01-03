@@ -527,7 +527,8 @@ class Survey(models.Model):
             self.surveyattr.export_status = ex.status
             logger.info('Survey export failed: {}'.format(ex))
 
-        self.surveyattr.last_exported = datetime.utcnow()
+        self.surveyattr.last_exported = datetime.utcnow().replace(
+            tzinfo=timezone.utc)
         self.surveyattr.save()
 
 
@@ -652,7 +653,8 @@ class Gradebook(models.Model):
             self.gradebookattr.export_status = ex.status
             logger.info('Gradebook export failed: {}'.format(ex))
 
-        self.gradebookattr.last_exported = datetime.utcnow()
+        self.gradebookattr.last_exported = datetime.utcnow().replace(
+            tzinfo=timezone.utc)
         self.gradebookattr.save()
 
     @staticmethod
