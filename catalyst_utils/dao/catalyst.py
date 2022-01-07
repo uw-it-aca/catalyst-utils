@@ -1,9 +1,6 @@
 # Copyright 2022 UW-IT, University of Washington
 # SPDX-License-Identifier: Apache-2.0
 
-# Copyright 2021 UW-IT, University of Washington
-# SPDX-License-Identifier: Apache-2.0
-
 from django.core.files.storage import default_storage
 from uw_catalyst.gradebook import (
     get_participants_for_gradebook, get_gradebook_export)
