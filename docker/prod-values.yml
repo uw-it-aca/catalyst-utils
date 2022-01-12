@@ -62,17 +62,17 @@ gcsCredentials:
 cronjob:
   enabled: true
   jobs:
-    - name: export-surveys
-      schedule: "*/6 * * * *"
-      command: ["/scripts/management_command.sh"]
-      args: ["export_surveys"]
-      resources:
-        limits:
-          cpu: 500m
-          memory: 256Mi
-        requests:
-          cpu: 25m
-          memory: 64Mi
+    # - name: export-surveys
+    #  schedule: "*/6 * * * *"
+    #  command: ["/scripts/management_command.sh"]
+    #  args: ["export_surveys"]
+    #  resources:
+    #    limits:
+    #      cpu: 500m
+    #      memory: 256Mi
+    #    requests:
+    #      cpu: 25m
+    #      memory: 64Mi
     - name: export-gradebooks
       schedule: "40 15-23 * * *"
       command: ["/scripts/management_command.sh"]
