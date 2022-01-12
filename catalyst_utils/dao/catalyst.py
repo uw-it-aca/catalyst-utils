@@ -21,6 +21,8 @@ def get_survey_attr(survey):
         'title': data.get('title'),
         'question_count': data.get('question_count'),
         'response_count': data.get('total_response_count'),
+        'last_modified': data.get('modification_date'),
+        'last_response': data.get('last_response_date'),
     }
 
 

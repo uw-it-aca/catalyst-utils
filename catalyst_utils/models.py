@@ -473,6 +473,24 @@ class Survey(models.Model):
             return self.surveyattr.response_count
 
     @property
+    def last_modified(self):
+        try:
+            if self.surveyattr.last_modified is None:
+                self.update_attr()
+        except SurveyAttr.DoesNotExist:
+            self.update_attr()
+        return self.surveyattr.last_modified
+
+    @property
+    def last_response(self):
+        try:
+            if self.surveyattr.last_modified is None:
+                self.update_attr()
+        except SurveyAttr.DoesNotExist:
+            self.update_attr()
+        return self.surveyattr.last_response
+
+    @property
     def export_path(self):
         return '/survey/{}/{}/export.zip'.format(
             self.person.login_name, self.survey_id)
@@ -517,11 +535,15 @@ class Survey(models.Model):
     def export(self):
         try:
             if self.question_count:
-                export_survey(self)
+                if (self.surveyattr.last_exported is None or
+                        self.surveyattr.last_exported < self.last_modified):
+                    export_survey(self)
             if self.response_count:
-                export_survey_responses(self)
-                if self.is_research_confidential:
-                    export_survey_code_translation(self)
+                if (self.surveyattr.last_exported is None or
+                        self.surveyattr.last_exported < self.last_response):
+                    export_survey_responses(self)
+                    if self.is_research_confidential:
+                        export_survey_code_translation(self)
             self.surveyattr.export_status = 200
         except DataFailureException as ex:
             self.surveyattr.export_status = ex.status
@@ -676,6 +698,8 @@ class SurveyAttr(models.Model):
     question_count = models.IntegerField(null=True)
     response_count = models.IntegerField(null=True)
     title = models.CharField(max_length=255, blank=True, null=True)
+    last_modified = models.DateTimeField(null=True)
+    last_response = models.DateTimeField(null=True)
     last_updated = models.DateTimeField(null=True)
     update_status = models.IntegerField(default=200)
     last_exported = models.DateTimeField(null=True)
