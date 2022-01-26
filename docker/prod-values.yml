@@ -63,7 +63,7 @@ cronjob:
   enabled: true
   jobs:
     - name: export-surveys
-      schedule: "*/6 * * * *"
+      schedule: "*/9 * * * *"
       command: ["/scripts/management_command.sh"]
       args: ["export_surveys"]
       resources:
@@ -159,7 +159,7 @@ environmentVariables:
   - name: CATALYST_ENV
     value: PROD
   - name: CATALYST_TIMEOUT
-    value: "10"
+    value: "60"
 
   - name: AUTH
     value: SAML
