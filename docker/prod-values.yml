@@ -159,7 +159,7 @@ environmentVariables:
   - name: CATALYST_ENV
     value: PROD
   - name: CATALYST_TIMEOUT
-    value: "60"
+    value: "120"
 
   - name: AUTH
     value: SAML
