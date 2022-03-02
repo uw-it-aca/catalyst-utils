@@ -22,11 +22,11 @@
         </li>
       </ul>
       <p class="text-dark bg-beige rounded p-3 small">
-        Welcome...
-        Lorem ipsum dolor, sit amet consectetur adipisicing elit. Cum voluptatibus, laborum
-        inventore magni, dolore quod incidunt error reiciendis nesciunt ex atque, amet culpa quia
-        ullam sit. Deleniti id at odit!
+        Welcome... Lorem ipsum dolor, sit amet consectetur adipisicing elit. Cum voluptatibus,
+        laborum inventore magni, dolore quod incidunt error reiciendis nesciunt ex atque, amet culpa
+        quia ullam sit. Deleniti id at odit!
       </p>
+      <br /><br />
     </template>
     <template #main>
       <!-- main section override -->
