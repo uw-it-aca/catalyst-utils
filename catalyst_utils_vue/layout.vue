@@ -1,13 +1,20 @@
 <template>
   <!-- layout.vue: this is where you override the layout -->
-  <topbar
+  <sidebar
     :app-name="appName"
     :app-root-url="appRootUrl"
     :page-title="pageTitle"
     :user-name="userName"
     :sign-out-url="signOutUrl"
   >
-    <template #header></template>
+    <template #header>
+    </template>
+    <template #navigation>
+      <ul class="text-white">
+        <li>Surveys</li>
+        <li>Gradebooks</li>
+      </ul>
+    </template>
     <template #main>
       <!-- main section override -->
       <slot name="title">
@@ -15,25 +22,17 @@
       </slot>
       <slot name="content"></slot>
     </template>
-    <template #footer>
-      <div class="bg-dark">
-        <div class="container-xl py-3 small">
-          <div
-            class="text-white font-weight-light"
-          >Copyright &copy; {{ new Date().getFullYear() }} University of Washington</div>
-        </div>
-      </div>
-    </template>
-  </topbar>
+    <template #footer> </template>
+  </sidebar>
 </template>
 
 <script>
-import { Topbar } from 'axdd-components';
+import { Sidebar } from 'axdd-components';
 
 export default {
-  name: 'Catalyst Utilities',
+  name: 'Catalyst',
   components: {
-    'topbar': Topbar,
+    sidebar: Sidebar,
   },
   props: {
     pageTitle: {
@@ -44,7 +43,7 @@ export default {
   data() {
     return {
       // minimum application setup overrides
-      appName: 'Catalyst Utilities',
+      appName: 'Catalyst',
       appRootUrl: '/',
       userName: 'javerage',
       signOutUrl: document.body.getAttribute('data-logout-url'),
@@ -52,6 +51,10 @@ export default {
       // automatically set year
       currentYear: new Date().getFullYear(),
     };
+  },
+  created: function () {
+    // constructs page title in the following format "Page Title - AppName"
+    document.title = this.pageTitle + ' - ' + this.appName;
   },
 };
 </script>
