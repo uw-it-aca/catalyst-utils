@@ -20,24 +20,30 @@
 
           <div class="card mb-5">
             <div class="card-body">
-              <table class="table">
+              <table class="table mb-0">
                 <thead>
                   <tr>
                     <th scope="col">Created</th>
                     <th scope="col">Name</th>
                     <th scope="col">Owner</th>
                     <th scope="col">Info</th>
-                    <th scope="col">Action</th>
+                    <th scope="col">&nbsp;</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr v-for="(ownedSurvey, index) in surveyDataList.owned_surveys">
-                    <td>{{ ownedSurvey.created_date }}</td>
-                    <td>{{ ownedSurvey.name }}</td>
-                    <td>{{ ownedSurvey.owner.login_name }}, {{ ownedSurvey.owner.name }}</td>
+                    <td>{{ formatDate(ownedSurvey.created_date) }}</td>
                     <td>
-                      Questions:{{ ownedSurvey.question_count }} Responses:
-                      {{ ownedSurvey.response_count }}
+                      <span v-if="ownedSurvey.name == null" class="text-muted">survey name null</span>
+                      <span v-else>{{ ownedSurvey.name }}</span>
+                    </td>
+                    <td>{{ ownedSurvey.owner.name }} ({{ ownedSurvey.owner.login_name }})</td>
+                    <td>
+                      Questions: <span v-if="ownedSurvey.question_count == null">0</span>
+                      <span v-else>{{ ownedSurvey.question_count }}</span>
+
+                      Responses: <span v-if="ownedSurvey.response_count == null">0</span>
+                      <span v-else>{{ ownedSurvey.response_count }}</span>
                     </td>
                     <td><button type="button" class="btn btn-primary btn-sm">Download</button></td>
                   </tr>
@@ -89,6 +95,7 @@
 
 <script>
 import Layout from '../layout.vue';
+import dayjs from "dayjs";
 
 export default {
   components: {
@@ -106,6 +113,11 @@ export default {
         .then((response) => response.json())
         .then((data) => (this.surveyDataList = data));
     },
+    formatDate(dateString) {
+      const date = dayjs(dateString);
+      // Then specify how you want your dates to be formatted
+      return date.format("MMMM D, YYYY");
+    },
   },
   mounted() {
     this.getSurveyData();
@@ -113,4 +125,10 @@ export default {
 };
 </script>
 
-<style lang="scss"></style>
+<style lang="scss">
+.table {
+  tr:last-of-type {
+    border-color: transparent !important;
+  }
+}
+</style>

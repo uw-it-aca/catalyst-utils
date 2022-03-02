@@ -7,13 +7,26 @@
     :user-name="userName"
     :sign-out-url="signOutUrl"
   >
-    <template #header>
-    </template>
+    <template #header> </template>
     <template #navigation>
-      <ul class="text-white">
-        <li>Surveys</li>
-        <li>Gradebooks</li>
+      <ul class="nav flex-column mb-5">
+        <li class="nav-item mb-1 bg-dark-purple rounded">
+          <a href="#" class="nav-link text-gray d-block px-2 py-1"
+            ><i class="bi bi-check-lg me-2"></i>Surveys</a
+          >
+        </li>
+        <li class="nav-item mb-1 bg-dark-purple-hover rounded">
+          <a href="#" class="nav-link text-gray d-block px-2 py-1"
+            ><i class="bi bi-percent me-2"></i>Gradebooks</a
+          >
+        </li>
       </ul>
+      <p class="text-dark bg-beige rounded p-3 small">
+        Welcome...
+        Lorem ipsum dolor, sit amet consectetur adipisicing elit. Cum voluptatibus, laborum
+        inventore magni, dolore quod incidunt error reiciendis nesciunt ex atque, amet culpa quia
+        ullam sit. Deleniti id at odit!
+      </p>
     </template>
     <template #main>
       <!-- main section override -->
