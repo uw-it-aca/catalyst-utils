@@ -1,12 +1,16 @@
 import { createWebHistory, createRouter } from "vue-router";
 
 // page components
-import Home from '../pages/home.vue';
+import Surveys from '../pages/surveys.vue';
 
 const routes = [
   {
-    path: "/",
-    component: Home
+    path: '/',
+    redirect: '/survey'
+  },
+  {
+    path: "/survey",
+    component: Surveys
   }
 ];
 
