@@ -11,6 +11,7 @@
           <h2>Your Surveys</h2>
 
           <p>{{ surveyData.owned_surveys }}</p>
+          <p>{{ surveyData.owned_surveys.length }}</p>
           <p>{{ typeof surveyData.owned_surveys }}</p>
 
           <div class="card mb-5">
@@ -66,6 +67,7 @@
           <h2>Surveys Owned by Others Netids</h2>
 
           <p>{{ surveyData.netid_surveys }}</p>
+          <p>{{ surveyData.netid_surveys.length }}</p>
           <p>{{ typeof surveyData.netid_surveys }}</p>
 
           <div class="card mb-5">
@@ -122,6 +124,7 @@
           <h2>Surveys you have Admin access to</h2>
 
           <p>{{ surveyData.admin_surveys }}</p>
+          <p>{{ surveyData.admin_surveys.length }}</p>
           <p>{{ typeof surveyData.admin_surveys }}</p>
 
           <div class="card mb-5">
