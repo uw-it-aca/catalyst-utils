@@ -10,15 +10,21 @@
     <template #header> </template>
     <template #navigation>
       <ul class="nav flex-column mb-5">
-        <li class="nav-item mb-1 bg-dark-purple rounded">
-          <a href="#" class="nav-link text-gray d-block px-2 py-1"
-            ><i class="bi bi-check-lg me-2"></i>Surveys</a
-          >
+        <li class="nav-item mb-1">
+          <router-link
+              class="nav-link text-light bg-dark-purple-hover rounded me-1"
+              active-class="bg-dark-purple"
+              to="/surveys"
+              ><i class="bi bi-check-lg me-2"></i>Surveys</router-link
+            >
         </li>
-        <li class="nav-item mb-1 bg-dark-purple-hover rounded">
-          <a href="#" class="nav-link text-gray d-block px-2 py-1"
-            ><i class="bi bi-percent me-2"></i>Gradebooks</a
-          >
+        <li class="nav-item mb-1">
+          <router-link
+              class="nav-link text-light bg-dark-purple-hover rounded me-1"
+              active-class="bg-dark-purple"
+              to="/gradebooks"
+              ><i class="bi bi-percent me-2"></i>Gradebooks</router-link
+            >
         </li>
       </ul>
       <p class="text-dark bg-beige rounded p-3 small">
