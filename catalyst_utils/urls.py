@@ -6,8 +6,8 @@ from catalyst_utils.views.pages import HomeView
 from catalyst_utils.views.api import SurveyList, GradebookList
 
 urlpatterns = [
-    re_path(r'^$', HomeView.as_view(), name='home'),
     re_path(r'^api/v1/survey$', SurveyList.as_view(), name='survey-list'),
     re_path(r'^api/v1/gradebook$', GradebookList.as_view(),
             name='gradebook-list'),
+    re_path(r'^.*$', HomeView.as_view(), name='home'),
 ]
