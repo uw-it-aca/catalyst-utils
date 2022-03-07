@@ -505,6 +505,31 @@ class Survey(models.Model):
         return '/survey/{}/{}/code_translation.csv'.format(
             self.person.login_name, self.survey_id)
 
+    @property
+    def export_filename(self):
+        return '{}-{}-export.zip'.format(self.person.login_name, self.name)
+
+    @property
+    def responses_filename(self):
+        return '{}-{}-responses.csv'.format(self.person.login_name, self.name)
+
+    @property
+    def code_translation_filename(self):
+        return '{}-{}-code_translation.csv'.format(
+            self.person.login_name, self.name)
+
+    def is_administrator(self, person):
+        if person == self.owner:
+            return True
+        if person in self.owner.admins:
+            return True
+        for survey_admin in self.administrators:
+            if person == survey_admin:
+                return True
+            if person in survey_admin.admins:
+                return True
+        return False
+
     def json_data(self):
         return {
             'name': self.name,
@@ -641,6 +666,22 @@ class Gradebook(models.Model):
     def export_path(self):
         return '/gradebook/{}/{}/export.xls'.format(
             self.owner.login_name, self.gradebook_id)
+
+    @property
+    def export_filename(self):
+        return '{}-{}-export.xls'.format(self.owner.login_name, self.name)
+
+    def is_administrator(self, person):
+        if person == self.owner:
+            return True
+        if person in self.owner.admins:
+            return True
+        for gradebook_admin in self.administrators:
+            if person == gradebook_admin:
+                return True
+            if person in gradebook_admin.admins:
+                return True
+        return False
 
     def json_data(self):
         return {
