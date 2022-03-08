@@ -42,11 +42,13 @@
 </template>
 
 <script>
-  name: 'survey',
-  props: {
-    surveys: {
-      type: Array,
-      required: true
+  export default {
+    name: 'survey',
+    props: {
+      surveys: {
+        type: Array,
+        required: true
+      }
     }
-  }
+  };
 </script>
