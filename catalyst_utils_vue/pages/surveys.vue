@@ -44,7 +44,7 @@
 
 <script>
 import Layout from '../layout.vue';
-import survey from '@/components/survey.vue'
+import survey from '../components/survey.vue'
 import dayjs from 'dayjs';
 
 export default {
