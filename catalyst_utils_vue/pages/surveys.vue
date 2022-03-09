@@ -5,7 +5,7 @@
     <template #content>
       <div class="row">
         <div class="col">
-          <div class="mb-3">{{ surveyData }}</div>
+          <!-- <div class="mb-3">{{ surveyData }}</div> -->
 
           <h2>Your Surveys</h2>
           <div class="card mb-5">
@@ -45,7 +45,6 @@
 <script>
 import Layout from '../layout.vue';
 import survey from '../components/survey.vue'
-import dayjs from 'dayjs';
 
 export default {
   components: {
@@ -68,11 +67,6 @@ export default {
         .catch((error) => {
           // Do something useful with the error
         });
-    },
-    formatDate(dateString) {
-      const date = dayjs(dateString);
-      // Then specify how you want your dates to be formatted
-      return date.format('MMMM D, YYYY');
     },
   },
   mounted() {

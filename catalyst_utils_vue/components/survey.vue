@@ -17,6 +17,8 @@
         <td>
           <span v-if="survey.name == null" class="text-muted">null</span>
           <span v-else>{{ survey.name }}</span>
+          <div v-if="survey.is_research_confidential">Confidential Research Survey</div>
+          <div v-else="survey.is_research_anonymous">Anonymous Research Survey</div>
         </td>
         <td>
           <div>
@@ -28,10 +30,6 @@
             <span v-if="survey.response_count == null" class="text-muted">null</span>
             <span v-else>{{ survey.response_count }}</span>
           </div>
-          <div>
-            Anonymous: {{ survey.is_research_anonymous }} Confidential:
-            {{ survey.is_research_confidential }}
-          </div>
         </td>
         <td>
           <button type="button" class="btn btn-dark-beige btn-sm">Download</button>
@@ -42,6 +40,8 @@
 </template>
 
 <script>
+  import { formatDate } from '../helpers/utils';
+
   export default {
     name: 'survey',
     props: {
