@@ -18,7 +18,7 @@
           <span v-if="survey.name == null" class="text-muted">null</span>
           <span v-else>{{ survey.name }}</span>
           <div v-if="survey.is_research_confidential">Confidential Research Survey</div>
-          <div v-else="survey.is_research_anonymous">Anonymous Research Survey</div>
+          <div v-else-if="survey.is_research_anonymous">Anonymous Research Survey</div>
         </td>
         <td>
           <div>
