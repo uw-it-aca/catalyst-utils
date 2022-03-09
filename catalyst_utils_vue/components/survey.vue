@@ -49,6 +49,9 @@
         type: Array,
         required: true
       }
+    },
+    methods: {
+      formatDate
     }
   };
 </script>
