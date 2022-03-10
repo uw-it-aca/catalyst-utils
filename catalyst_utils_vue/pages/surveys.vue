@@ -3,10 +3,10 @@
 <template>
   <layout :page-title="pageTitle">
     <template #content>
-      <div class="row my-3">
+      <div class="row my-4">
         <div class="col">
           <!-- <div class="mb-3">{{ surveyData }}</div> -->
-          <div class="card shadow-sm mb-3">
+          <div class="card border-light-gray shadow-sm rounded-3 mb-4">
             <div class="card-header bg-white border-0 p-4 pb-3">
               <h2 class="h6 m-0 text-uppercase fw-bold text-uppercase text-dark-beige">Yours</h2>
             </div>
@@ -21,14 +21,12 @@
             </div>
           </div>
 
-          <div class="card shadow-sm mb-3">
+          <div class="card border-light-gray shadow-sm rounded-3 mb-4">
             <div class="card-header bg-white border-0 p-4 pb-3">
               <h2 class="h6 m-0 text-uppercase fw-bold text-uppercase text-dark-beige">Owned by Others</h2>
             </div>
             <div v-if="isLoading" class="card-body p-4 pt-0  d-flex justify-content-center">
-              <div class="spinner-border text-secondary" role="status">
-                <span class="visually-hidden">Loading...</span>
-              </div>
+              <survey-loading></survey-loading>
             </div>
             <div v-else class="card-body p-4 pt-0 table-responsive-md">
               <div v-if="surveyData.netid_surveys && surveyData.netid_surveys.length">
@@ -38,14 +36,12 @@
             </div>
           </div>
 
-          <div class="card shadow-sm mb-3">
+          <div class="card border-light-gray shadow-sm rounded-3 mb-4">
             <div class="card-header bg-white border-0 p-4 pb-33">
               <h2 class="h6 m-0 text-uppercase fw-bold text-uppercase text-dark-beige">You have Admin access</h2>
             </div>
             <div v-if="isLoading" class="card-body p-4 pt-0  d-flex justify-content-center">
-              <div class="spinner-border text-secondary" role="status">
-                <span class="visually-hidden">Loading...</span>
-              </div>
+              <survey-loading></survey-loading>
             </div>
             <div v-else class="card-body p-4 pt-0 table-responsive-md">
               <div v-if="surveyData.admin_surveys && surveyData.admin_surveys.length">

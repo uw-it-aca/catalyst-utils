@@ -1,10 +1,10 @@
 <template>
   <table class="table mb-0">
-    <thead>
+    <thead class="small">
       <tr>
-        <th scope="col" class="ps-0">Created</th>
+        <th scope="col" class="w-25 ps-0">Created</th>
         <th scope="col">Name</th>
-        <th scope="col">Info</th>
+        <th scope="col" class="w-25">Info</th>
         <th scope="col" class="pe-0" style="width: 130px;">&nbsp;</th>
       </tr>
     </thead>
@@ -25,14 +25,17 @@
           </div>
         </td>
         <td>
-          <div class="mt-4 small">
-            Questions:
-            <span v-if="survey.question_count == null" class="badge rounded-pill bg-info text-dark">12</span>
-            <span v-else>{{ survey.question_count }}</span>
+          <div class="mt-4 small d-flex justify-content-between">
 
-            Responses:
-            <span v-if="survey.response_count == null" class="badge rounded-pill bg-info text-dark">1234</span>
+            <div>Questions
+            <span v-if="survey.question_count == null" class="badge rounded-pill bg-beige text-dark">0</span>
+            <span v-else>{{ survey.question_count }}</span>
+            </div>
+
+            <div>Responses
+            <span v-if="survey.response_count == null" class="badge rounded-pill bg-beige text-dark">0</span>
             <span v-else>{{ survey.response_count }}</span>
+            </div>
           </div>
         </td>
         <td class="pe-0 align-middle text-end">
