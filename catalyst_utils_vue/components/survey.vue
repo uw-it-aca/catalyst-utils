@@ -4,8 +4,7 @@
       <tr>
         <th scope="col" class="w-25 ps-0">Created</th>
         <th scope="col">Name</th>
-        <th scope="col" class="w-25">Info</th>
-        <th scope="col" class="pe-0" style="width: 130px">&nbsp;</th>
+        <th scope="col" class="pe-0" style="width: 110px">&nbsp;</th>
       </tr>
     </thead>
     <tbody>
@@ -19,14 +18,9 @@
             <span v-if="survey.name == null" class="">null</span>
             <span v-else>{{ survey.name }}</span>
           </div>
-          <div class="small text-muted">
-            <span v-if="survey.is_research_confidential">Confidential Research Survey</span>
-            <span v-else-if="survey.is_research_anonymous">Anonymous Research Survey</span>
-          </div>
-        </td>
-        <td>
-          <div class="mt-4 small text-muted d-flex justify-content-between">
-            <div>
+          <div class="small text-muted d-flex">
+
+            <div class="me-4">
               Questions
               <span
                 v-if="survey.question_count == null"
@@ -37,7 +31,7 @@
                 survey.question_count
               }}</span>
             </div>
-            <div>
+            <div class="me-4">
               Responses
               <span
                 v-if="survey.response_count == null"
@@ -48,6 +42,12 @@
                 survey.response_count
               }}</span>
             </div>
+
+            <div>
+              <span v-if="survey.is_research_confidential">Confidential Research Survey</span>
+              <span v-else-if="survey.is_research_anonymous">Anonymous Research Survey</span>
+            </div>
+
           </div>
         </td>
         <td class="pe-0 align-middle text-end">
@@ -66,7 +66,7 @@
 </template>
 
 <script>
-import { formatDate } from '../helpers/utils';
+import { formatDate, downloadFile } from '../helpers/utils';
 
 export default {
   name: 'survey',
@@ -78,9 +78,7 @@ export default {
   },
   methods: {
     formatDate,
-    downloadFile(event) {
-      alert('Download a file...');
-    },
+    downloadFile
   },
 };
 </script>

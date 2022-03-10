@@ -8,7 +8,7 @@
               <h2 class="h6 m-0 text-uppercase fw-bold text-uppercase text-dark-beige">Yours</h2>
             </div>
             <div v-if="isLoading" class="card-body p-4 pt-0 d-flex justify-content-center">
-              <gradebook-loading></gradebook-loading>
+              <table-loading></table-loading>
             </div>
             <div v-else class="card-body p-4 pt-0 table-responsive-md">
               <div v-if="gradebookData.owned_gradebooks && gradebookData.owned_gradebooks.length">
@@ -23,7 +23,7 @@
               <h2 class="h6 m-0 text-uppercase fw-bold text-uppercase text-dark-beige">Owned by Others</h2>
             </div>
             <div v-if="isLoading" class="card-body p-4 pt-0  d-flex justify-content-center">
-              <gradebook-loading></gradebook-loading>
+              <table-loading></table-loading>
             </div>
             <div v-else class="card-body p-4 pt-0 table-responsive-md">
               <div v-if="gradebookData.netid_gradebooks && gradebookData.netid_gradebooks.length">
@@ -38,7 +38,7 @@
               <h2 class="h6 m-0 text-uppercase fw-bold text-uppercase text-dark-beige">You have Admin access</h2>
             </div>
             <div v-if="isLoading" class="card-body p-4 pt-0  d-flex justify-content-center">
-              <gradebook-loading></gradebook-loading>
+              <table-loading></table-loading>
             </div>
             <div v-else class="card-body p-4 pt-0 table-responsive-md">
               <div v-if="gradebookData.admin_gradebooks && gradebookData.admin_gradebooks.length">
@@ -56,13 +56,13 @@
 <script>
 import Layout from '../layout.vue';
 import Gradebook from '../components/gradebook.vue';
-import SurveyLoading from '../components/survey-loading.vue';
+import TableLoading from '../components/table-loading.vue';
 
 export default {
   components: {
     'layout': Layout,
     'gradebook': Gradebook,
-    'gradebook-loading': SurveyLoading
+    'table-loading': TableLoading
   },
   data() {
     return {
@@ -85,9 +85,8 @@ export default {
     },
   },
   mounted() {
-    this.getGradebookData();
-
-    //setTimeout(this.getGradebookData, 3000);
+    //this.getGradebookData();
+    setTimeout(this.getGradebookData, 3000);
   },
 };
 </script>

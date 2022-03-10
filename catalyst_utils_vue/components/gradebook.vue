@@ -4,15 +4,14 @@
       <tr>
         <th scope="col" class="w-25 ps-0">Created</th>
         <th scope="col">Name</th>
-        <th scope="col" class="w-25">Info</th>
-        <th scope="col" class="pe-0" style="width: 130px;">&nbsp;</th>
+        <th scope="col" class="pe-0" style="width: 110px;">&nbsp;</th>
       </tr>
     </thead>
     <tbody>
       <tr v-for="(gradebook, index) in gradebooks" :key="index">
         <td class="ps-0">
           <div>{{ formatDate(gradebook.created_date) }}</div>
-          <div class="small text-muted">{{ graedbook.owner.login_name }}</div>
+          <div class="small text-muted">{{ gradebook.owner.login_name }}</div>
         </td>
         <td>
           <div>
@@ -20,18 +19,13 @@
             <span v-else>{{ gradebook.name }}</span>
           </div>
           <div class="small text-muted">
-          </div>
-        </td>
-        <td>
-          <div class="mt-4 small text-muted d-flex justify-content-between">
-            <div>Students
+            Students
               <span v-if="gradebook.participant_count == null" class="badge rounded-pill bg-beige text-dark">0</span>
               <span v-else>{{ gradebook.participant_count }}</span>
-            </div>
           </div>
         </td>
         <td class="pe-0 align-middle text-end">
-          <button type="button" class="btn btn-dark-beige btn-sm rounded-pill">Download</button>
+          <button v-show="gradebook.participant_count > 0" @click="downloadFile" type="button" class="btn btn-dark-beige btn-sm rounded-pill px-3">Download</button>
         </td>
       </tr>
     </tbody>
@@ -39,7 +33,7 @@
 </template>
 
 <script>
-import { formatDate } from '../helpers/utils';
+import { formatDate, downloadFile } from '../helpers/utils';
 
 export default {
   name: 'gradebook',
@@ -51,6 +45,7 @@ export default {
   },
   methods: {
     formatDate,
+    downloadFile
   },
 };
 </script>
