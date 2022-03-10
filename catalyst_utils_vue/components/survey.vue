@@ -1,38 +1,43 @@
 <template>
   <table class="table mb-0">
-    <thead>
+    <thead class="small">
       <tr>
-        <th scope="col">Created</th>
+        <th scope="col" class="w-25 ps-0">Created</th>
         <th scope="col">Name</th>
-        <th scope="col">Info</th>
-        <th scope="col">&nbsp;</th>
+        <th scope="col" class="w-25">Info</th>
+        <th scope="col" class="pe-0" style="width: 130px;">&nbsp;</th>
       </tr>
     </thead>
     <tbody>
       <tr v-for="(survey, index) in surveys" :key="index">
-        <td>
+        <td class="ps-0">
           <div>{{ formatDate(survey.created_date) }}</div>
-          <div class="small">{{ survey.owner.login_name }}</div>
-        </td>
-        <td>
-          <span v-if="survey.name == null" class="text-muted">null</span>
-          <span v-else>{{ survey.name }}</span>
-          <div v-if="survey.is_research_confidential">Confidential Research Survey</div>
-          <div v-else-if="survey.is_research_anonymous">Anonymous Research Survey</div>
+          <div class="small text-muted">{{ survey.owner.login_name }}</div>
         </td>
         <td>
           <div>
-            Questions:
-            <span v-if="survey.question_count == null" class="text-muted">null</span>
-            <span v-else>{{ survey.question_count }}</span>
-
-            Responses:
-            <span v-if="survey.response_count == null" class="text-muted">null</span>
-            <span v-else>{{ survey.response_count }}</span>
+            <span v-if="survey.name == null" class="">null</span>
+            <span v-else>{{ survey.name }}</span>
+          </div>
+          <div class="small text-muted">
+            <span v-if="survey.is_research_confidential">Confidential Research Survey</span>
+            <span v-else-if="survey.is_research_anonymous">Anonymous Research Survey</span>
           </div>
         </td>
         <td>
-          <button type="button" class="btn btn-dark-beige btn-sm">Download</button>
+          <div class="mt-4 small text-muted d-flex justify-content-between">
+            <div>Questions
+            <span v-if="survey.question_count == null" class="badge rounded-pill bg-beige text-dark">0</span>
+            <span v-else>{{ survey.question_count }}</span>
+            </div>
+            <div>Responses
+            <span v-if="survey.response_count == null" class="badge rounded-pill bg-beige text-dark">0</span>
+            <span v-else>{{ survey.response_count }}</span>
+            </div>
+          </div>
+        </td>
+        <td class="pe-0 align-middle text-end">
+          <button type="button" class="btn btn-dark-beige btn-sm rounded-pill">Download</button>
         </td>
       </tr>
     </tbody>
@@ -40,18 +45,18 @@
 </template>
 
 <script>
-  import { formatDate } from '../helpers/utils';
+import { formatDate } from '../helpers/utils';
 
-  export default {
-    name: 'survey',
-    props: {
-      surveys: {
-        type: Array,
-        required: true
-      }
+export default {
+  name: 'survey',
+  props: {
+    surveys: {
+      type: Array,
+      required: true,
     },
-    methods: {
-      formatDate
-    }
-  };
+  },
+  methods: {
+    formatDate,
+  },
+};
 </script>

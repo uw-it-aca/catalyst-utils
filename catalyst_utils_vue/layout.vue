@@ -27,7 +27,7 @@
           >
         </li>
       </ul>
-      <p class="text-dark bg-beige rounded p-3 small">
+      <p class="text-light-gray bg-dark-purple rounded-3 p-3 small">
         Welcome... Lorem ipsum dolor, sit amet consectetur adipisicing elit. Cum voluptatibus,
         laborum inventore magni, dolore quod incidunt error reiciendis nesciunt ex atque, amet culpa
         quia ullam sit. Deleniti id at odit!
@@ -37,9 +37,11 @@
     <template #main>
       <!-- main section override -->
       <slot name="title">
-        <h1>{{ pageTitle }}</h1>
+        <h1 class="h4 my-4 text-dark">{{ pageTitle }}</h1>
       </slot>
-      <slot name="content"></slot>
+
+        <slot name="content"></slot>
+
     </template>
     <template #footer> </template>
   </sidebar>
@@ -49,7 +51,6 @@
 import { Sidebar } from 'axdd-components';
 
 export default {
-  name: 'Catalyst',
   components: {
     sidebar: Sidebar,
   },
