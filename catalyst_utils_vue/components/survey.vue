@@ -25,13 +25,11 @@
           </div>
         </td>
         <td>
-          <div class="mt-4 small d-flex justify-content-between">
-
+          <div class="mt-4 small text-muted d-flex justify-content-between">
             <div>Questions
             <span v-if="survey.question_count == null" class="badge rounded-pill bg-beige text-dark">0</span>
             <span v-else>{{ survey.question_count }}</span>
             </div>
-
             <div>Responses
             <span v-if="survey.response_count == null" class="badge rounded-pill bg-beige text-dark">0</span>
             <span v-else>{{ survey.response_count }}</span>
