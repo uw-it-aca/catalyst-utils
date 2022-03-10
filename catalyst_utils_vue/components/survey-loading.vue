@@ -22,7 +22,7 @@
           <div class="mt-4"><span class="placeholder bg-light-gray col-12"></span></div>
         </td>
         <td class="pe-0 align-middle text-end">
-          <button type="button" disabled class="btn btn-sm placeholder bg-light-gray text-muted rounded-pill">Download</button>
+          <button type="button" disabled class="btn btn-sm placeholder bg-light-gray text-muted rounded-pill px-3">Download</button>
         </td>
       </tr>
     </tbody>
