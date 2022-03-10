@@ -9,7 +9,10 @@
 
           <h2>Your Surveys</h2>
           <div class="card mb-5">
-            <div class="card-body table-responsive-md">
+            <div v-if="isLoading" class="card-body d-flex justify-content-center">
+              <survey-loading></survey-loading>
+            </div>
+            <div v-else class="card-body table-responsive-md">
               <div v-if="surveyData.owned_surveys && surveyData.owned_surveys.length">
                 <survey :surveys="surveyData.owned_surveys" />
               </div>
@@ -19,7 +22,12 @@
 
           <h2>Surveys Owned by Shared Netids</h2>
           <div class="card mb-5">
-            <div class="card-body table-responsive-md">
+            <div v-if="isLoading" class="card-body d-flex justify-content-center">
+              <div class="spinner-border text-secondary" role="status">
+                <span class="visually-hidden">Loading...</span>
+              </div>
+            </div>
+            <div v-else class="card-body table-responsive-md">
               <div v-if="surveyData.netid_surveys && surveyData.netid_surveys.length">
                 <survey :surveys="surveyData.netid_surveys" />
               </div>
@@ -29,7 +37,12 @@
 
           <h2>Surveys you have Admin access to</h2>
           <div class="card mb-5">
-            <div class="card-body table-responsive-md">
+            <div v-if="isLoading" class="card-body d-flex justify-content-center">
+              <div class="spinner-border text-secondary" role="status">
+                <span class="visually-hidden">Loading...</span>
+              </div>
+            </div>
+            <div v-else class="card-body table-responsive-md">
               <div v-if="surveyData.admin_surveys && surveyData.admin_surveys.length">
                 <survey :surveys="surveyData.admin_surveys" />
               </div>
@@ -44,17 +57,20 @@
 
 <script>
 import Layout from '../layout.vue';
-import survey from '../components/survey.vue'
+import Survey from '../components/survey.vue';
+import SurveyLoading from '../components/survey-loading.vue';
 
 export default {
   components: {
-    layout: Layout,
-    survey: survey,
+    'layout': Layout,
+    'survey': Survey,
+    'survey-loading': SurveyLoading
   },
   data() {
     return {
       pageTitle: 'Surveys',
       surveyData: [],
+      isLoading: true,
     };
   },
   methods: {
@@ -63,6 +79,7 @@ export default {
         .then((response) => response.json())
         .then((data) => {
           this.surveyData = data;
+          this.isLoading = false;
         })
         .catch((error) => {
           // Do something useful with the error
@@ -72,6 +89,9 @@ export default {
   mounted() {
     // fetch the survey data
     this.getSurveyData();
+
+    // use setTimeout to test loading locally
+    //setTimeout(this.getSurveyData, 3000);
   },
 };
 </script>
