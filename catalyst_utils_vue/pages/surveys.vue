@@ -89,10 +89,10 @@ export default {
   },
   mounted() {
     // fetch the survey data
-    //this.getSurveyData();
+    this.getSurveyData();
 
     // use setTimeout to test loading locally
-    setTimeout(this.getSurveyData, 3000);
+    // setTimeout(this.getSurveyData, 3000);
   },
 };
 </script>

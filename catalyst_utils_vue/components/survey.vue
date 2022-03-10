@@ -5,7 +5,7 @@
         <th scope="col" class="w-25 ps-0">Created</th>
         <th scope="col">Name</th>
         <th scope="col" class="w-25">Info</th>
-        <th scope="col" class="pe-0" style="width: 130px;">&nbsp;</th>
+        <th scope="col" class="pe-0" style="width: 130px">&nbsp;</th>
       </tr>
     </thead>
     <tbody>
@@ -26,18 +26,39 @@
         </td>
         <td>
           <div class="mt-4 small text-muted d-flex justify-content-between">
-            <div>Questions
-            <span v-if="survey.question_count == null" class="badge rounded-pill bg-beige text-dark">0</span>
-            <span v-else>{{ survey.question_count }}</span>
+            <div>
+              Questions
+              <span
+                v-if="survey.question_count == null"
+                class="badge rounded-pill bg-beige text-dark"
+                >0</span
+              >
+              <span v-else class="badge rounded-pill bg-beige text-dark">{{
+                survey.question_count
+              }}</span>
             </div>
-            <div>Responses
-            <span v-if="survey.response_count == null" class="badge rounded-pill bg-beige text-dark">0</span>
-            <span v-else>{{ survey.response_count }}</span>
+            <div>
+              Responses
+              <span
+                v-if="survey.response_count == null"
+                class="badge rounded-pill bg-beige text-dark"
+                >0</span
+              >
+              <span v-else class="badge rounded-pill bg-beige text-dark">{{
+                survey.response_count
+              }}</span>
             </div>
           </div>
         </td>
         <td class="pe-0 align-middle text-end">
-          <button type="button" class="btn btn-dark-beige btn-sm rounded-pill">Download</button>
+          <button
+            v-show="survey.question_count != null && survey.response_count != null"
+            @click="downloadFile"
+            type="button"
+            class="btn btn-dark-beige btn-sm rounded-pill px-3"
+          >
+            Download
+          </button>
         </td>
       </tr>
     </tbody>
@@ -57,6 +78,9 @@ export default {
   },
   methods: {
     formatDate,
+    downloadFile(event) {
+      alert('Download a file...');
+    },
   },
 };
 </script>
