@@ -66,6 +66,7 @@ class SurveyModelTest(TestCase):
             'response_count': 27,
             'is_research_confidential': True,
             'is_research_anonymous': False,
+            'download_url': '/api/v1/survey/1/file',
             'owner': {'login_name': 'javerage', 'name': 'Jamesy McJamesy'}})
 
         mock_fn.return_value = {
@@ -79,6 +80,7 @@ class SurveyModelTest(TestCase):
             'response_count': 10,
             'is_research_confidential': False,
             'is_research_anonymous': False,
+            'download_url': '/api/v1/survey/2/file',
             'owner': {'login_name': 'javerage', 'name': 'Jamesy McJamesy'}})
 
 
@@ -130,6 +132,7 @@ class GradebookModelTest(TestCase):
             'html_url': 'https://catalyst.uw.edu/gradebook/javerage/1',
             'name': 'CHEM 201 Gradebook',
             'participant_count': 10,
+            'download_url': '/api/v1/gradebook/1/file',
             'owner': {'login_name': 'javerage', 'name': 'Jamesy McJamesy'}})
 
         mock_fn.return_value = {'participant_count': 72}
@@ -139,4 +142,5 @@ class GradebookModelTest(TestCase):
             'html_url': 'https://catalyst.uw.edu/gradebook/javerage/2',
             'name': 'CHEM 202 A Gradebook',
             'participant_count': 72,
+            'download_url': '/api/v1/gradebook/2/file',
             'owner': {'login_name': 'javerage', 'name': 'Jamesy McJamesy'}})
