@@ -47,6 +47,13 @@ class SurveyModelTest(TestCase):
                          '/survey/javerage/1/code_translation.csv')
 
     @mock.patch('catalyst_utils.models.get_survey_attr')
+    def test_filename(self, mock_fn):
+        mock_fn.return_value = {
+            'title': 'Survey Test', 'question_count': 1, 'response_count': 2}
+        survey = Survey.objects.get(survey_id=1)
+        self.assertEqual(survey.filename, 'javerage-Survey Test.zip')
+
+    @mock.patch('catalyst_utils.models.get_survey_attr')
     def test_json_data(self, mock_fn):
         mock_fn.return_value = {
             'title': 'Survey Test', 'question_count': 1, 'response_count': 27}
@@ -59,6 +66,7 @@ class SurveyModelTest(TestCase):
             'response_count': 27,
             'is_research_confidential': True,
             'is_research_anonymous': False,
+            'download_url': '/api/v1/survey/1/file',
             'owner': {'login_name': 'javerage', 'name': 'Jamesy McJamesy'}})
 
         mock_fn.return_value = {
@@ -72,6 +80,7 @@ class SurveyModelTest(TestCase):
             'response_count': 10,
             'is_research_confidential': False,
             'is_research_anonymous': False,
+            'download_url': '/api/v1/survey/2/file',
             'owner': {'login_name': 'javerage', 'name': 'Jamesy McJamesy'}})
 
 
@@ -105,6 +114,15 @@ class GradebookModelTest(TestCase):
         self.assertEqual(gradebook.export_path,
                          '/gradebook/javerage/2/export.xls')
 
+    def test_filename(self):
+        gradebook = Gradebook.objects.get(gradebook_id=1)
+        self.assertEqual(gradebook.filename,
+                         'javerage-CHEM 201 Gradebook.xls')
+
+        gradebook = Gradebook.objects.get(gradebook_id=2)
+        self.assertEqual(gradebook.filename,
+                         'javerage-CHEM 202 A Gradebook.xls')
+
     @mock.patch('catalyst_utils.models.get_gradebook_attr')
     def test_json_data(self, mock_fn):
         mock_fn.return_value = {'participant_count': 10}
@@ -114,6 +132,7 @@ class GradebookModelTest(TestCase):
             'html_url': 'https://catalyst.uw.edu/gradebook/javerage/1',
             'name': 'CHEM 201 Gradebook',
             'participant_count': 10,
+            'download_url': '/api/v1/gradebook/1/file',
             'owner': {'login_name': 'javerage', 'name': 'Jamesy McJamesy'}})
 
         mock_fn.return_value = {'participant_count': 72}
@@ -123,4 +142,5 @@ class GradebookModelTest(TestCase):
             'html_url': 'https://catalyst.uw.edu/gradebook/javerage/2',
             'name': 'CHEM 202 A Gradebook',
             'participant_count': 72,
+            'download_url': '/api/v1/gradebook/2/file',
             'owner': {'login_name': 'javerage', 'name': 'Jamesy McJamesy'}})

@@ -3,6 +3,7 @@
 
 from django.db import models, transaction
 from django.conf import settings
+from django.urls import reverse
 from django.utils import timezone
 from catalyst_utils.dao.person import get_person_data
 from catalyst_utils.dao.group import get_group_members
@@ -505,6 +506,22 @@ class Survey(models.Model):
         return '/survey/{}/{}/code_translation.csv'.format(
             self.person.login_name, self.survey_id)
 
+    @property
+    def filename(self):
+        return '{}-{}.zip'.format(self.person.login_name, self.name)
+
+    def is_administrator(self, person):
+        if person == self.owner:
+            return True
+        if person in self.owner.admins:
+            return True
+        for survey_admin in self.administrators:
+            if person == survey_admin:
+                return True
+            if person in survey_admin.admins:
+                return True
+        return False
+
     def json_data(self):
         return {
             'name': self.name,
@@ -516,6 +533,8 @@ class Survey(models.Model):
             'response_count': self.response_count,
             'is_research_confidential': self.is_research_confidential,
             'is_research_anonymous': self.is_research_anonymous,
+            'download_url': reverse('survey-file', kwargs={
+                'survey_id': self.survey_id}),
         }
 
     def update_attr(self):
@@ -642,6 +661,22 @@ class Gradebook(models.Model):
         return '/gradebook/{}/{}/export.xls'.format(
             self.owner.login_name, self.gradebook_id)
 
+    @property
+    def filename(self):
+        return '{}-{}.xls'.format(self.owner.login_name, self.name)
+
+    def is_administrator(self, person):
+        if person == self.owner:
+            return True
+        if person in self.owner.admins:
+            return True
+        for gradebook_admin in self.administrators:
+            if person == gradebook_admin:
+                return True
+            if person in gradebook_admin.admins:
+                return True
+        return False
+
     def json_data(self):
         return {
             'name': self.name,
@@ -650,6 +685,8 @@ class Gradebook(models.Model):
                 self.owner.login_name, self.gradebook_id),
             'owner': self.owner.json_data(),
             'participant_count': self.participant_count,
+            'download_url': reverse('gradebook-file', kwargs={
+                'gradebook_id': self.gradebook_id}),
         }
 
     def update_attr(self):

@@ -3,11 +3,19 @@
 
 from django.urls import re_path
 from catalyst_utils.views.pages import HomeView
-from catalyst_utils.views.api import SurveyList, GradebookList
+from catalyst_utils.views.api import (
+    SurveyList, GradebookList, SurveyFile, GradebookFile)
 
 urlpatterns = [
-    re_path(r'^$', HomeView.as_view(), name='home'),
-    re_path(r'^api/v1/survey$', SurveyList.as_view(), name='survey-list'),
     re_path(r'^api/v1/gradebook$', GradebookList.as_view(),
             name='gradebook-list'),
+    re_path(r'^api/v1/gradebook/(?P<gradebook_id>[\d]+)/file$',
+            GradebookFile.as_view(), name='gradebook-file'),
+
+    re_path(r'^api/v1/survey$', SurveyList.as_view(), name='survey-list'),
+    re_path(r'^api/v1/survey/(?P<survey_id>[\d]+)/file$',
+            SurveyFile.as_view(), name='survey-file'),
+
+    re_path(r'^(gradebooks|surveys)$', HomeView.as_view()),
+    re_path(r'^$', HomeView.as_view()),
 ]
