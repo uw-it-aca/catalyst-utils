@@ -51,12 +51,12 @@
           </div>
         </td>
         <td class="pe-0 align-middle text-end">
-          <button
+          <a
             v-show="survey.question_count > 0 || survey.response_count > 0"
-            @click="downloadFile(survey.download_url)"
-            type="button"
+            href="{{ survey.download_url }}"
+            title="Download survey files"
             class="btn btn-dark-beige btn-sm rounded-pill px-3">Download
-          </button>
+          </a>
         </td>
       </tr>
     </tbody>
@@ -64,7 +64,7 @@
 </template>
 
 <script>
-import { formatDate, downloadFile } from '../helpers/utils';
+import { formatDate } from '../helpers/utils';
 
 export default {
   name: 'survey',
@@ -76,7 +76,6 @@ export default {
   },
   methods: {
     formatDate,
-    downloadFile
   },
 };
 </script>
