@@ -1,4 +1,4 @@
-import { createWebHistory, createRouter } from "vue-router";
+import { createWebHistory, createRouter } from 'vue-router';
 
 // page components
 import Surveys from '../pages/surveys.vue';
@@ -10,11 +10,11 @@ const routes = [
     redirect: '/surveys'
   },
   {
-    path: "/surveys",
+    path: '/surveys',
     component: Surveys
   },
   {
-    path: "/gradebooks",
+    path: '/gradebooks',
     component: Gradebooks
   }
 ];
