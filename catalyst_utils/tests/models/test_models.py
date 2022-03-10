@@ -51,7 +51,7 @@ class SurveyModelTest(TestCase):
         mock_fn.return_value = {
             'title': 'Survey Test', 'question_count': 1, 'response_count': 2}
         survey = Survey.objects.get(survey_id=1)
-        self.assertEqual(survey.filename, 'javerage-Survey Test-export.zip')
+        self.assertEqual(survey.filename, 'javerage-Survey Test.zip')
 
     @mock.patch('catalyst_utils.models.get_survey_attr')
     def test_json_data(self, mock_fn):
@@ -117,11 +117,11 @@ class GradebookModelTest(TestCase):
     def test_filename(self):
         gradebook = Gradebook.objects.get(gradebook_id=1)
         self.assertEqual(gradebook.filename,
-                         'javerage-CHEM 201 Gradebook-export.xls')
+                         'javerage-CHEM 201 Gradebook.xls')
 
         gradebook = Gradebook.objects.get(gradebook_id=2)
         self.assertEqual(gradebook.filename,
-                         'javerage-CHEM 202 A Gradebook-export.xls')
+                         'javerage-CHEM 202 A Gradebook.xls')
 
     @mock.patch('catalyst_utils.models.get_gradebook_attr')
     def test_json_data(self, mock_fn):
