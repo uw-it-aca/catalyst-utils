@@ -91,8 +91,9 @@ class GradebookList(APIView):
 
 class SurveyFile(APIView):
     def get(self, request, *args, **kwargs):
+        survey_id = kwargs.get('survey_id')
         try:
-            survey = Survey.objects.get(kwargs.get('survey_id'))
+            survey = Survey.objects.get(survey_id=survey_id)
             if not survey.is_administrator(self.person):
                 return self.error_response(401, 'Not Authorized')
         except Survey.DoesNotExist:
@@ -104,8 +105,9 @@ class SurveyFile(APIView):
 
 class GradebookFile(APIView):
     def get(self, request, *args, **kwargs):
+        gradebook_id = kwargs.get('gradebook_id')
         try:
-            gradebook = Gradebook.objects.get(kwargs.get('gradebook_id'))
+            gradebook = Gradebook.objects.get(gradebook_id=gradebook_id)
             if not gradebook.is_administrator(self.person):
                 return self.error_response(401, 'Not Authorized')
         except Gradebook.DoesNotExist:
