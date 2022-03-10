@@ -1,149 +1,49 @@
-// home.vue
-
 <template>
   <layout :page-title="pageTitle">
     <template #content>
-      <div class="row">
+      <div class="row my-4">
         <div class="col">
-          <div class="mb-3">{{ gradebookData }}</div>
-
-          <h2>Your Gradebooks</h2>
-          <div class="card mb-5">
-            <div class="card-body table-responsive-md">
-              <table v-if="gradebookData.owned_gradebooks && gradebookData.owned_gradebooks.length" class="table mb-0">
-                <thead>
-                  <tr>
-                    <th scope="col">Created</th>
-                    <th scope="col">Name</th>
-                    <th scope="col">Info</th>
-                    <th scope="col">&nbsp;</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr v-for="(owned, index) in gradebookData.owned_gradebooks" :key="index">
-                    <td>
-                      <div>{{ formatDate(owned.created_date) }}</div>
-                      <div class="small">{{ owned.owner.login_name }}</div>
-                    </td>
-                    <td>
-                      <span v-if="owned.name == null" class="text-muted">null</span>
-                      <span v-else>{{ owned.name }}</span>
-                    </td>
-                    <td>
-                      <div>
-                        Questions:
-                        <span v-if="owned.question_count == null" class="text-muted">null</span>
-                        <span v-else>{{ owned.question_count }}</span>
-
-                        Responses:
-                        <span v-if="owned.response_count == null" class="text-muted">null</span>
-                        <span v-else>{{ owned.response_count }}</span>
-                      </div>
-                      <div>
-                        Anonymous: {{ owned.is_research_anonymous }} Confidential:
-                        {{ owned.is_research_confidential }}
-                      </div>
-                    </td>
-                    <td>
-                      <button type="button" class="btn btn-dark-beige btn-sm">Download</button>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+          <div class="card border-light-gray shadow-sm rounded-3 mb-4">
+            <div class="card-header bg-white border-0 p-4 pb-3">
+              <h2 class="h6 m-0 text-uppercase fw-bold text-uppercase text-dark-beige">Yours</h2>
+            </div>
+            <div v-if="isLoading" class="card-body p-4 pt-0 d-flex justify-content-center">
+              <gradebook-loading></gradebook-loading>
+            </div>
+            <div v-else class="card-body p-4 pt-0 table-responsive-md">
+              <div v-if="gradebookData.owned_gradebooks && gradebookData.owned_gradebooks.length">
+                <gradebook :gradebooks="gradebookData.owned_gradebooks" />
+              </div>
               <div v-else>No data</div>
             </div>
           </div>
 
-          <h2>Gradebooks Owned by Others Netids</h2>
-          <div class="card mb-5">
-            <div class="card-body table-responsive-md">
-              <table v-if="gradebookData.netid_gradebooks && gradebookData.netid_gradebooks.length" class="table mb-0">
-                <thead>
-                  <tr>
-                    <th scope="col">Created</th>
-                    <th scope="col">Name</th>
-                    <th scope="col">Info</th>
-                    <th scope="col">&nbsp;</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr v-for="(netid, index) in gradebookData.netid_gradebooks" :key="index">
-                    <td>
-                      <div>{{ formatDate(netid.created_date) }}</div>
-                      <div class="small">{{ netid.owner.login_name }}</div>
-                    </td>
-                    <td>
-                      <span v-if="netid.name == null" class="text-muted">null</span>
-                      <span v-else>{{ netid.name }}</span>
-                    </td>
-                    <td>
-                      <div>
-                        Questions:
-                        <span v-if="netid.question_count == null" class="text-muted">null</span>
-                        <span v-else>{{ netid.question_count }}</span>
-
-                        Responses:
-                        <span v-if="netid.response_count == null" class="text-muted">null</span>
-                        <span v-else>{{ netid.response_count }}</span>
-                      </div>
-                      <div>
-                        Anonymous: {{ netid.is_research_anonymous }} Confidential:
-                        {{ netid.is_research_confidential }}
-                      </div>
-                    </td>
-                    <td>
-                      <button type="button" class="btn btn-darl-beige btn-sm">Download</button>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+          <div class="card border-light-gray shadow-sm rounded-3 mb-4">
+            <div class="card-header bg-white border-0 p-4 pb-3">
+              <h2 class="h6 m-0 text-uppercase fw-bold text-uppercase text-dark-beige">Owned by Others</h2>
+            </div>
+            <div v-if="isLoading" class="card-body p-4 pt-0  d-flex justify-content-center">
+              <gradebook-loading></gradebook-loading>
+            </div>
+            <div v-else class="card-body p-4 pt-0 table-responsive-md">
+              <div v-if="gradebookData.netid_gradebooks && gradebookData.netid_gradebooks.length">
+                <gradebook :gradebooks="gradebookData.netid_gradebooks" />
+              </div>
               <div v-else>No data</div>
             </div>
           </div>
 
-          <h2>Gradebooks you have Admin access to</h2>
-          <div class="card mb-5">
-            <div class="card-body table-responsive-md">
-              <table v-if="gradebookData.admin_gradebooks && gradebookData.admin_gradebooks.length" class="table mb-0">
-                <thead>
-                  <tr>
-                    <th scope="col">Created</th>
-                    <th scope="col">Name</th>
-                    <th scope="col">Info</th>
-                    <th scope="col">&nbsp;</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr v-for="(admin, index) in gradebookData.admin_gradebooks" :key="index">
-                    <td>
-                      <div>{{ formatDate(admin.created_date) }}</div>
-                      <div class="small">{{ admin.owner.login_name }}</div>
-                    </td>
-                    <td>
-                      <span v-if="admin.name == null" class="text-muted">null</span>
-                      <span v-else>{{ admin.name }}</span>
-                    </td>
-                    <td>
-                      <div>
-                        Questions:
-                        <span v-if="admin.question_count == null" class="text-muted">null</span>
-                        <span v-else>{{ admin.question_count }}</span>
-
-                        Responses:
-                        <span v-if="admin.response_count == null" class="text-muted">null</span>
-                        <span v-else>{{ admin.response_count }}</span>
-                      </div>
-                      <div>
-                        Anonymous: {{ admin.is_research_anonymous }} Confidential:
-                        {{ admin.is_research_confidential }}
-                      </div>
-                    </td>
-                    <td>
-                      <button type="button" class="btn btn-dark-beige btn-sm">Download</button>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+          <div class="card border-light-gray shadow-sm rounded-3 mb-4">
+            <div class="card-header bg-white border-0 p-4 pb-33">
+              <h2 class="h6 m-0 text-uppercase fw-bold text-uppercase text-dark-beige">You have Admin access</h2>
+            </div>
+            <div v-if="isLoading" class="card-body p-4 pt-0  d-flex justify-content-center">
+              <gradebook-loading></gradebook-loading>
+            </div>
+            <div v-else class="card-body p-4 pt-0 table-responsive-md">
+              <div v-if="gradebookData.admin_gradebooks && gradebookData.admin_gradebooks.length">
+                <gradebook :gradebooks="gradebookData.admin_gradebooks" />
+              </div>
               <div v-else>No data</div>
             </div>
           </div>
@@ -155,16 +55,20 @@
 
 <script>
 import Layout from '../layout.vue';
-import dayjs from 'dayjs';
+import Gradebook from '../components/gradebook.vue';
+import SurveyLoading from '../components/survey-loading.vue';
 
 export default {
   components: {
-    layout: Layout,
+    'layout': Layout,
+    'gradebook': Gradebook,
+    'gradebook-loading': SurveyLoading
   },
   data() {
     return {
       pageTitle: 'Gradebooks',
       gradebookData: [],
+      isLoading: true,
     };
   },
   methods: {
@@ -173,20 +77,17 @@ export default {
         .then((response) => response.json())
         .then((data) => {
           this.gradebookData = data;
+          this.isLoading = false;
         })
         .catch((error) => {
           // Do something useful with the error
         });
     },
-    formatDate(dateString) {
-      const date = dayjs(dateString);
-      // Then specify how you want your dates to be formatted
-      return date.format('MMMM D, YYYY');
-    },
   },
   mounted() {
-    // fetch the survey data
     this.getGradebookData();
+
+    //setTimeout(this.getGradebookData, 3000);
   },
 };
 </script>

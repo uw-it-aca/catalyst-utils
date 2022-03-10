@@ -1,11 +1,8 @@
-// home.vue
-
 <template>
   <layout :page-title="pageTitle">
     <template #content>
       <div class="row my-4">
         <div class="col">
-          <!-- <div class="mb-3">{{ surveyData }}</div> -->
           <div class="card border-light-gray shadow-sm rounded-3 mb-4">
             <div class="card-header bg-white border-0 p-4 pb-3">
               <h2 class="h6 m-0 text-uppercase fw-bold text-uppercase text-dark-beige">Yours</h2>
