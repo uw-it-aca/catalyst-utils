@@ -8,7 +8,7 @@
               <h2 class="h6 m-0 text-uppercase fw-bold text-uppercase text-dark-beige">Yours</h2>
             </div>
             <div v-if="isLoading" class="card-body p-4 pt-0 d-flex justify-content-center">
-              <survey-loading></survey-loading>
+              <table-loading></table-loading>
             </div>
             <div v-else class="card-body p-4 pt-0 table-responsive-md">
               <div v-if="surveyData.owned_surveys && surveyData.owned_surveys.length">
@@ -23,7 +23,7 @@
               <h2 class="h6 m-0 text-uppercase fw-bold text-uppercase text-dark-beige">Owned by Others</h2>
             </div>
             <div v-if="isLoading" class="card-body p-4 pt-0  d-flex justify-content-center">
-              <survey-loading></survey-loading>
+              <table-loading></table-loading>
             </div>
             <div v-else class="card-body p-4 pt-0 table-responsive-md">
               <div v-if="surveyData.netid_surveys && surveyData.netid_surveys.length">
@@ -38,7 +38,7 @@
               <h2 class="h6 m-0 text-uppercase fw-bold text-uppercase text-dark-beige">You have Admin access</h2>
             </div>
             <div v-if="isLoading" class="card-body p-4 pt-0  d-flex justify-content-center">
-              <survey-loading></survey-loading>
+              <table-loading></table-loading>
             </div>
             <div v-else class="card-body p-4 pt-0 table-responsive-md">
               <div v-if="surveyData.admin_surveys && surveyData.admin_surveys.length">
@@ -56,13 +56,13 @@
 <script>
 import Layout from '../layout.vue';
 import Survey from '../components/survey.vue';
-import SurveyLoading from '../components/survey-loading.vue';
+import TableLoading from '../components/table-loading.vue';
 
 export default {
   components: {
     'layout': Layout,
     'survey': Survey,
-    'survey-loading': SurveyLoading
+    'table-loading': TableLoading
   },
   data() {
     return {
@@ -87,9 +87,7 @@ export default {
   mounted() {
     // fetch the survey data
     this.getSurveyData();
-
-    // use setTimeout to test loading locally
-    // setTimeout(this.getSurveyData, 3000);
+    //setTimeout(this.getSurveyData, 3000);
   },
 };
 </script>
