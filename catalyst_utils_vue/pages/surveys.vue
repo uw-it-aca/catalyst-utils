@@ -86,8 +86,8 @@ export default {
   },
   mounted() {
     // fetch the survey data
-    //this.getSurveyData();
-    setTimeout(this.getSurveyData, 3000);
+    this.getSurveyData();
+    //setTimeout(this.getSurveyData, 3000);
   },
 };
 </script>

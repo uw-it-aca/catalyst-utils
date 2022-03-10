@@ -85,8 +85,8 @@ export default {
     },
   },
   mounted() {
-    //this.getGradebookData();
-    setTimeout(this.getGradebookData, 3000);
+    this.getGradebookData();
+    //setTimeout(this.getGradebookData, 3000);
   },
 };
 </script>
