@@ -21,4 +21,6 @@ urlpatterns = [
             name='survey-file-codetranslation'),
     re_path(r'^api/v1/survey/(?P<survey_id>[\d]+)/responses$',
             SurveyResponsesFile.as_view(), name='survey-file-responses'),
+    re_path(r'^(gradebooks|surveys)$', HomeView.as_view()),
+    re_path(r'^$', HomeView.as_view()),
 ]
