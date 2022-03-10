@@ -47,16 +47,11 @@ class SurveyModelTest(TestCase):
                          '/survey/javerage/1/code_translation.csv')
 
     @mock.patch('catalyst_utils.models.get_survey_attr')
-    def test_filenames(self, mock_fn):
+    def test_filename(self, mock_fn):
         mock_fn.return_value = {
             'title': 'Survey Test', 'question_count': 1, 'response_count': 2}
         survey = Survey.objects.get(survey_id=1)
-        self.assertEqual(survey.export_filename,
-                         'javerage-Survey Test-export.zip')
-        self.assertEqual(survey.responses_filename,
-                         'javerage-Survey Test-responses.csv')
-        self.assertEqual(survey.code_translation_filename,
-                         'javerage-Survey Test-code_translation.csv')
+        self.assertEqual(survey.filename, 'javerage-Survey Test-export.zip')
 
     @mock.patch('catalyst_utils.models.get_survey_attr')
     def test_json_data(self, mock_fn):
@@ -117,13 +112,13 @@ class GradebookModelTest(TestCase):
         self.assertEqual(gradebook.export_path,
                          '/gradebook/javerage/2/export.xls')
 
-    def test_filenames(self):
+    def test_filename(self):
         gradebook = Gradebook.objects.get(gradebook_id=1)
-        self.assertEqual(gradebook.export_filename,
+        self.assertEqual(gradebook.filename,
                          'javerage-CHEM 201 Gradebook-export.xls')
 
         gradebook = Gradebook.objects.get(gradebook_id=2)
-        self.assertEqual(gradebook.export_filename,
+        self.assertEqual(gradebook.filename,
                          'javerage-CHEM 202 A Gradebook-export.xls')
 
     @mock.patch('catalyst_utils.models.get_gradebook_attr')

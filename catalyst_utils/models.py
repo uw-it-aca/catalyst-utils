@@ -3,6 +3,7 @@
 
 from django.db import models, transaction
 from django.conf import settings
+from django.urls import reverse
 from django.utils import timezone
 from catalyst_utils.dao.person import get_person_data
 from catalyst_utils.dao.group import get_group_members
@@ -506,17 +507,8 @@ class Survey(models.Model):
             self.person.login_name, self.survey_id)
 
     @property
-    def export_filename(self):
-        return '{}-{}-export.zip'.format(self.person.login_name, self.name)
-
-    @property
-    def responses_filename(self):
-        return '{}-{}-responses.csv'.format(self.person.login_name, self.name)
-
-    @property
-    def code_translation_filename(self):
-        return '{}-{}-code_translation.csv'.format(
-            self.person.login_name, self.name)
+    def filename(self):
+        return '{}-{}.zip'.format(self.person.login_name, self.name)
 
     def is_administrator(self, person):
         if person == self.owner:
@@ -541,6 +533,8 @@ class Survey(models.Model):
             'response_count': self.response_count,
             'is_research_confidential': self.is_research_confidential,
             'is_research_anonymous': self.is_research_anonymous,
+            'download_url': reverse('survey-file', kwargs={
+                'survey_id': self.survey_id)}),
         }
 
     def update_attr(self):
@@ -668,8 +662,8 @@ class Gradebook(models.Model):
             self.owner.login_name, self.gradebook_id)
 
     @property
-    def export_filename(self):
-        return '{}-{}-export.xls'.format(self.owner.login_name, self.name)
+    def filename(self):
+        return '{}-{}.xls'.format(self.owner.login_name, self.name)
 
     def is_administrator(self, person):
         if person == self.owner:
@@ -691,6 +685,8 @@ class Gradebook(models.Model):
                 self.owner.login_name, self.gradebook_id),
             'owner': self.owner.json_data(),
             'participant_count': self.participant_count,
+            'download_url': reverse('gradebook-file', kwargs={
+                'gradebook_id': self.gradebook_id)}),
         }
 
     def update_attr(self):

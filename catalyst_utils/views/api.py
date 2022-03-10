@@ -89,7 +89,7 @@ class GradebookList(APIView):
         return self.json_response(data)
 
 
-class SurveyExportFile(APIView):
+class SurveyFile(APIView):
     def get(self, request, *args, **kwargs):
         try:
             survey = Survey.objects.get(kwargs.get('survey_id'))
@@ -98,41 +98,11 @@ class SurveyExportFile(APIView):
         except Survey.DoesNotExist:
             return self.error_response(404, 'Not Found')
 
-        return self.file_response(survey.export_path, survey.export_filename,
+        return self.file_response(survey.export_path, survey.filename,
                                   content_type='application/zip')
 
 
-class SurveyCodeTranslationFile(APIView):
-    def get(self, request, *args, **kwargs):
-        try:
-            survey = Survey.objects.get(kwargs.get('survey_id'))
-            if not survey.is_administrator(self.person):
-                return self.error_response(401, 'Not Authorized')
-            if not survey.is_research_confidential:
-                return self.error_response(400, 'Not Available')
-        except Survey.DoesNotExist:
-            return self.error_response(404, 'Not Found')
-
-        return self.file_response(survey.code_translation_path,
-                                  survey.code_translation_filename,
-                                  content_type='text/csv')
-
-
-class SurveyResponsesFile(APIView):
-    def get(self, request, *args, **kwargs):
-        try:
-            survey = Survey.objects.get(kwargs.get('survey_id'))
-            if not survey.is_administrator(self.person):
-                return self.error_response(401, 'Not Authorized')
-        except Survey.DoesNotExist:
-            return self.error_response(404, 'Not Found')
-
-        return self.file_response(survey.responses_path,
-                                  survey.responses_filename,
-                                  content_type='text/csv')
-
-
-class GradebookExportFile(APIView):
+class GradebookFile(APIView):
     def get(self, request, *args, **kwargs):
         try:
             gradebook = Gradebook.objects.get(kwargs.get('gradebook_id'))
@@ -142,5 +112,5 @@ class GradebookExportFile(APIView):
             return self.error_response(404, 'Not Found')
 
         return self.file_response(gradebook.export_path,
-                                  gradebook.export_filename,
+                                  gradebook.filename,
                                   content_type='application/vnd.ms-excel')
