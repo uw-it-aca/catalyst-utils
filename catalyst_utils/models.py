@@ -534,7 +534,7 @@ class Survey(models.Model):
             'is_research_confidential': self.is_research_confidential,
             'is_research_anonymous': self.is_research_anonymous,
             'download_url': reverse('survey-file', kwargs={
-                'survey_id': self.survey_id)}),
+                'survey_id': self.survey_id}),
         }
 
     def update_attr(self):
@@ -686,7 +686,7 @@ class Gradebook(models.Model):
             'owner': self.owner.json_data(),
             'participant_count': self.participant_count,
             'download_url': reverse('gradebook-file', kwargs={
-                'gradebook_id': self.gradebook_id)}),
+                'gradebook_id': self.gradebook_id}),
         }
 
     def update_attr(self):
