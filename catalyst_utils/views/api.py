@@ -40,7 +40,7 @@ class APIView(View):
     @staticmethod
     def file_response(path, filename, content_type='text/csv'):
         if not default_storage.exists(path):
-            return self.error_response(404, 'Not Available')
+            return APIView.error_response(404, 'Not Available')
 
         response = HttpResponse(content='', status=200,
                                 content_type=content_type)
