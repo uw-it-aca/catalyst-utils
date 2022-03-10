@@ -5,8 +5,11 @@ function formatDate(dateString) {
   return date.format('MMMM D, YYYY');
 }
 
-function downloadFile() {
-  alert('Download a file...');
+function downloadFile(url) {
+  fetch(url)
+    .catch((error) => {
+      alert(error);
+    });
 }
 
 export { formatDate, downloadFile };

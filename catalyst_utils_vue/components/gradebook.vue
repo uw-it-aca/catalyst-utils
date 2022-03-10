@@ -25,7 +25,12 @@
           </div>
         </td>
         <td class="pe-0 align-middle text-end">
-          <button v-show="gradebook.participant_count > 0" @click="downloadFile" type="button" class="btn btn-dark-beige btn-sm rounded-pill px-3">Download</button>
+          <button
+            v-show="gradebook.participant_count > 0"
+            @click="downloadFile(gradebook.download_url)"
+            type="button"
+            class="btn btn-dark-beige btn-sm rounded-pill px-3">Download
+          </button>
         </td>
       </tr>
     </tbody>
