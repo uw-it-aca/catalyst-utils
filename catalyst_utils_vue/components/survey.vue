@@ -2,15 +2,15 @@
   <table class="table mb-0">
     <thead>
       <tr>
-        <th scope="col">Created</th>
+        <th scope="col" class="ps-0">Created</th>
         <th scope="col">Name</th>
         <th scope="col">Info</th>
-        <th scope="col">&nbsp;</th>
+        <th scope="col" class="pe-0" style="width: 130px;">&nbsp;</th>
       </tr>
     </thead>
     <tbody>
       <tr v-for="(survey, index) in surveys" :key="index">
-        <td>
+        <td class="ps-0">
           <div>{{ formatDate(survey.created_date) }}</div>
           <div class="small text-muted">{{ survey.owner.login_name }}</div>
         </td>
@@ -35,7 +35,7 @@
             <span v-else>{{ survey.response_count }}</span>
           </div>
         </td>
-        <td class="align-middle text-end">
+        <td class="pe-0 align-middle text-end">
           <button type="button" class="btn btn-dark-beige btn-sm rounded-pill">Download</button>
         </td>
       </tr>

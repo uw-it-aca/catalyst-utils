@@ -37,8 +37,9 @@
     <template #main>
       <!-- main section override -->
       <slot name="title">
-        <h1>{{ pageTitle }}</h1>
+        <h1 class="h4 mt-4 text-secondary">{{ pageTitle }}</h1>
       </slot>
+
       <slot name="content"></slot>
     </template>
     <template #footer> </template>
@@ -49,7 +50,6 @@
 import { Sidebar } from 'axdd-components';
 
 export default {
-  name: 'Catalyst',
   components: {
     sidebar: Sidebar,
   },

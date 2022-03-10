@@ -3,16 +3,17 @@
 <template>
   <layout :page-title="pageTitle">
     <template #content>
-      <div class="row">
+      <div class="row my-3">
         <div class="col">
           <!-- <div class="mb-3">{{ surveyData }}</div> -->
-
-          <h2>Your Surveys</h2>
-          <div class="card mb-5">
-            <div v-if="isLoading" class="card-body d-flex justify-content-center">
+          <div class="card shadow-sm mb-3">
+            <div class="card-header bg-white border-0 p-4 pb-3">
+              <h2 class="h6 m-0 text-uppercase fw-bold text-uppercase text-dark-beige">Yours</h2>
+            </div>
+            <div v-if="isLoading" class="card-body p-4 pt-0 d-flex justify-content-center">
               <survey-loading></survey-loading>
             </div>
-            <div v-else class="card-body table-responsive-md">
+            <div v-else class="card-body p-4 pt-0 table-responsive-md">
               <div v-if="surveyData.owned_surveys && surveyData.owned_surveys.length">
                 <survey :surveys="surveyData.owned_surveys" />
               </div>
@@ -20,14 +21,16 @@
             </div>
           </div>
 
-          <h2>Surveys Owned by Shared Netids</h2>
-          <div class="card mb-5">
-            <div v-if="isLoading" class="card-body d-flex justify-content-center">
+          <div class="card shadow-sm mb-3">
+            <div class="card-header bg-white border-0 p-4 pb-3">
+              <h2 class="h6 m-0 text-uppercase fw-bold text-uppercase text-dark-beige">Owned by Others</h2>
+            </div>
+            <div v-if="isLoading" class="card-body p-4 pt-0  d-flex justify-content-center">
               <div class="spinner-border text-secondary" role="status">
                 <span class="visually-hidden">Loading...</span>
               </div>
             </div>
-            <div v-else class="card-body table-responsive-md">
+            <div v-else class="card-body p-4 pt-0 table-responsive-md">
               <div v-if="surveyData.netid_surveys && surveyData.netid_surveys.length">
                 <survey :surveys="surveyData.netid_surveys" />
               </div>
@@ -35,14 +38,16 @@
             </div>
           </div>
 
-          <h2>Surveys you have Admin access to</h2>
-          <div class="card mb-5">
-            <div v-if="isLoading" class="card-body d-flex justify-content-center">
+          <div class="card shadow-sm mb-3">
+            <div class="card-header bg-white border-0 p-4 pb-33">
+              <h2 class="h6 m-0 text-uppercase fw-bold text-uppercase text-dark-beige">You have Admin access</h2>
+            </div>
+            <div v-if="isLoading" class="card-body p-4 pt-0  d-flex justify-content-center">
               <div class="spinner-border text-secondary" role="status">
                 <span class="visually-hidden">Loading...</span>
               </div>
             </div>
-            <div v-else class="card-body table-responsive-md">
+            <div v-else class="card-body p-4 pt-0 table-responsive-md">
               <div v-if="surveyData.admin_surveys && surveyData.admin_surveys.length">
                 <survey :surveys="surveyData.admin_surveys" />
               </div>
@@ -88,10 +93,10 @@ export default {
   },
   mounted() {
     // fetch the survey data
-    this.getSurveyData();
+    //this.getSurveyData();
 
     // use setTimeout to test loading locally
-    //setTimeout(this.getSurveyData, 3000);
+    setTimeout(this.getSurveyData, 3000);
   },
 };
 </script>
