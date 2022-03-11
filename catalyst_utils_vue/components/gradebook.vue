@@ -25,12 +25,12 @@
           </div>
         </td>
         <td class="pe-0 align-middle text-end">
-          <button
+          <a
             v-show="gradebook.participant_count > 0"
-            @click="downloadFile(gradebook.download_url)"
-            type="button"
+            v-bind:href="gradebook.download_url"
+            title="Download gradebook file"
             class="btn btn-dark-beige btn-sm rounded-pill px-3">Download
-          </button>
+          </a>
         </td>
       </tr>
     </tbody>
@@ -38,7 +38,7 @@
 </template>
 
 <script>
-import { formatDate, downloadFile } from '../helpers/utils';
+import { formatDate } from '../helpers/utils';
 
 export default {
   name: 'gradebook',
@@ -50,7 +50,6 @@ export default {
   },
   methods: {
     formatDate,
-    downloadFile
   },
 };
 </script>
