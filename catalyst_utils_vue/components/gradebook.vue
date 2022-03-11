@@ -4,7 +4,7 @@
       <tr>
         <th scope="col" class="w-25 ps-0">Created</th>
         <th scope="col">Name</th>
-        <th scope="col" class="pe-0" style="width: 110px;">&nbsp;</th>
+        <th scope="col" class="pe-0" style="width: 110px">&nbsp;</th>
       </tr>
     </thead>
     <tbody>
@@ -20,8 +20,14 @@
           </div>
           <div class="small text-muted">
             Students
-              <span v-if="gradebook.participant_count == null" class="badge rounded-pill bg-beige text-dark">0</span>
-              <span v-else>{{ gradebook.participant_count }}</span>
+            <span
+              v-if="gradebook.participant_count == null"
+              class="badge rounded-pill bg-beige text-dark"
+              >0</span
+            >
+            <span v-else class="badge rounded-pill bg-beige text-dark">{{
+              gradebook.participant_count
+            }}</span>
           </div>
         </td>
         <td class="pe-0 align-middle text-end">
@@ -29,7 +35,8 @@
             v-show="gradebook.participant_count > 0"
             v-bind:href="gradebook.download_url"
             title="Download gradebook file"
-            class="btn btn-dark-beige btn-sm rounded-pill px-3">Download
+            class="btn btn-dark-beige btn-sm rounded-pill px-3"
+            >Download
           </a>
         </td>
       </tr>

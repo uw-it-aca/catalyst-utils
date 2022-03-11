@@ -18,8 +18,6 @@
             ><i class="bi bi-check-lg me-2"></i>Surveys</router-link
           >
         </li>
-        <li><a href="/gradebooks">Gradebooks</a></li>
-        <li><router-link to="/gradebooks">Gradebooks</router-link></li>
         <li class="nav-item mb-1">
           <router-link
             class="nav-link text-light bg-dark-purple-hover rounded me-1 px-2 py-1"

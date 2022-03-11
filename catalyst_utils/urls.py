@@ -9,10 +9,10 @@ from catalyst_utils.views.pages import HomeView
 from catalyst_utils.views.api import (
     SurveyList, GradebookList, SurveyFile, GradebookFile)
 
-# debug routes for developing error pages
-"""
+# start with an empty url array
 urlpatterns = []
 
+# add debug routes for developing error pages
 if settings.DEBUG:
     urlpatterns += [
         re_path(
@@ -25,9 +25,9 @@ if settings.DEBUG:
             name="404_response",
         )
     ]
-"""
 
-urlpatterns = [
+# add the app urls
+urlpatterns += [
     re_path(r'^api/v1/gradebook$', GradebookList.as_view(),
             name='gradebook-list'),
     re_path(r'^api/v1/gradebook/(?P<gradebook_id>[\d]+)/file$',
@@ -38,3 +38,4 @@ urlpatterns = [
     re_path(r'^(gradebooks|surveys)$', HomeView.as_view()),
     re_path(r'^$', HomeView.as_view()),
 ]
+
