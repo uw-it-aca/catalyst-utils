@@ -27,7 +27,7 @@
         <td class="pe-0 align-middle text-end">
           <a
             v-show="gradebook.participant_count > 0"
-            href="{{ gradebook.download_url }}"
+            v-bind:href="gradebook.download_url"
             title="Download gradebook file"
             class="btn btn-dark-beige btn-sm rounded-pill px-3">Download
           </a>
