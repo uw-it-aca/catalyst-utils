@@ -53,7 +53,7 @@
         <td class="pe-0 align-middle text-end">
           <a
             v-show="survey.question_count > 0 || survey.response_count > 0"
-            href="{{ survey.download_url }}"
+            v-bind:href="survey.download_url"
             title="Download survey files"
             class="btn btn-dark-beige btn-sm rounded-pill px-3">Download
           </a>
