@@ -3,10 +3,14 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content="" />
-    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors" />
-    <meta name="generator" content="Hugo 0.88.1" />
     <title>404 (Not Found) - Catalyst</title>
+
+    <link rel="icon" href="/static/catalyst_utils/img/favicon.ico">
+
+    <!-- google fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Encode+Sans:wght@700&family=Open+Sans:ital,wght@0,400;0,700;1,400&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 
     <!-- CSS only -->
     <link
@@ -18,20 +22,28 @@
 
     <!-- Favicons -->
 
-    <style></style>
+    <style>
+      .axdd-font-open-sans {
+        font-family: 'Open Sans', sans-serif !important;
+      }
+      .axdd-font-encode-sans {
+        font-family: 'Encode Sans', sans-serif !important;
+      }
+    </style>
 
-    <!-- Custom styles for this template -->
-    <link href="starter-template.css" rel="stylesheet" />
   </head>
-  <body>
-    <div class="col-lg-6 mx-auto p-3 py-md-5">
-      <header class="d-flex align-items-center pb-3 mb-5 border-bottom">
+  <body class="axdd-font-open-sans">
+    <div class="col-lg-7 mx-auto p-3 py-md-5">
+
+      <header class="d-flex justify-content-between pb-3 mb-5 border-bottom">
         <a href="/" class="d-flex align-items-center text-dark text-decoration-none">
-          <span class="fs-4">Catalyst Archiver</span>
+          <span class="h3 m-0">Catalyst</span>
         </a>
+        <img src="/static/catalyst_utils/img/uw_logo_300.png" style="height:33px;">
       </header>
 
       <main>
+
         <h1>404 (Not Found)</h1>
         <p class="fs-5 col-md-8">
           We can't find the page you're looking for. Don't worry though, maybe we can still help you.
@@ -46,9 +58,11 @@
           <li>Go to the homepage and attempt to find the place you are looking for.</li>
         </ul>
       </main>
-      <footer class="pt-5 my-5 text-muted border-top">
+
+      <footer class="pt-3 my-5 border-top small">
         Copyright &copy; 2022 University of Washington
       </footer>
+
     </div>
 
     <!-- JavaScript Bundle with Popper -->
@@ -57,5 +71,6 @@
       integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
       crossorigin="anonymous"
     ></script>
+
   </body>
 </html>
