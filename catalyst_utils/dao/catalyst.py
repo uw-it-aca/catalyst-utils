@@ -1,20 +1,15 @@
 # Copyright 2022 UW-IT, University of Washington
 # SPDX-License-Identifier: Apache-2.0
 
-from django.core.files.storage import default_storage
 from django.utils import timezone
 from uw_catalyst.gradebook import (
     get_participants_for_gradebook, get_gradebook_export)
 from uw_catalyst.survey import (
     get_survey, get_survey_export, get_survey_results,
     get_survey_code_translation)
+from catalyst_utils.dao.file import write_file
 from restclients_core.exceptions import DataFailureException
 from dateutil.parser import parse
-
-
-def write_file(path, data):
-    with default_storage.open(path, mode='wb') as f:
-        f.write(data)
 
 
 def get_survey_attr(survey):
