@@ -5,8 +5,9 @@ from django.http import HttpResponse
 from django.views import View
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
-from django.core.files.storage import default_storage
+from django.core.exceptions import ObjectDoesNotExist
 from catalyst_utils.models import Person, Survey, Gradebook
+from catalyst_utils.dao.file import read_file
 from userservice.user import UserService
 from logging import getLogger
 import json
@@ -38,18 +39,13 @@ class APIView(View):
                             content_type='application/json')
 
     @staticmethod
-    def file_response(path, filename, content_type='text/csv'):
-        if not default_storage.exists(path):
-            return APIView.error_response(404, 'Not Available')
-
-        response = HttpResponse(content='', status=200,
+    def file_response(content, filename, content_type='text/csv'):
+        response = HttpResponse(content=content, status=200,
                                 content_type=content_type)
 
         response['Content-Disposition'] = 'attachment; filename="{}"'.format(
             re.sub(r'[,/]', '-', filename))
 
-        with default_storage.open(path, mode='r') as f:
-            response.content = f.read()
         return response
 
 
@@ -94,13 +90,18 @@ class SurveyFile(APIView):
         survey_id = kwargs.get('survey_id')
         try:
             survey = Survey.objects.get(survey_id=survey_id)
+
             if not survey.is_administrator(self.person):
                 return self.error_response(401, 'Not Authorized')
+
+            return self.file_response(read_file(survey.export_path),
+                                      survey.filename,
+                                      content_type='application/zip')
+
         except Survey.DoesNotExist:
             return self.error_response(404, 'Not Found')
-
-        return self.file_response(survey.export_path, survey.filename,
-                                  content_type='application/zip')
+        except ObjectDoesNotExist:
+            return self.error_response(404, 'Not Available')
 
 
 class GradebookFile(APIView):
@@ -108,11 +109,15 @@ class GradebookFile(APIView):
         gradebook_id = kwargs.get('gradebook_id')
         try:
             gradebook = Gradebook.objects.get(gradebook_id=gradebook_id)
+
             if not gradebook.is_administrator(self.person):
                 return self.error_response(401, 'Not Authorized')
+
+            return self.file_response(read_file(gradebook.export_path),
+                                      gradebook.filename,
+                                      content_type='application/vnd.ms-excel')
+
         except Gradebook.DoesNotExist:
             return self.error_response(404, 'Not Found')
-
-        return self.file_response(gradebook.export_path,
-                                  gradebook.filename,
-                                  content_type='application/vnd.ms-excel')
+        except ObjectDoesNotExist:
+            return self.error_response(404, 'Not Available')
