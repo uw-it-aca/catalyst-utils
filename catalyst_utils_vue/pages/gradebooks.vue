@@ -4,13 +4,13 @@
       <div class="row my-4">
         <div class="col">
           <div class="card border-light-gray shadow-sm rounded-3 mb-4">
-            <div class="card-header bg-white border-0 p-4 pb-3">
-              <h2 class="h6 m-0 text-uppercase fw-bold text-uppercase text-dark-beige">Yours</h2>
+            <div class="card-header bg-white border-0 p-4 pb-0">
+              <h2 class="h6 m-0 text-uppercase fw-bold text-uppercase axdd-font-encode-sans text-dark-beige">Yours</h2>
             </div>
-            <div v-if="isLoading" class="card-body p-4 pt-0 d-flex justify-content-center">
+            <div v-if="isLoading" class="card-body p-4 d-flex justify-content-center">
               <table-loading></table-loading>
             </div>
-            <div v-else class="card-body p-4 pt-0 table-responsive-md">
+            <div v-else class="card-body p-4">
               <div v-if="gradebookData.owned_gradebooks && gradebookData.owned_gradebooks.length">
                 <gradebook :gradebooks="gradebookData.owned_gradebooks" />
               </div>
@@ -19,13 +19,13 @@
           </div>
 
           <div class="card border-light-gray shadow-sm rounded-3 mb-4">
-            <div class="card-header bg-white border-0 p-4 pb-3">
-              <h2 class="h6 m-0 text-uppercase fw-bold text-uppercase text-dark-beige">Owned by Others</h2>
+            <div class="card-header bg-white border-0 p-4 pb-0">
+              <h2 class="h6 m-0 text-uppercase fw-bold text-uppercase axdd-font-encode-sans text-dark-beige">Owned by Others</h2>
             </div>
-            <div v-if="isLoading" class="card-body p-4 pt-0  d-flex justify-content-center">
+            <div v-if="isLoading" class="card-body p-4 pt-0 d-flex justify-content-center">
               <table-loading></table-loading>
             </div>
-            <div v-else class="card-body p-4 pt-0 table-responsive-md">
+            <div v-else class="card-body p-4">
               <div v-if="gradebookData.netid_gradebooks && gradebookData.netid_gradebooks.length">
                 <gradebook :gradebooks="gradebookData.netid_gradebooks" />
               </div>
@@ -34,13 +34,13 @@
           </div>
 
           <div class="card border-light-gray shadow-sm rounded-3 mb-4">
-            <div class="card-header bg-white border-0 p-4 pb-33">
-              <h2 class="h6 m-0 text-uppercase fw-bold text-uppercase text-dark-beige">You have Admin access</h2>
+            <div class="card-header bg-white border-0 p-4 pb-0">
+              <h2 class="h6 m-0 text-uppercase fw-bold text-uppercase axdd-font-encode-sans text-dark-beige">You have Admin access</h2>
             </div>
-            <div v-if="isLoading" class="card-body p-4 pt-0  d-flex justify-content-center">
+            <div v-if="isLoading" class="card-body p-4 pt-0 d-flex justify-content-center">
               <table-loading></table-loading>
             </div>
-            <div v-else class="card-body p-4 pt-0 table-responsive-md">
+            <div v-else class="card-body p-4">
               <div v-if="gradebookData.admin_gradebooks && gradebookData.admin_gradebooks.length">
                 <gradebook :gradebooks="gradebookData.admin_gradebooks" />
               </div>
