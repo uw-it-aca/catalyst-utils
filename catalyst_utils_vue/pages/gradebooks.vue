@@ -4,49 +4,55 @@
       <div class="row my-4">
         <div class="col">
           <div class="card border-light-gray shadow-sm rounded-3 mb-4">
-            <div class="card-header bg-white border-0 p-4 pb-0">
+            <div class="card-header bg-white p-4 pb-0">
               <h2 class="h6 m-0 text-uppercase fw-bold text-uppercase axdd-font-encode-sans text-dark-beige">Yours</h2>
+
+              <!-- TODO: componentize -->
+              <ul class="nav nav-tabs border-0 mt-3" id="myTab" role="tablist">
+                <li class="nav-item" role="presentation">
+                  <button class="nav-link active" id="yours-tab" data-bs-toggle="tab" data-bs-target="#yours" type="button" role="tab" aria-controls="yours" aria-selected="true">Yours</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <button class="nav-link" id="others-tab" data-bs-toggle="tab" data-bs-target="#others" type="button" role="tab" aria-controls="others" aria-selected="false">Owned by Others</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <button class="nav-link" id="admin-tab" data-bs-toggle="tab" data-bs-target="#admin" type="button" role="tab" aria-controls="admin" aria-selected="false">You have Admin Access</button>
+                </li>
+              </ul>
+
             </div>
-            <div v-if="isLoading" class="card-body p-4 d-flex justify-content-center">
-              <table-loading></table-loading>
-            </div>
-            <div v-else class="card-body p-4">
-              <div v-if="gradebookData.owned_gradebooks && gradebookData.owned_gradebooks.length">
-                <gradebook :gradebooks="gradebookData.owned_gradebooks" />
+            <div class="card-body p-4">
+
+              <div v-if="isLoading">
+                <table-loading></table-loading>
               </div>
-              <div v-else>No data</div>
+
+               <!-- TODO: componentize -->
+              <div v-else class="tab-content" id="myTabContent">
+                <div class="tab-pane fade show active" id="yours" role="tabpanel" aria-labelledby="yours-tab">
+                  <div v-if="gradebookData.owned_gradebooks && gradebookData.owned_gradebooks.length">
+                    <gradebook :gradebooks="gradebookData.owned_gradebooks" :role="'owner'" />
+                  </div>
+                  <div v-else>No data</div>
+                </div>
+                <div class="tab-pane fade" id="others" role="tabpanel" aria-labelledby="others-tab">
+                  <div v-if="gradebookData.netid_gradebooks && gradebookData.netid_gradebooks.length">
+                    <gradebook :gradebooks="gradebookData.netid_gradebooks" :role="'collaborator'" />
+                  </div>
+                  <div v-else>No data</div>
+                </div>
+                <div class="tab-pane fade" id="admin" role="tabpanel" aria-labelledby="admin-tab">
+                  <div v-if="gradebookData.admin_gradebooks && gradebookData.admin_gradebooks.length">
+                    <gradebook :gradebooks="gradebookData.admin_gradebooks" :role="'collaborator'" />
+                  </div>
+                  <div v-else>No data</div>
+                </div>
+              </div>
+              <!-- end of tab content -->
+
             </div>
           </div>
 
-          <div class="card border-light-gray shadow-sm rounded-3 mb-4">
-            <div class="card-header bg-white border-0 p-4 pb-0">
-              <h2 class="h6 m-0 text-uppercase fw-bold text-uppercase axdd-font-encode-sans text-dark-beige">Owned by Others</h2>
-            </div>
-            <div v-if="isLoading" class="card-body p-4 pt-0 d-flex justify-content-center">
-              <table-loading></table-loading>
-            </div>
-            <div v-else class="card-body p-4">
-              <div v-if="gradebookData.netid_gradebooks && gradebookData.netid_gradebooks.length">
-                <gradebook :gradebooks="gradebookData.netid_gradebooks" />
-              </div>
-              <div v-else>No data</div>
-            </div>
-          </div>
-
-          <div class="card border-light-gray shadow-sm rounded-3 mb-4">
-            <div class="card-header bg-white border-0 p-4 pb-0">
-              <h2 class="h6 m-0 text-uppercase fw-bold text-uppercase axdd-font-encode-sans text-dark-beige">You have Admin access</h2>
-            </div>
-            <div v-if="isLoading" class="card-body p-4 pt-0 d-flex justify-content-center">
-              <table-loading></table-loading>
-            </div>
-            <div v-else class="card-body p-4">
-              <div v-if="gradebookData.admin_gradebooks && gradebookData.admin_gradebooks.length">
-                <gradebook :gradebooks="gradebookData.admin_gradebooks" />
-              </div>
-              <div v-else>No data</div>
-            </div>
-          </div>
         </div>
       </div>
     </template>
@@ -85,8 +91,8 @@ export default {
     },
   },
   mounted() {
-    this.getGradebookData();
-    //setTimeout(this.getGradebookData, 3000);
+    //this.getGradebookData();
+    setTimeout(this.getGradebookData, 3000);
   },
 };
 </script>
