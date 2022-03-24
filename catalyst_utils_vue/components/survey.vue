@@ -47,12 +47,6 @@
         </td>
         <td class="align-middle">
           <a
-            v-bind:href="survey.download_url"
-            title="Download survey files"
-            class="btn btn-outline-dark-beige btn-sm rounded-pill px-3"
-            >Download
-          </a>
-          <a
             v-show="survey.question_count > 0 || survey.response_count > 0"
             v-bind:href="survey.download_url"
             title="Download survey files"

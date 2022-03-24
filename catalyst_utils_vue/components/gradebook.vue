@@ -29,12 +29,6 @@
           </div>
         </td>
         <td class="align-middle">
-          <a
-              v-bind:href="gradebook.download_url"
-              title="Download gradebook file"
-              class="btn btn-outline-dark-beige btn-sm rounded-pill px-3"
-              >Download
-            </a>
             <a
               v-show="gradebook.participant_count > 0"
               v-bind:href="gradebook.download_url"
