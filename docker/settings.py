@@ -24,7 +24,7 @@ TEMPLATES[0]['OPTIONS']['context_processors'] += [
 if os.getenv('ENV', 'localdev') == 'localdev':
     DEBUG = True
     DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
-    MEDIA_ROOT = os.getenv('IMPORT_DATA_ROOT', '/app/csv')
+    MEDIA_ROOT = os.getenv('MEDIA_ROOT', '/app/data')
     WEBPACK_LOADER = {
         'DEFAULT': {
             'STATS_FILE': os.path.join(BASE_DIR, 'catalyst_utils/static/webpack-stats.json'),

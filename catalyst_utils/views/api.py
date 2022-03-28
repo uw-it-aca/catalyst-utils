@@ -7,7 +7,7 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
 from catalyst_utils.models import Person, Survey, Gradebook
-from catalyst_utils.dao.file import read_file
+from catalyst_utils.dao.file import read_file, build_archive
 from userservice.user import UserService
 from logging import getLogger
 import json
@@ -90,18 +90,21 @@ class SurveyFile(APIView):
         survey_id = kwargs.get('survey_id')
         try:
             survey = Survey.objects.get(survey_id=survey_id)
-
-            if not survey.is_administrator(self.person):
-                return self.error_response(401, 'Not Authorized')
-
-            return self.file_response(read_file(survey.export_path),
-                                      survey.filename,
-                                      content_type='application/zip')
-
         except Survey.DoesNotExist:
             return self.error_response(404, 'Not Found')
+
+        if not survey.is_administrator(self.person):
+            return self.error_response(401, 'Not Authorized')
+
+        try:
+            archive = build_archive([survey.export_path,
+                                     survey.responses_path,
+                                     survey.code_translation_path])
         except ObjectDoesNotExist:
             return self.error_response(404, 'Not Available')
+
+        return self.file_response(archive, survey.filename,
+                                  content_type='application/zip')
 
 
 class GradebookFile(APIView):
@@ -109,15 +112,15 @@ class GradebookFile(APIView):
         gradebook_id = kwargs.get('gradebook_id')
         try:
             gradebook = Gradebook.objects.get(gradebook_id=gradebook_id)
+        except Gradebook.DoesNotExist:
+            return self.error_response(404, 'Not Found')
 
-            if not gradebook.is_administrator(self.person):
-                return self.error_response(401, 'Not Authorized')
+        if not gradebook.is_administrator(self.person):
+            return self.error_response(401, 'Not Authorized')
 
+        try:
             return self.file_response(read_file(gradebook.export_path),
                                       gradebook.filename,
                                       content_type='application/vnd.ms-excel')
-
-        except Gradebook.DoesNotExist:
-            return self.error_response(404, 'Not Found')
         except ObjectDoesNotExist:
             return self.error_response(404, 'Not Available')
