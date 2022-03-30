@@ -40,7 +40,7 @@
           <div class="small text-muted">{{ formatDate(gradebook.created_date) }}</div>
         </td>
         <td>
-          <div v-show="gradebook.owner.login_name != this.userName" class="small text-muted">{{ gradebook.owner.login_name }}</div>
+          <div class="small text-muted">{{ gradebook.owner.login_name }}</div>
         </td>
       </tr>
     </tbody>
