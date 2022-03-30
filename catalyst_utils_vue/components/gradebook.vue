@@ -5,7 +5,6 @@
         <th scope="col" class="w-50 ps-0">Name</th>
         <th scope="col">&nbsp;</th>
         <th scope="col">Created</th>
-        <th scope="col">Role</th>
         <th scope="col">Owner</th>
       </tr>
     </thead>
@@ -41,9 +40,6 @@
           <div class="small text-muted">{{ formatDate(gradebook.created_date) }}</div>
         </td>
         <td>
-          <div class="small text-muted">{{ role }}</div>
-        </td>
-        <td>
           <div v-show="gradebook.owner.login_name != this.userName" class="small text-muted">{{ gradebook.owner.login_name }}</div>
         </td>
       </tr>
@@ -61,10 +57,6 @@ export default {
       type: Array,
       required: true,
     },
-    role: {
-      type: String,
-      required: true,
-    }
   },
   data() {
     return {
