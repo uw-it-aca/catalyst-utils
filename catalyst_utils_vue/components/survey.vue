@@ -57,7 +57,7 @@
           <div class="small text-muted">{{ formatDate(survey.created_date) }}</div>
         </td>
         <td>
-          <div v-show="survey.owner.login_name != this.userName" class="small text-muted">{{ survey.owner.login_name }}</div>
+          <div class="small text-muted">{{ survey.owner.login_name }}</div>
         </td>
       </tr>
     </tbody>
