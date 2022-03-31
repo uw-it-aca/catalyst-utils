@@ -15,15 +15,10 @@ urlpatterns = []
 # add debug routes for developing error pages
 if settings.DEBUG:
     urlpatterns += [
-        re_path(
-            r"^500$",
-            TemplateView.as_view(template_name="500.html"),
-            name="500_response",
-        ),
-        re_path(r"^404$",
-            TemplateView.as_view(template_name="404.html"),
-            name="404_response",
-        )
+        re_path(r'^500$', TemplateView.as_view(template_name='500.html'),
+                name='500_response'),
+        re_path(r'^404$', TemplateView.as_view(template_name='404.html'),
+                name='404_response'),
     ]
 
 # add the app urls
@@ -38,4 +33,3 @@ urlpatterns += [
     re_path(r'^(gradebooks|surveys)$', HomeView.as_view()),
     re_path(r'^$', HomeView.as_view()),
 ]
-

@@ -48,6 +48,12 @@ class APIView(View):
 
         return response
 
+    @staticmethod
+    def sorted_tools(tools):
+        return sorted(tools,
+                      key=lambda t: (t['created_date'], t['name'].upper()),
+                      reverse=True)
+
 
 class SurveyList(APIView):
     def get(self, request, *args, **kwargs):
@@ -59,9 +65,12 @@ class SurveyList(APIView):
             return self.json_response(status=204)
 
         data = {
-            'owned_surveys': [s.json_data() for s in owned_surveys],
-            'netid_surveys': [s.json_data() for s in netid_surveys],
-            'admin_surveys': [s.json_data() for s in admin_surveys],
+            'owned_surveys': self.sorted_tools(
+                [s.json_data() for s in owned_surveys]),
+            'netid_surveys': self.sorted_tools(
+                [s.json_data() for s in netid_surveys]),
+            'admin_surveys': self.sorted_tools(
+                [s.json_data() for s in admin_surveys]),
         }
 
         return self.json_response(data)
@@ -77,9 +86,12 @@ class GradebookList(APIView):
             return self.json_response(status=204)
 
         data = {
-            'owned_gradebooks': [s.json_data() for s in owned_gradebooks],
-            'netid_gradebooks': [s.json_data() for s in netid_gradebooks],
-            'admin_gradebooks': [s.json_data() for s in admin_gradebooks],
+            'owned_gradebooks': self.sorted_tools(
+                [s.json_data() for s in owned_gradebooks]),
+            'netid_gradebooks': self.sorted_tools(
+                [s.json_data() for s in netid_gradebooks]),
+            'admin_gradebooks': self.sorted_tools(
+                [s.json_data() for s in admin_gradebooks]),
         }
 
         return self.json_response(data)
