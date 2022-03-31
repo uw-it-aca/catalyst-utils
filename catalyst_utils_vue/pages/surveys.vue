@@ -10,13 +10,19 @@
               <!-- TODO: componentize -->
               <ul class="nav nav-tabs border-0 mt-3" id="myTab" role="tablist">
                 <li class="nav-item" role="presentation">
-                  <button class="nav-link active" id="owner-tab" data-bs-toggle="tab" data-bs-target="#owner" type="button" role="tab" aria-controls="owner" aria-selected="true">Owner ({{ surveyData.owned_surveys.length }})</button>
+                  <button class="nav-link active" id="owner-tab" data-bs-toggle="tab" data-bs-target="#owner" type="button" role="tab" aria-controls="owner" aria-selected="true">
+                    Owner <span class="badge rounded-pill bg-beige text-dark">{{ surveyData.owned_surveys.length }}</span>
+                  </button>
                 </li>
                 <li class="nav-item" role="presentation">
-                  <button class="nav-link" id="collaborator-tab" data-bs-toggle="tab" data-bs-target="#collaborator" type="button" role="tab" aria-controls="collaborator" aria-selected="false">Collaborator ({{ surveyData.admin_surveys.length }})</button>
+                  <button class="nav-link" id="collaborator-tab" data-bs-toggle="tab" data-bs-target="#collaborator" type="button" role="tab" aria-controls="collaborator" aria-selected="false">
+                    Collaborator <span class="badge rounded-pill bg-beige text-dark">{{ surveyData.admin_surveys.length }}</span>
+                  </button>
                 </li>
                 <li class="nav-item" role="presentation">
-                  <button class="nav-link" id="admin-tab" data-bs-toggle="tab" data-bs-target="#admin" type="button" role="tab" aria-controls="admin" aria-selected="false">Shared-account Admin ({{ surveyData.netid_surveys.length }})</button>
+                  <button class="nav-link" id="admin-tab" data-bs-toggle="tab" data-bs-target="#admin" type="button" role="tab" aria-controls="admin" aria-selected="false">
+                    Shared-account Admin <span class="badge rounded-pill bg-beige text-dark">{{ surveyData.netid_surveys.length }}</span>
+                  </button>
                 </li>
               </ul>
 

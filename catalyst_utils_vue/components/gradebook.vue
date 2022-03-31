@@ -17,14 +17,7 @@
           </div>
           <div class="small text-muted">
             Students
-            <span
-              v-if="gradebook.participant_count == null"
-              class="badge rounded-pill bg-beige text-dark"
-              >0</span
-            >
-            <span v-else class="badge rounded-pill bg-beige text-dark">{{
-              gradebook.participant_count
-            }}</span>
+            <span class="badge rounded-pill bg-beige text-dark">{{ gradebook.participant_count }}</span>
           </div>
         </td>
         <td class="align-middle">
@@ -40,7 +33,7 @@
           <div class="small text-muted">{{ formatDate(gradebook.created_date) }}</div>
         </td>
         <td>
-          <div v-show="gradebook.owner.login_name != this.userName" class="small text-muted">{{ gradebook.owner.login_name }}</div>
+          <div class="small text-muted">{{ gradebook.owner.login_name }}</div>
         </td>
       </tr>
     </tbody>
