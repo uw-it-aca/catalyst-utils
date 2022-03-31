@@ -50,7 +50,8 @@ class APIView(View):
 
     @staticmethod
     def sorted_tools(tools):
-        return sorted(tools, key=lambda t: (t.created_date, t.name.upper),
+        return sorted(tools,
+                      key=lambda t: (t['created_date'], t['name'].upper()),
                       reverse=True)
 
 
