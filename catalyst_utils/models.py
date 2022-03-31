@@ -529,8 +529,8 @@ class Survey(models.Model):
             'html_url': 'https://catalyst.uw.edu/webq/survey/{}/{}'.format(
                 self.person.login_name, self.survey_id),
             'owner': self.person.json_data(),
-            'question_count': self.question_count,
-            'response_count': self.response_count,
+            'question_count': self.question_count or 0,
+            'response_count': self.response_count or 0,
             'is_research_confidential': self.is_research_confidential,
             'is_research_anonymous': self.is_research_anonymous,
             'download_url': reverse('survey-file', kwargs={
@@ -684,7 +684,7 @@ class Gradebook(models.Model):
             'html_url': 'https://catalyst.uw.edu/gradebook/{}/{}'.format(
                 self.owner.login_name, self.gradebook_id),
             'owner': self.owner.json_data(),
-            'participant_count': self.participant_count,
+            'participant_count': self.participant_count or 0,
             'download_url': reverse('gradebook-file', kwargs={
                 'gradebook_id': self.gradebook_id}),
         }

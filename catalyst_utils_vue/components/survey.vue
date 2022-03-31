@@ -18,25 +18,11 @@
           <div class="small text-muted d-flex">
             <div class="me-4">
               Questions
-              <span
-                v-if="survey.question_count == null"
-                class="badge rounded-pill bg-beige text-dark"
-                >0</span
-              >
-              <span v-else class="badge rounded-pill bg-beige text-dark">{{
-                survey.question_count
-              }}</span>
+              <span class="badge rounded-pill bg-beige text-dark">{{ survey.question_count }}</span>
             </div>
             <div class="me-4">
               Responses
-              <span
-                v-if="survey.response_count == null"
-                class="badge rounded-pill bg-beige text-dark"
-                >0</span
-              >
-              <span v-else class="badge rounded-pill bg-beige text-dark">{{
-                survey.response_count
-              }}</span>
+              <span class="badge rounded-pill bg-beige text-dark">{{ survey.response_count }}</span>
             </div>
             <div>
               <span v-if="survey.is_research_confidential">Confidential Research Survey</span>
