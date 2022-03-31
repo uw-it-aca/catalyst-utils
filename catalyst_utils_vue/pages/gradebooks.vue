@@ -10,13 +10,19 @@
               <!-- TODO: componentize -->
               <ul class="nav nav-tabs border-0 mt-3" id="myTab" role="tablist">
                 <li class="nav-item" role="presentation">
-                  <button class="nav-link active" id="owner-tab" data-bs-toggle="tab" data-bs-target="#owner" type="button" role="tab" aria-controls="owner" aria-selected="true">Owner ({{ gradebookData.owned_gradebooks.length }})</button>
+                  <button class="nav-link active" id="owner-tab" data-bs-toggle="tab" data-bs-target="#owner" type="button" role="tab" aria-controls="owner" aria-selected="true">
+                    Owner <span class="badge rounded-pill bg-beige text-dark">{{ gradebookData.owned_gradebooks.length }}</span>
+                  </button>
                 </li>
                 <li class="nav-item" role="presentation">
-                  <button class="nav-link" id="collaborator-tab" data-bs-toggle="tab" data-bs-target="#collaborator" type="button" role="tab" aria-controls="collaborator" aria-selected="false">Collaborator ({{ gradebookData.admin_gradebooks.length }})</button>
+                  <button class="nav-link" id="collaborator-tab" data-bs-toggle="tab" data-bs-target="#collaborator" type="button" role="tab" aria-controls="collaborator" aria-selected="false">
+                    Collaborator <span class="badge rounded-pill bg-beige text-dark">{{ gradebookData.admin_gradebooks.length }}</span>
+                  </button>
                 </li>
                 <li class="nav-item" role="presentation">
-                  <button class="nav-link" id="admin-tab" data-bs-toggle="tab" data-bs-target="#admin" type="button" role="tab" aria-controls="admin" aria-selected="false">Shared-account Admin ({{ gradebookData.netid_gradebooks.length }})</button>
+                  <button class="nav-link" id="admin-tab" data-bs-toggle="tab" data-bs-target="#admin" type="button" role="tab" aria-controls="admin" aria-selected="false">
+                    Shared-account Admin <span class="badge rounded-pill bg-beige text-dark">{{ gradebookData.netid_gradebooks.length }}</span>
+                  </button>
                 </li>
               </ul>
 
