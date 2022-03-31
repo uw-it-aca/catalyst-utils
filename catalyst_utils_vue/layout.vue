@@ -30,7 +30,7 @@
       <p class="text-light-gray bg-dark-purple rounded-3 p-3 small">
         Welcome to the Catalyst Archive tool!
         <br/><br/>
-        Catalyst WebQ and GradeBook will retire on June 16, 2022. This self-service archive enables you to download your WebQ surveys and responses, and GradeBook CSV files.
+        Catalyst WebQ and GradeBook will retire on June 16, 2022. This self-service archive enables you to download your WebQ surveys and responses, and GradeBook Excel files.
         <br/><br/>
         <a href="https://itconnect.uw.edu/learn/tools/catalyst-web-tools/retirement/" target="blank">Learn more</a>
       </p>
@@ -65,7 +65,7 @@ export default {
   data() {
     return {
       // minimum application setup overrides
-      appName: 'Catalyst',
+      appName: 'Catalyst Archive',
       appRootUrl: '/',
       userName: document.body.getAttribute('data-user-name'),
       signOutUrl: document.body.getAttribute('data-signout-url'),
