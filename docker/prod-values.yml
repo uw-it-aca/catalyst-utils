@@ -9,12 +9,20 @@ targetAverageUtilization: 100
 ingress:
   enabled: true
   tls:
-    catalyst:
+    archive:
+      secretName: archive.catalyst.uw.edu-ingress-cert
+      hosts:
+        - archive.catalyst.uw.edu
+    apps:
       secretName: apps.catalyst.uw.edu-ingress-cert
       hosts:
         - apps.catalyst.uw.edu
   hosts:
-    catalyst:
+    archive:
+      host: archive.catalyst.uw.edu
+      paths:
+        - "/"
+    apps:
       host: apps.catalyst.uw.edu
       paths:
         - "/"
@@ -22,6 +30,10 @@ ingress:
     cert-manager.io/cluster-issuer: letsencrypt
     nginx.ingress.kubernetes.io/ssl-ciphers: "ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES128-SHA256"
     nginx.ingress.kubernetes.io/client-body-buffer-size: "16K"
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      if ($host != 'archive.catalyst.uw.edu' ) {
+        return 301 $scheme://archive.catalyst.uw.edu;
+      }
 lifecycle:
   enabled: true
   preStop:
