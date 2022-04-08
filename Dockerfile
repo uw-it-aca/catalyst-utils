@@ -6,15 +6,15 @@ USER root
 RUN apt-get update && apt-get install mysql-client libmysqlclient-dev -y
 USER acait
 
-ADD --chown=acait:acait catalyst_utils/ /app/catalyst_utils/
+ADD --chown=acait:acait catalyst_utils/VERSION /app/catalyst_utils/
 ADD --chown=acait:acait setup.py /app/
 ADD --chown=acait:acait requirements.txt /app/
 
 RUN . /app/bin/activate && pip install -r requirements.txt
 RUN . /app/bin/activate && pip install mysqlclient
 
-ADD --chown=acait:acait docker/*.py /app/project/
-ADD --chown=acait:acait docker/*.sh /scripts/
+ADD --chown=acait:acait . /app/
+ADD --chown=acait:acait docker/ /app/project/
 RUN chmod u+x /scripts/app_start.sh
 
 FROM node:14.18.1-stretch AS wpack
