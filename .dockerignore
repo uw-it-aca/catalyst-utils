@@ -6,6 +6,7 @@
 *.egg
 *.egg-info
 *.sql.gz
+
 .cache
 .project
 .idea
@@ -17,6 +18,7 @@
 .installed.cfg
 .venv
 .env.sample
+
 Dockerfile*
 docker-compose*
 node_modules
@@ -34,10 +36,14 @@ wheels/
 logs/
 pyvenv.cfg
 pip-selfcheck.json
+get-pip.py
+db.sqlite3
+
 [Bb]in
 [Ii]nclude
 [Ll]ib
 [Ll]ib64
 [Ll]ocal
 [Ss]cripts
+
 docker/*-values.yml
