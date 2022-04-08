@@ -18,10 +18,6 @@
 .installed.cfg
 .venv
 .env.sample
-.coveragerc
-.prettierrc
-.editorconfig
-.eslintrc.js
 
 Dockerfile*
 docker-compose*
