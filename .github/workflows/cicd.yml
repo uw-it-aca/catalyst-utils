@@ -119,7 +119,7 @@ jobs:
           -e DJANGO_APP="$DJANGO_APP"
           -e "ENV=localdev" -e "AUTH=SAML_MOCK"
           app-test-container
-          bash -c ". ./docker/test.sh"
+          bash -c ". ./scripts/test.sh"
 
       - name: Record Test Results
         env:
