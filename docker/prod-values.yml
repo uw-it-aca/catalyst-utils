@@ -10,12 +10,12 @@ ingress:
   enabled: true
   tls:
     catalyst:
-      secretName: apps.catalyst.uw.edu-ingress-cert
+      secretName: archive.catalyst.uw.edu-ingress-cert
       hosts:
-        - apps.catalyst.uw.edu
+        - archive.catalyst.uw.edu
   hosts:
     catalyst:
-      host: apps.catalyst.uw.edu
+      host: archive.catalyst.uw.edu
       paths:
         - "/"
   annotations:
@@ -45,7 +45,7 @@ database:
   engine: mysql
   name: catalyst_utils_prod
   hostname: catalyst-db-service
-  secretName: apps.catalyst.uw.edu-sql-secrets
+  secretName: archive.catalyst.uw.edu-sql-secrets
 repo: catalyst
 instance: prod
 image:
@@ -58,7 +58,7 @@ memcached:
     type: RollingUpdate
 gcsCredentials:
   mounted: true
-  secretName: apps.catalyst.uw.edu-gcs-credentials
+  secretName: archive.catalyst.uw.edu-gcs-credentials
 cronjob:
   enabled: true
   jobs:
@@ -143,7 +143,7 @@ certs:
   mounted: true
   certPath: /certs/apps.catalyst.uw.edu-uwca.cert
   keyPath: /certs/apps.catalyst.uw.edu-uwca.key
-  secretName: apps.catalyst.uw.edu-uwca-certs
+  secretName: archive.catalyst.uw.edu-uwca-certs
 environmentVariables:
   - name: ENV
     value: prod
@@ -164,50 +164,50 @@ environmentVariables:
   - name: AUTH
     value: SAML
   - name: SAML_ENTITY_ID
-    value: https://apps.catalyst.uw.edu/saml2
+    value: https://archive.catalyst.uw.edu/saml2
   - name: CLUSTER_CNAME
-    value: apps.catalyst.uw.edu
+    value: archive.catalyst.uw.edu
 
 externalSecrets:
   enabled: true
   secrets:
-    - name: apps.catalyst.uw.edu-secrets
+    - name: archive.catalyst.uw.edu-secrets
       externalKey: axdd/kv/data/catalyst/prod/secrets
       data:
         - name: django-secret
           property: django-secret
         - name: storage-bucket-name
           property: storage-bucket-name
-    - name: apps.catalyst.uw.edu-shared-secrets
+    - name: archive.catalyst.uw.edu-shared-secrets
       externalKey: axdd/kv/data/catalyst/shared/secrets
       data:
         - name: storage-project-id
           property: storage-project-id
-    - name: apps.catalyst.uw.edu-sql-secrets
+    - name: archive.catalyst.uw.edu-sql-secrets
       externalKey: axdd/kv/data/catalyst/shared/sql-secrets
       data:
         - name: username
           property: username
         - name: password
           property: password
-    - name: apps.catalyst.uw.edu-gcs-credentials
+    - name: archive.catalyst.uw.edu-gcs-credentials
       externalKey: axdd/kv/data/catalyst/shared/gcs-credentials
       data:
         - name: credentials.json
           property: credentials.json
-    - name: apps.catalyst.uw.edu-uwca-certs
+    - name: archive.catalyst.uw.edu-uwca-certs
       externalKey: axdd/kv/data/catalyst/prod/uwca-certs
       data:
         - name: apps.catalyst.uw.edu-uwca.cert
           property: apps.catalyst.uw.edu-uwca.cert
         - name: apps.catalyst.uw.edu-uwca.key
           property: apps.catalyst.uw.edu-uwca.key
-    - name: apps.catalyst.uw.edu-ic-certs
+    - name: archive.catalyst.uw.edu-ic-certs
       externalKey: axdd/kv/data/catalyst/prod/ic-certs
       data:
-        - name: apps.catalyst.uw.edu-ic.cert
-          property: apps.catalyst.uw.edu-ic.cert
-    - name: apps.catalyst.uw.edu-uw-idp-cert
+        - name: archive.catalyst.uw.edu-ic.cert
+          property: archive.catalyst.uw.edu-ic.cert
+    - name: archive.catalyst.uw.edu-uw-idp-cert
       externalKey: axdd/kv/data/idp-cert
       data:
         - name: uw-idp-cert
@@ -216,21 +216,21 @@ externalSecrets:
 environmentVariablesSecrets:
   djangoSecret:
     name: DJANGO_SECRET
-    secretName: apps.catalyst.uw.edu-secrets
+    secretName: archive.catalyst.uw.edu-secrets
     secretKey: django-secret
   storageBucketName:
     name: STORAGE_BUCKET_NAME
-    secretName: apps.catalyst.uw.edu-secrets
+    secretName: archive.catalyst.uw.edu-secrets
     secretKey: storage-bucket-name
   storageProjectId:
     name: STORAGE_PROJECT_ID
-    secretName: apps.catalyst.uw.edu-shared-secrets
+    secretName: archive.catalyst.uw.edu-shared-secrets
     secretKey: storage-project-id
   samlSPCert:
     name: SP_CERT
-    secretName: apps.catalyst.uw.edu-ic-certs
-    secretKey: apps.catalyst.uw.edu-ic.cert
+    secretName: archive.catalyst.uw.edu-ic-certs
+    secretKey: archive.catalyst.uw.edu-ic.cert
   samlIDPCert:
     name: IDP_CERT
-    secretName: apps.catalyst.uw.edu-uw-idp-cert
+    secretName: archive.catalyst.uw.edu-uw-idp-cert
     secretKey: uw-idp-cert

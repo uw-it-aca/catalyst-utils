@@ -95,6 +95,7 @@ jobs:
       - name: Build App Image
         uses: docker/build-push-action@v2
         with:
+          context: .
           target: app-container
           tags: ${{ needs.context.outputs.image_tag }}
           push: false
