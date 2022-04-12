@@ -3,8 +3,8 @@
     <thead class="small">
       <tr>
         <th scope="col" class="w-50 ps-0">Name</th>
-        <th scope="col" >&nbsp;</th>
-        <th scope="col" >Created</th>
+        <th scope="col">&nbsp;</th>
+        <th scope="col">Created</th>
         <th scope="col">Role</th>
         <th scope="col">Owner</th>
       </tr>
@@ -16,7 +16,13 @@
           <div><span class="placeholder bg-light-gray col-5"></span></div>
         </td>
         <td class="align-middle">
-          <button type="button" disabled class="btn btn-sm placeholder bg-light-gray text-muted rounded-pill px-3">Download</button>
+          <button
+            type="button"
+            disabled
+            class="btn btn-sm placeholder bg-light-gray text-muted rounded-pill px-3"
+          >
+            Download
+          </button>
         </td>
         <td class="placeholder-glow">
           <div><span class="placeholder bg-light-gray col-10"></span></div>
