@@ -52,6 +52,26 @@
         }
     },
     {
+        "model": "catalyst_utils.SurveyAttr",
+        "pk": 1,
+        "fields": {
+            "survey": 1,
+            "title": "Survey Test",
+            "question_count": 5,
+            "response_count": 2
+        }
+    },
+    {
+        "model": "catalyst_utils.SurveyAttr",
+        "pk": 2,
+        "fields": {
+            "survey": 2,
+            "title": "Class Survey",
+            "question_count": 15,
+            "response_count": 220
+        }
+    },
+    {
         "model": "catalyst_utils.Gradebook",
         "pk": 1,
         "fields": {
@@ -71,6 +91,22 @@
             "create_date": "2019-04-01T00:00:00Z",
             "modification_date": "2019-06-01T00:00:00Z",
             "authz_id": 6
+        }
+    },
+    {
+        "model": "catalyst_utils.GradebookAttr",
+        "pk": 1,
+        "fields": {
+            "gradebook": 1,
+            "participant_count": 25
+        }
+    },
+    {
+        "model": "catalyst_utils.GradebookAttr",
+        "pk": 2,
+        "fields": {
+            "gradebook": 2,
+            "participant_count": 40
         }
     }
 ]
