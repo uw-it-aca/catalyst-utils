@@ -21,7 +21,7 @@ services:
   devtools:
     build:
       context: .
-      target: wpack
+      target: node-bundler
     restart: always
     container_name: catalyst_utils_devtools
     ports:
