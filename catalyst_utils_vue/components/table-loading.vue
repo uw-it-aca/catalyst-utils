@@ -10,7 +10,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr v-for="index in 6" :key="index">
+      <tr v-for="index in 4" :key="index">
         <td class="ps-0 placeholder-glow">
           <div><span class="placeholder bg-light-gray col-10"></span></div>
           <div><span class="placeholder bg-light-gray col-5"></span></div>
