@@ -17,17 +17,19 @@
           </div>
           <div class="small text-muted">
             Students
-            <span class="badge rounded-pill bg-beige text-dark">{{ gradebook.participant_count }}</span>
+            <span class="badge rounded-pill bg-beige text-dark">{{
+              gradebook.participant_count
+            }}</span>
           </div>
         </td>
         <td class="align-middle">
-            <a
-              v-show="gradebook.participant_count > 0"
-              v-bind:href="gradebook.download_url"
-              title="Download gradebook file"
-              class="btn btn-outline-dark-beige btn-sm rounded-pill px-3"
-              >Download
-            </a>
+          <a
+            v-show="gradebook.participant_count > 0"
+            v-bind:href="gradebook.download_url"
+            title="Download gradebook file"
+            class="btn btn-outline-dark-beige btn-sm rounded-pill px-3"
+            >Download
+          </a>
         </td>
         <td>
           <div class="small text-muted">{{ formatDate(gradebook.created_date) }}</div>
