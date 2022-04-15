@@ -141,9 +141,9 @@ cronjob:
           memory: 64Mi
 certs:
   mounted: true
-  certPath: /certs/apps.catalyst.uw.edu-uwca.cert
-  keyPath: /certs/apps.catalyst.uw.edu-uwca.key
-  secretName: archive.catalyst.uw.edu-uwca-certs
+  certPath: /certs/apps.catalyst.uw.edu-ic.cert
+  keyPath: /certs/apps.catalyst.uw.edu-ic.key
+  secretName: archive.catalyst.uw.edu-ic-certs
 environmentVariables:
   - name: ENV
     value: prod
@@ -195,18 +195,13 @@ externalSecrets:
       data:
         - name: credentials.json
           property: credentials.json
-    - name: archive.catalyst.uw.edu-uwca-certs
-      externalKey: axdd/kv/data/catalyst/prod/uwca-certs
-      data:
-        - name: apps.catalyst.uw.edu-uwca.cert
-          property: apps.catalyst.uw.edu-uwca.cert
-        - name: apps.catalyst.uw.edu-uwca.key
-          property: apps.catalyst.uw.edu-uwca.key
     - name: archive.catalyst.uw.edu-ic-certs
       externalKey: axdd/kv/data/catalyst/prod/ic-certs
       data:
         - name: archive.catalyst.uw.edu-ic.cert
           property: archive.catalyst.uw.edu-ic.cert
+        - name: archive.catalyst.uw.edu-ic.key
+          property: archive.catalyst.uw.edu-ic.key
     - name: archive.catalyst.uw.edu-uw-idp-cert
       externalKey: axdd/kv/data/idp-cert
       data:
