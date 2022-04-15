@@ -55,9 +55,9 @@ cronjob:
   enabled: false
 certs:
   mounted: true
-  certPath: /certs/test.catalyst.uw.edu-ic.cert
-  keyPath: /certs/test.catalyst.uw.edu-ic.key
-  secretName: test.catalyst.uw.edu-ic-certs
+  certPath: /certs/test.catalyst.uw.edu-uwca.cert
+  keyPath: /certs/test.catalyst.uw.edu-uwca.key
+  secretName: test.catalyst.uw.edu-uwca-certs
 environmentVariables:
   - name: ENV
     value: test
@@ -109,6 +109,13 @@ externalSecrets:
       data:
         - name: credentials.json
           property: credentials.json
+    - name: test.catalyst.uw.edu-uwca-certs
+      externalKey: axdd/kv/data/catalyst/test/uwca-certs
+      data:
+        - name: test.catalyst.uw.edu-uwca.cert
+          property: test.catalyst.uw.edu-uwca.cert
+        - name: test.catalyst.uw.edu-uwca.key
+          property: test.catalyst.uw.edu-uwca.key
     - name: test.catalyst.uw.edu-ic-certs
       externalKey: axdd/kv/data/catalyst/test/ic-certs
       data:
