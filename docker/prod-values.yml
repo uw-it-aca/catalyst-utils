@@ -207,6 +207,8 @@ externalSecrets:
       data:
         - name: archive.catalyst.uw.edu-ic.cert
           property: archive.catalyst.uw.edu-ic.cert
+        - name: archive.catalyst.uw.edu-ic.key
+          property: archive.catalyst.uw.edu-ic.key
     - name: archive.catalyst.uw.edu-uw-idp-cert
       externalKey: axdd/kv/data/idp-cert
       data:
