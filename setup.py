@@ -21,7 +21,7 @@ setup(
     packages=['catalyst_utils'],
     include_package_data=True,
     install_requires = [
-        'Django~=2.2',
+        'Django~=3.2',
         'django-userservice~=3.1',
         'django-storages[google]>=1.10',
         'uw-memcached-clients~=1.0',
@@ -48,6 +48,5 @@ setup(
         'License :: OSI Approved :: Apache Software License',
         'Operating System :: OS Independent',
         'Programming Language :: Python',
-        'Programming Language :: Python :: 3.6',
     ],
 )
