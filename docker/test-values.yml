@@ -54,7 +54,7 @@ gcsCredentials:
 mountedSecrets:
   enabled: true
   mountPath: /ssl
-  secretName: test-catalyst.uw.edu-openssl-conf
+  secretName: test.catalyst.uw.edu-openssl-conf
 cronjob:
   enabled: false
 certs:
