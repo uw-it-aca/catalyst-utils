@@ -27,8 +27,9 @@ lifecycle:
   preStop:
     enabled: true
 autoscaling:
-  enabled: false
-replicaCount: 1
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 5
 affinity:
    podsSpanNodes: true
 readiness:
@@ -59,6 +60,10 @@ memcached:
 gcsCredentials:
   mounted: true
   secretName: archive.catalyst.uw.edu-gcs-credentials
+mountedSecrets:
+  enabled: true
+  mountPath: /ssl
+  secretName: archive-catalyst.uw.edu-openssl-conf
 cronjob:
   enabled: true
   jobs:
@@ -168,6 +173,9 @@ environmentVariables:
   - name: CLUSTER_CNAME
     value: archive.catalyst.uw.edu
 
+  - name: OPENSSL_CONF
+    value: /ssl/openssl.cnf
+
 externalSecrets:
   enabled: true
   secrets:
@@ -214,6 +222,11 @@ externalSecrets:
       data:
         - name: uw-idp-cert
           property: cert
+    - name: archive.catalyst.uw.edu-openssl-conf
+      externalKey: axdd/kv/data/openssl-conf
+      data:
+        - name: openssl.cnf
+          property: openssl.cnf
 
 environmentVariablesSecrets:
   djangoSecret:

@@ -21,8 +21,6 @@ TEMPLATES[0]['OPTIONS']['context_processors'] += [
     'catalyst_utils.context_processors.django_debug',
 ]
 
-DEFAULT_AUTO_FIELD='django.db.models.AutoField'
-
 if os.getenv('ENV', 'localdev') == 'localdev':
     DEBUG = True
     DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
