@@ -51,6 +51,10 @@ memcached:
 gcsCredentials:
   mounted: true
   secretName: test.catalyst.uw.edu-gcs-credentials
+mountedSecrets:
+  enabled: true
+  mountPath: /ssl
+  secretName: test-catalyst.uw.edu-openssl-conf
 cronjob:
   enabled: false
 certs:
@@ -81,6 +85,9 @@ environmentVariables:
     value: https://test.catalyst.uw.edu/saml2
   - name: CLUSTER_CNAME
     value: test.catalyst.uw.edu
+
+  - name: OPENSSL_CONF
+    value: /ssl/openssl.cnf
 
 externalSecrets:
   enabled: true
@@ -128,6 +135,11 @@ externalSecrets:
       data:
         - name: uw-idp-cert
           property: cert
+    - name: test.catalyst.uw.edu-openssl-conf
+      externalKey: axdd/kv/data/openssl-conf
+      data:
+        - name: openssl.cnf
+          property: openssl.cnf
 
 environmentVariablesSecrets:
   djangoSecret:
