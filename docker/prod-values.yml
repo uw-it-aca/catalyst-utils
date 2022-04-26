@@ -63,7 +63,7 @@ gcsCredentials:
 mountedSecrets:
   enabled: true
   mountPath: /ssl
-  secretName: archive-catalyst.uw.edu-openssl-conf
+  secretName: archive.catalyst.uw.edu-openssl-conf
 cronjob:
   enabled: true
   jobs:
