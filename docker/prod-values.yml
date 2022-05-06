@@ -68,8 +68,19 @@ mountedSecrets:
 cronjob:
   enabled: true
   jobs:
-    - name: export-surveys
-      schedule: "*/9 * * * *"
+    - name: export-surveys-1
+      schedule: "0,10,20,30,40,50 * * * *"
+      command: ["/scripts/management_command.sh"]
+      args: ["export_surveys"]
+      resources:
+        limits:
+          cpu: 500m
+          memory: 256Mi
+        requests:
+          cpu: 25m
+          memory: 64Mi
+    - name: export-surveys-2
+      schedule: "5,15,25,35,45,55 * * * *"
       command: ["/scripts/management_command.sh"]
       args: ["export_surveys"]
       resources:
@@ -101,17 +112,17 @@ cronjob:
         requests:
           cpu: 25m
           memory: 64Mi
-    - name: update-survey-attr
-      schedule: "*/9 * * * *"
-      command: ["/scripts/management_command.sh"]
-      args: ["update_survey_attr"]
-      resources:
-        limits:
-          cpu: 500m
-          memory: 256Mi
-        requests:
-          cpu: 25m
-          memory: 64Mi
+    #- name: update-survey-attr
+    #  schedule: "*/9 * * * *"
+    #  command: ["/scripts/management_command.sh"]
+    #  args: ["update_survey_attr"]
+    #  resources:
+    #    limits:
+    #      cpu: 500m
+    #      memory: 256Mi
+    #    requests:
+    #      cpu: 25m
+    #      memory: 64Mi
     - name: update-gradebook-attr
       schedule: "*/27 * * * *"
       command: ["/scripts/management_command.sh"]
