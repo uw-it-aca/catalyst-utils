@@ -353,7 +353,7 @@ class SurveyManager(models.Manager):
         SurveyAttr.objects.addToJob(job_id, survey_ids)
 
         for survey in super().get_queryset().select_related('person').filter(
-                survey_id__in=list(survey_id)):
+                survey_id__in=list(survey_ids)):
             survey.export()
 
 
