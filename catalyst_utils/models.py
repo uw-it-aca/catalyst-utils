@@ -342,8 +342,18 @@ class SurveyManager(models.Manager):
 
     def export_files(self):
         limit = getattr(settings, 'SURVEY_EXPORT_LIMIT', 100)
-        for survey in super().get_queryset().select_related('person').all(
-                ).order_by('surveyattr__last_exported')[:limit]:
+        job_id = datetime.now().timestamp()
+
+        survey_ids = super().get_queryset().filter(
+            surveyattr__job_id__isnull=True
+        ).order_by(
+            'surveyattr__last_exported'
+        ).values_list('survey_id', flat=True)[:limit]
+
+        SurveyAttr.objects.addToJob(job_id, survey_ids)
+
+        for survey in super().get_queryset().select_related('person').filter(
+                survey_id__in=list(survey_id)):
             survey.export()
 
 
@@ -553,6 +563,7 @@ class Survey(models.Model):
 
     def export(self):
         try:
+            self.update_attr()
             if self.question_count:
                 if (self.surveyattr.last_exported is None or
                         self.surveyattr.last_exported < self.last_modified):
@@ -570,6 +581,7 @@ class Survey(models.Model):
 
         self.surveyattr.last_exported = datetime.utcnow().replace(
             tzinfo=timezone.utc)
+        self.surveyattr.job_id = None
         self.surveyattr.save()
 
 
@@ -727,6 +739,12 @@ class Gradebook(models.Model):
         return cutoff - relativedelta(years=interval)
 
 
+class SurveyAttrManager(models.Manager):
+    def addToJob(self, job_id, survey_ids):
+        super().get_queryset().filter(
+            survey__survey_id__in=list(survey_ids)).update(job_id=job_id)
+
+
 class SurveyAttr(models.Model):
     """
     Extends webq.Survey data
@@ -741,11 +759,15 @@ class SurveyAttr(models.Model):
     update_status = models.IntegerField(default=200)
     last_exported = models.DateTimeField(null=True)
     export_status = models.IntegerField(default=200)
+    job_id = models.FloatField(null=True)
+
+    objects = SurveyAttrManager()
 
     class Meta:
         indexes = [
             models.Index(fields=['update_status'], name='s_update_status_idx'),
             models.Index(fields=['export_status'], name='s_export_status_idx'),
+            models.Index(fields=['job_id'], name='s_job_id_idx'),
         ]
 
 
