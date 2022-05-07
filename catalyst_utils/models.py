@@ -341,7 +341,7 @@ class SurveyManager(models.Manager):
             survey.update_attr()
 
     def export_files(self):
-        limit = getattr(settings, 'SURVEY_EXPORT_LIMIT', 125)
+        limit = getattr(settings, 'SURVEY_EXPORT_LIMIT', 200)
         job_id = datetime.now().timestamp()
 
         survey_ids = super().get_queryset().filter(
