@@ -18,3 +18,5 @@ class RestClientsCache(RestclientPymemcacheClient):
                 return ONE_DAY * 30
             else:
                 return ONE_MINUTE
+        elif 'catalyst' == service:
+            return None
