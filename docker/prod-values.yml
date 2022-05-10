@@ -68,19 +68,8 @@ mountedSecrets:
 cronjob:
   enabled: true
   jobs:
-    - name: export-surveys-1
-      schedule: "0,10,20,30,40,50 * * * *"
-      command: ["/scripts/management_command.sh"]
-      args: ["export_surveys"]
-      resources:
-        limits:
-          cpu: 500m
-          memory: 256Mi
-        requests:
-          cpu: 25m
-          memory: 64Mi
-    - name: export-surveys-2
-      schedule: "3,13,23,33,43,53 * * * *"
+    - name: export-surveys
+      schedule: "*/5 * * * *"
       command: ["/scripts/management_command.sh"]
       args: ["export_surveys"]
       resources:
