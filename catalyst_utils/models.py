@@ -346,19 +346,19 @@ class SurveyManager(models.Manager):
                 ).order_by('surveyattr__last_exported')[:limit]:
             survey.export()
 
-        #job_id = datetime.now().timestamp()
-
-        #survey_ids = super().get_queryset().filter(
-        #    surveyattr__job_id__isnull=True
-        #).order_by(
-        #    'surveyattr__last_exported'
-        #).values_list('survey_id', flat=True)[:limit]
-
-        #SurveyAttr.objects.addToJob(job_id, survey_ids)
-
-        #for survey in super().get_queryset().select_related('person').filter(
-        #        survey_id__in=list(survey_ids)):
-        #    survey.export()
+#        job_id = datetime.now().timestamp()
+#
+#        survey_ids = super().get_queryset().filter(
+#            surveyattr__job_id__isnull=True
+#        ).order_by(
+#            'surveyattr__last_exported'
+#        ).values_list('survey_id', flat=True)[:limit]
+#
+#        SurveyAttr.objects.addToJob(job_id, survey_ids)
+#
+#        for survey in super().get_queryset().select_related('person').filter(
+#                survey_id__in=list(survey_ids)):
+#            survey.export()
 
 
 class Survey(models.Model):
@@ -552,18 +552,18 @@ class Survey(models.Model):
         }
 
     def update_attr(self):
+        data = {'last_updated': datetime.utcnow().replace(tzinfo=timezone.utc)}
         try:
-            data = get_survey_attr(self)
+            data.update(get_survey_attr(self))
             data['update_status'] = 200
         except DataFailureException as ex:
-            data = {'update_status': ex.status}
+            data['update_status'] = ex.status
             logger.info('Survey update failed: {}'.format(ex))
-
-        data['last_updated'] = datetime.utcnow().replace(tzinfo=timezone.utc)
-        attr, created = SurveyAttr.objects.update_or_create(
-            survey=self, defaults=data)
-        if created:
-            self.surveyattr = attr
+        finally:
+            attr, created = SurveyAttr.objects.update_or_create(
+                survey=self, defaults=data)
+            if created:
+                self.surveyattr = attr
 
     def export(self):
         try:
