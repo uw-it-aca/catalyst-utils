@@ -342,19 +342,23 @@ class SurveyManager(models.Manager):
 
     def export_files(self):
         limit = getattr(settings, 'SURVEY_EXPORT_LIMIT', 200)
-        job_id = datetime.now().timestamp()
-
-        survey_ids = super().get_queryset().filter(
-            surveyattr__job_id__isnull=True
-        ).order_by(
-            'surveyattr__last_exported'
-        ).values_list('survey_id', flat=True)[:limit]
-
-        SurveyAttr.objects.addToJob(job_id, survey_ids)
-
-        for survey in super().get_queryset().select_related('person').filter(
-                survey_id__in=list(survey_ids)):
+        for survey in super().get_queryset().select_related('person').all(
+                ).order_by('surveyattr__last_exported')[:limit]:
             survey.export()
+
+        #job_id = datetime.now().timestamp()
+
+        #survey_ids = super().get_queryset().filter(
+        #    surveyattr__job_id__isnull=True
+        #).order_by(
+        #    'surveyattr__last_exported'
+        #).values_list('survey_id', flat=True)[:limit]
+
+        #SurveyAttr.objects.addToJob(job_id, survey_ids)
+
+        #for survey in super().get_queryset().select_related('person').filter(
+        #        survey_id__in=list(survey_ids)):
+        #    survey.export()
 
 
 class Survey(models.Model):
