@@ -45,7 +45,7 @@ image:
   repository: gcr.io/uwit-mci-axdd/catalyst
   tag: IMAGE_TAG
 labels:
-  billing-code: 522
+  billing-code: "522"
 memcached:
   enabled: true
   replicaCount: 1
