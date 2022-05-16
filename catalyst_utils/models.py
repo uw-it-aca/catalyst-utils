@@ -24,7 +24,11 @@ class PersonManager(models.Manager):
     def update_netid_admins(self):
         for person in super().get_queryset().filter(
                 personattr__is_person=False):
-            person.update_admins()
+            try:
+                person.update_admins()
+            except DataFailureException as ex:
+                logger.info('Update netid admins failed for {}: {}'.format(
+                    person.login_name, ex))
 
     def update_person_attr(self):
         limit = getattr(settings, 'PERSON_UPDATE_LIMIT', 250)
