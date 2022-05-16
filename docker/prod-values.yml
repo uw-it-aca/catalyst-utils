@@ -170,50 +170,50 @@ externalSecrets:
   enabled: true
   secrets:
     - name: archive.catalyst.uw.edu-secrets
-      externalKey: axdd/kv/data/catalyst/prod/secrets
+      externalKey: catalyst/prod/secrets
       data:
         - name: django-secret
           property: django-secret
         - name: storage-bucket-name
           property: storage-bucket-name
     - name: archive.catalyst.uw.edu-shared-secrets
-      externalKey: axdd/kv/data/catalyst/shared/secrets
+      externalKey: catalyst/shared/secrets
       data:
         - name: storage-project-id
           property: storage-project-id
     - name: archive.catalyst.uw.edu-sql-secrets
-      externalKey: axdd/kv/data/catalyst/shared/sql-secrets
+      externalKey: catalyst/shared/sql-secrets
       data:
         - name: username
           property: username
         - name: password
           property: password
     - name: archive.catalyst.uw.edu-gcs-credentials
-      externalKey: axdd/kv/data/catalyst/shared/gcs-credentials
+      externalKey: catalyst/shared/gcs-credentials
       data:
         - name: credentials.json
           property: credentials.json
     - name: archive.catalyst.uw.edu-uwca-certs
-      externalKey: axdd/kv/data/catalyst/prod/uwca-certs
+      externalKey: catalyst/prod/uwca-certs
       data:
         - name: apps.catalyst.uw.edu-uwca.cert
           property: apps.catalyst.uw.edu-uwca.cert
         - name: apps.catalyst.uw.edu-uwca.key
           property: apps.catalyst.uw.edu-uwca.key
     - name: archive.catalyst.uw.edu-ic-certs
-      externalKey: axdd/kv/data/catalyst/prod/ic-certs
+      externalKey: catalyst/prod/ic-certs
       data:
         - name: archive.catalyst.uw.edu-ic.cert
           property: archive.catalyst.uw.edu-ic.cert
         - name: archive.catalyst.uw.edu-ic.key
           property: archive.catalyst.uw.edu-ic.key
     - name: archive.catalyst.uw.edu-uw-idp-cert
-      externalKey: axdd/kv/data/idp-cert
+      externalKey: idp-cert
       data:
         - name: uw-idp-cert
           property: cert
     - name: archive.catalyst.uw.edu-openssl-conf
-      externalKey: axdd/kv/data/openssl-conf
+      externalKey: openssl-conf
       data:
         - name: openssl.cnf
           property: openssl.cnf
