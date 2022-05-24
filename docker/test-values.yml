@@ -41,9 +41,6 @@ database:
   secretName: test.catalyst.uw.edu-sql-secrets
 repo: catalyst
 instance: test
-image:
-  repository: gcr.io/uwit-mci-axdd/catalyst
-  tag: IMAGE_TAG
 memcached:
   enabled: true
   replicaCount: 1
