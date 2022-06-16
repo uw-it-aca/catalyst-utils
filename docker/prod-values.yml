@@ -9,19 +9,11 @@ targetAverageUtilization: 100
 ingress:
   enabled: true
   tls:
-    catalyst-redirect:
-      secretName: catalyst.uw.edu-ingress-cert
-      hosts:
-        - catalyst.uw.edu
     catalyst-archive:
       secretName: archive.catalyst.uw.edu-ingress-cert
       hosts:
         - archive.catalyst.uw.edu
   hosts:
-    catalyst-redirect:
-      host: catalyst.uw.edu
-      paths:
-        - "/"
     catalyst-archive:
       host: archive.catalyst.uw.edu
       paths:
