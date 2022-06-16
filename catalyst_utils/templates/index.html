@@ -20,13 +20,19 @@
 
 <body data-django-debug="{{ django_debug|lower}}" data-user-name="{{ username }}" data-signout-url="{{ signout_url }}"{% if google_analytics %} data-google-analytics="{{ google_analytics }}"{% endif %} class="bg-light">
 
-    <div class="alert alert-{{ message_level }} hidden-print" role="alert">
-        {% for message in messages %}
-        <div class="container"{% if not forloop.last %} style="margin-bottom:10px;"{% endif %}>
-            <i class="fas fa-exclamation-circle fa-lg"></i> <span class="persistent-message">{{ message }}</span>
+    {% if messages %}
+    <div class="alert alert-{{ message_level }} d-print-none border-0 m-0 small" role="alert">
+        <div class="container-xl">
+          {% for message in messages %}
+          <div class="row">
+              <div class="col text-center {% if not forloop.last %}mb-2{% endif %}">
+              <i class="bi bi-exclamation-circle-fill me-2"></i><span>{{ message }}</span>
+              </div>
+          </div>
+          {% endfor %}
         </div>
-        {% endfor %}
     </div>
+    {% endif %}
 
     <!-- vue app will be injected here -->
     <div id="app"></div>
