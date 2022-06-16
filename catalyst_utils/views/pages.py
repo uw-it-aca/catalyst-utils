@@ -20,8 +20,8 @@ class HomeView(TemplateView):
         context['messages'] = []
 
         for message in Message.objects.active_messages():
-            if 'message_level' not in ret:
-                ret['message_level'] = message.get_level_display().lower()
+            if 'message_level' not in context:
+                context['message_level'] = message.get_level_display().lower()
             context['messages'].append(message.render())
 
         return context
