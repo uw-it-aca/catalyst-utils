@@ -345,11 +345,12 @@ class SurveyManager(models.Manager):
             survey.update_attr()
 
     def export_files(self):
-        limit = getattr(settings, 'SURVEY_EXPORT_LIMIT', 200)
+        limit = getattr(settings, 'SURVEY_EXPORT_LIMIT', 500)
         job_id = datetime.now().timestamp()
 
         survey_ids = super().get_queryset().filter(
-            surveyattr__job_id__isnull=True
+            surveyattr__job_id__isnull=True,
+            surveyattr__last_updated__isnull=True
         ).order_by(
             'surveyattr__last_exported'
         ).values_list('survey_id', flat=True)[:limit]
