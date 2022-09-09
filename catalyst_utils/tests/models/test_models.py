@@ -118,7 +118,7 @@ class GradebookModelTest(TestCase):
     def test_json_data(self):
         gradebook = Gradebook.objects.get(gradebook_id=1)
         self.assertEqual(gradebook.json_data(), {
-            'created_date': '2017-01-01T00:00:00+00:00',
+            'created_date': '2022-01-01T00:00:00+00:00',
             'html_url': 'https://catalyst.uw.edu/gradebook/javerage/1',
             'name': 'CHEM 201 Gradebook',
             'participant_count': 25,
@@ -127,7 +127,7 @@ class GradebookModelTest(TestCase):
 
         gradebook = Gradebook.objects.get(gradebook_id=2)
         self.assertEqual(gradebook.json_data(), {
-            'created_date': '2019-04-01T00:00:00+00:00',
+            'created_date': '2022-04-01T00:00:00+00:00',
             'html_url': 'https://catalyst.uw.edu/gradebook/javerage/2',
             'name': 'CHEM 202 A Gradebook',
             'participant_count': 40,

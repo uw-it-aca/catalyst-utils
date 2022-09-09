@@ -10,5 +10,10 @@ module.exports = {
   ],
   env: {
     "vue/setup-compiler-macros": true,
+    node: true,
+    jest: true,
+  },
+  rules: {
+    'vue/multi-word-component-names': 'off',
   },
 };

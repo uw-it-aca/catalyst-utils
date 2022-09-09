@@ -77,17 +77,6 @@ mountedSecrets:
 cronjob:
   enabled: true
   jobs:
-    - name: export-surveys
-      schedule: "*/20 * * * *"
-      command: ["/scripts/management_command.sh"]
-      args: ["export_surveys"]
-      resources:
-        limits:
-          cpu: 500m
-          memory: 256Mi
-        requests:
-          cpu: 25m
-          memory: 64Mi
     - name: update-person-attr
       schedule: "*/20 15-23 * * *"
       command: ["/scripts/management_command.sh"]
