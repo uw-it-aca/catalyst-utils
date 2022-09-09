@@ -66,7 +66,7 @@
 </template>
 
 <script>
-import { Card, CardHeading, CardAction, Tabs, TabItem, TabPanel } from 'axdd-components';
+import { Card, CardHeading, Tabs, TabItem, TabPanel } from 'axdd-components';
 import Layout from '../layout.vue';
 import Survey from '../components/survey.vue';
 import TableLoading from '../components/table-loading.vue';
@@ -78,7 +78,6 @@ export default {
     'table-loading': TableLoading,
     'axdd-card': Card,
     'axdd-card-heading': CardHeading,
-    'axdd-card-action': CardAction,
     'axdd-tabs': Tabs,
     'axdd-tab-item': TabItem,
     'axdd-tab-panel': TabPanel,
@@ -99,7 +98,7 @@ export default {
           this.isLoading = false;
         })
         .catch((error) => {
-          // Do something useful with the error
+            this.requestError = error;
         });
     },
   },
