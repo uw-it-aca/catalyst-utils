@@ -2,15 +2,15 @@
   <table class="table mb-0">
     <thead class="small">
       <tr>
-        <th scope="col" class="w-50 ps-0">Name</th>
+        <th scope="col" class="w-50">Name</th>
         <th scope="col">&nbsp;</th>
         <th scope="col">Created</th>
         <th scope="col">Owner</th>
       </tr>
     </thead>
-    <tbody>
+    <tbody class="table-group-divider">
       <tr v-for="(gradebook, index) in gradebooks" :key="index">
-        <td class="ps-0">
+        <td>
           <div>
             <span v-if="gradebook.name == null" class="">null</span>
             <span v-else>{{ gradebook.name }}</span>
@@ -32,7 +32,9 @@
           </a>
         </td>
         <td>
-          <div class="small text-muted">{{ formatDate(gradebook.created_date) }}</div>
+          <div class="small text-muted">
+            {{ formatDate(gradebook.created_date) }}
+          </div>
         </td>
         <td>
           <div class="small text-muted">{{ gradebook.owner.login_name }}</div>
@@ -43,10 +45,10 @@
 </template>
 
 <script>
-import { formatDate } from '../helpers/utils';
+import { formatDate } from "../helpers/utils";
 
 export default {
-  name: 'gradebook',
+  name: "gradebook",
   props: {
     gradebooks: {
       type: Array,
@@ -55,7 +57,7 @@ export default {
   },
   data() {
     return {
-      userName: document.body.getAttribute('data-user-name'),
+      userName: document.body.getAttribute("data-user-name"),
     };
   },
   methods: {
@@ -63,3 +65,11 @@ export default {
   },
 };
 </script>
+
+<style lang="scss">
+.table tbody {
+  tr:last-of-type {
+    border-color: transparent !important;
+  }
+}
+</style>
