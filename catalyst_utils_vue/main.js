@@ -1,38 +1,38 @@
-import { createApp } from 'vue'
-import App from './app.vue';
-import router from './router';
-import store from './store';
+import { createApp } from "vue";
+import App from "./app.vue";
+import router from "./router";
+import store from "./store";
 
-import VueGtag from 'vue-gtag-next';
-import VueMq from 'vue3-mq';
+import VueGtag from "vue-gtag-next";
+import { Vue3Mq } from "vue3-mq";
 
 // bootstrap js
-import 'bootstrap';
+import "bootstrap";
 
 // custom bootstrap theming
-import './css/custom.scss';
+import "./css/custom.scss";
 
 const app = createApp(App);
 
 // MARK: google analytics data stream measurement_id
-const gaCode = document.body.getAttribute('google-analytics');
-const debugMode = document.body.getAttribute('django-debug');
+const gaCode = document.body.getAttribute("data-google-analytics");
+const debugMode = document.body.getAttribute("data-django-debug");
 
 app.config.productionTip = false;
 
-// vue-gtag
+// vue-gtag-next
 app.use(VueGtag, {
-  config: {
+  isEnabled: debugMode == "false",
+  property: {
     id: gaCode,
     params: {
       anonymize_ip: true,
     },
   },
-  enabled: debugMode == 'true',
 });
 
 // vue-mq (media queries)
-app.use(VueMq, {
+app.use(Vue3Mq, {
   breakpoints: {
     // breakpoints == min-widths of next size
     mobile: 768, // tablet begins 768px
