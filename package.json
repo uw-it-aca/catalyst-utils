@@ -1,7 +1,7 @@
 {
-  "name": "catalyst_utils",
+  "name": "catalyst-utils",
   "version": "1.0.0",
-  "description": "catalyst_utils some description text",
+  "description": "catalyst-utils",
   "main": "webpack.config.js",
   "scripts": {
     "test": "jest",
@@ -10,14 +10,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/uw-it-aca/catalyst_utils.git"
+    "url": "git+https://github.com/uw-it-aca/catalyst-utils.git"
   },
   "author": "Your Name Here",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/uw-it-aca/catalyst_utils/issues"
+    "url": "https://github.com/uw-it-aca/catalyst-utils/issues"
   },
-  "homepage": "https://github.com/uw-it-aca/catalyst_utils#readme",
+  "homepage": "https://github.com/uw-it-aca/catalyst-utils#readme",
   "dependencies": {
     "@popperjs/core": "^2.9.2",
     "axdd-components": "git+https://github.com/uw-it-aca/axdd-components.git#1.0.4a",
