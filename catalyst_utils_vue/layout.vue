@@ -1,13 +1,18 @@
 <template>
   <!-- layout.vue: this is where you override the layout -->
-  <sidebar
+  <axdd-sidebar
     :app-name="appName"
     :app-root-url="appRootUrl"
     :page-title="pageTitle"
     :user-name="userName"
     :sign-out-url="signOutUrl"
   >
-    <template #header></template>
+    <template #profile>
+      <axdd-profile
+        :user-netid="userName"
+        :signout-url="signOutUrl"
+      ></axdd-profile>
+    </template>
     <template #navigation>
       <ul class="nav flex-column mb-5">
         <li class="nav-item mb-1">
@@ -27,14 +32,21 @@
           >
         </li>
       </ul>
+    </template>
+    <template #aside>
       <p class="text-light-gray bg-dark-purple rounded-3 p-3 small">
         Welcome to the Catalyst Archive tool!
-        <br/><br/>
-        Catalyst WebQ and GradeBook retired on June 16, 2022. This self-service archive enables you to download your WebQ surveys and responses, and GradeBook Excel files.
-        <br/><br/>
-        <a href="https://itconnect.uw.edu/learn/tools/catalyst-web-tools/catalyst-archive/" target="blank">Learn more</a>
+        <br /><br />
+        Catalyst WebQ and GradeBook retired on June 16, 2022. This self-service
+        archive enables you to download your WebQ surveys and responses, and
+        GradeBook Excel files.
+        <br /><br />
+        <a
+          href="https://itconnect.uw.edu/learn/tools/catalyst-web-tools/catalyst-archive/"
+          target="blank"
+          >Learn more</a
+        >
       </p>
-      <br /><br />
     </template>
     <template #main>
       <!-- main section override -->
@@ -42,19 +54,19 @@
         <h1 class="visually-hidden">{{ pageTitle }}</h1>
       </slot>
 
-        <slot name="content"></slot>
-
+      <slot name="content"></slot>
     </template>
     <template #footer> </template>
-  </sidebar>
+  </axdd-sidebar>
 </template>
 
 <script>
-import { Sidebar } from 'axdd-components';
+import { Sidebar, Profile } from "axdd-components";
 
 export default {
   components: {
-    sidebar: Sidebar,
+    "axdd-sidebar": Sidebar,
+    "axdd-profile": Profile,
   },
   props: {
     pageTitle: {
@@ -65,10 +77,10 @@ export default {
   data() {
     return {
       // minimum application setup overrides
-      appName: 'Catalyst Archive',
-      appRootUrl: '/',
-      userName: document.body.getAttribute('data-user-name'),
-      signOutUrl: document.body.getAttribute('data-signout-url'),
+      appName: "Catalyst Archive",
+      appRootUrl: "/",
+      userName: document.body.getAttribute("data-user-name"),
+      signOutUrl: document.body.getAttribute("data-signout-url"),
 
       // automatically set year
       currentYear: new Date().getFullYear(),
@@ -76,7 +88,7 @@ export default {
   },
   created: function () {
     // constructs page title in the following format "Page Title - AppName"
-    document.title = this.pageTitle + ' - ' + this.appName;
+    document.title = this.pageTitle + " - " + this.appName;
   },
 };
 </script>
