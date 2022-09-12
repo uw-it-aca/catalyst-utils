@@ -9,11 +9,19 @@ targetAverageUtilization: 100
 ingress:
   enabled: true
   tls:
+    solstice-redirect:
+      secretName: solstice.uw.edu-ingress-cert
+      hosts:
+        - solstice.uw.edu
     catalyst-archive:
       secretName: archive.catalyst.uw.edu-ingress-cert
       hosts:
         - archive.catalyst.uw.edu
   hosts:
+    solstice-redirect:
+      host: solstice.uw.edu
+      paths:
+        - "/"
     catalyst-archive:
       host: archive.catalyst.uw.edu
       paths:
