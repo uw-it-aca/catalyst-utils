@@ -361,6 +361,12 @@ class SurveyManager(models.Manager):
                 survey_id__in=list(survey_ids)):
             survey.export()
 
+    def export_files_for_owner(self, uwnetid):
+        person = Person.objects.get(login_name=uwnetid)
+        for survey in super().get_queryset().select_related('person').filter(
+                person=person):
+            survey.export()
+
 
 class Survey(models.Model):
     """
