@@ -13,6 +13,8 @@ ingress:
       secretName: catalyst.uw.edu-ingress-cert
       hosts:
         - catalyst.uw.edu
+        - catalyst.washington.edu
+        - catalysttools.washington.edu
     solstice-redirect:
       secretName: solstice.uw.edu-ingress-cert
       hosts:
@@ -24,6 +26,14 @@ ingress:
   hosts:
     catalyst-redirect:
       host: catalyst.uw.edu
+      paths:
+        - "/"
+    catalystwa-redirect:
+      host: catalyst.washington.edu
+      paths:
+        - "/"
+    catalysttools-redirect:
+      host: catalysttools.washington.edu
       paths:
         - "/"
     solstice-redirect:
