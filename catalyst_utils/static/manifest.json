@@ -1,0 +1,26 @@
+{
+  "node_modules/bootstrap-icons/font/fonts/bootstrap-icons.woff2": {
+    "file": "catalyst_utils/assets/bootstrap-icons.c69bf1cc.woff2",
+    "src": "node_modules/bootstrap-icons/font/fonts/bootstrap-icons.woff2"
+  },
+  "node_modules/bootstrap-icons/font/fonts/bootstrap-icons.woff": {
+    "file": "catalyst_utils/assets/bootstrap-icons.13977b4a.woff",
+    "src": "node_modules/bootstrap-icons/font/fonts/bootstrap-icons.woff"
+  },
+  "catalyst_utils_vue/main.js": {
+    "file": "catalyst_utils/assets/main.7f1d82f7.js",
+    "src": "catalyst_utils_vue/main.js",
+    "isEntry": true,
+    "css": [
+      "catalyst_utils/assets/main.a263c0a4.css"
+    ],
+    "assets": [
+      "catalyst_utils/assets/bootstrap-icons.c69bf1cc.woff2",
+      "catalyst_utils/assets/bootstrap-icons.13977b4a.woff"
+    ]
+  },
+  "catalyst_utils_vue/main.css": {
+    "file": "catalyst_utils/assets/main.a263c0a4.css",
+    "src": "catalyst_utils_vue/main.css"
+  }
+}
