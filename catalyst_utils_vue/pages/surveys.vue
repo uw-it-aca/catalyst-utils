@@ -113,6 +113,7 @@ import Survey from "../components/survey.vue";
 import TableLoading from "../components/table-loading.vue";
 
 export default {
+  name: "PagesSurveysComp",
   components: {
     layout: Layout,
     survey: Survey,

@@ -113,6 +113,7 @@ import Gradebook from "../components/gradebook.vue";
 import TableLoading from "../components/table-loading.vue";
 
 export default {
+  name: "PagesGradebooksComp",
   components: {
     layout: Layout,
     gradebook: Gradebook,

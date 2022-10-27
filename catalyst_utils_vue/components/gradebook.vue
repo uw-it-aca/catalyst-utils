@@ -48,7 +48,7 @@
 import { formatDate } from "../helpers/utils";
 
 export default {
-  name: "gradebook",
+  name: "GradebookComp",
   props: {
     gradebooks: {
       type: Array,
