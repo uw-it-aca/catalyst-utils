@@ -20,7 +20,7 @@ setup(
     version=VERSION,
     packages=['catalyst_utils'],
     include_package_data=True,
-    install_requires = [
+    install_requires=[
         'Django~=3.2',
         'django-userservice~=3.1',
         'django-storages[google]>=1.10',
@@ -33,14 +33,13 @@ setup(
         'UW-Django-SAML2~=1.5',
         'Django-SupportTools~=3.5',
         'Django-Persistent-Message',
-        'django-webpack-loader',
     ],
     license='Apache License, Version 2.0',
     description='UW application that supports catalyst',
     long_description=README,
     url='https://github.com/uw-it-aca/catalyst-utils',
-    author = "UW-IT AXDD",
-    author_email = "aca-it@uw.edu",
+    author="UW-IT AXDD",
+    author_email="aca-it@uw.edu",
     classifiers=[
         'Environment :: Web Environment',
         'Framework :: Django',

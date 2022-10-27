@@ -1,6 +1,6 @@
 ARG DJANGO_CONTAINER_VERSION=1.4.1
 
-FROM gcr.io/uwit-mci-axdd/django-container:${DJANGO_CONTAINER_VERSION} as app-prewebpack-container
+FROM gcr.io/uwit-mci-axdd/django-container:${DJANGO_CONTAINER_VERSION} as app-prebundler-container
 
 USER root
 
@@ -27,9 +27,9 @@ ADD . /app/
 
 ARG VUE_DEVTOOLS
 ENV VUE_DEVTOOLS=$VUE_DEVTOOLS
-RUN npx webpack --mode=production
+RUN npm run build
 
-FROM app-prewebpack-container as app-container
+FROM app-prebundler-container as app-container
 
 COPY --chown=acait:acait --from=node-bundler /app/catalyst_utils/static /app/catalyst_utils/static
 

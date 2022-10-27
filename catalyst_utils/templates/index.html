@@ -1,5 +1,5 @@
 {% load static %}
-{% load render_bundle from webpack_loader %}
+{% load vite %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -14,7 +14,8 @@
      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
      <link href="https://fonts.googleapis.com/css2?family=Encode+Sans+Condensed:wght@400;500;700&family=Open+Sans:ital,wght@0,400;0,700;1,400&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 
-     {% render_bundle 'main' 'css' %}
+     <!-- vite css bundle -->
+    {% vite_styles 'catalyst_utils_vue/main.js' %}
 
 </head>
 
@@ -36,7 +37,9 @@
 
     <!-- vue app will be injected here -->
     <div id="app"></div>
-    {% render_bundle 'main' 'js' attrs='defer' %}
+
+    <!-- vite js bundle -->
+    {% vite_scripts 'catalyst_utils_vue/main.js' %}
 
 </body>
 

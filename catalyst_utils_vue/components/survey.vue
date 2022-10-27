@@ -64,7 +64,7 @@
 import { formatDate } from "../helpers/utils";
 
 export default {
-  name: "survey",
+  name: "SurveyComp",
   props: {
     surveys: {
       type: Array,
