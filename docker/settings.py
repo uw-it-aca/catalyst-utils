@@ -8,7 +8,6 @@ INSTALLED_APPS += [
     'userservice',
     'persistent_message',
     'rc_django',
-    'webpack_loader',
 ]
 
 MIDDLEWARE += [
@@ -25,11 +24,6 @@ if os.getenv('ENV', 'localdev') == 'localdev':
     DEBUG = True
     DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
     MEDIA_ROOT = os.getenv('MEDIA_ROOT', '/app/data')
-    WEBPACK_LOADER = {
-        'DEFAULT': {
-            'STATS_FILE': os.path.join(BASE_DIR, 'catalyst_utils/static/webpack-stats.json'),
-        }
-    }
     MIGRATION_MODULES = {
         'catalyst_utils': 'catalyst_utils.test_migrations',
     }
@@ -43,12 +37,8 @@ else:
     GS_LOCATION = os.path.join(os.getenv('STORAGE_DATA_ROOT', ''))
     GS_CREDENTIALS = service_account.Credentials.from_service_account_file(
         '/gcs/credentials.json')
-    WEBPACK_LOADER = {
-        'DEFAULT': {
-            'STATS_FILE': os.path.join(BASE_DIR, '/static/webpack-stats.json'),
-        }
-    }
-    CATALYST_SUPPORT_GROUP = os.getenv('SUPPORT_GROUP', 'u_acadev_catalyst_support-admins')
+    CATALYST_SUPPORT_GROUP = os.getenv('SUPPORT_GROUP',
+                                       'u_acadev_catalyst_support-admins')
     CATALYST_ADMIN_GROUP = os.getenv('ADMIN_GROUP', 'u_acadev_catalyst_admins')
 
 USERSERVICE_VALIDATION_MODULE = 'catalyst_utils.dao.person.is_netid'
@@ -61,3 +51,10 @@ SUPPORTTOOLS_PARENT_APP_URL = '/'
 
 GRADEBOOK_RETENTION_YEARS = 5
 CURRENT_USER_GROUP = 'u_acadev_catalyst_current-users'
+
+if os.getenv("ENV") == "localdev":
+    VITE_MANIFEST_PATH = os.path.join(
+        BASE_DIR, "catalyst_utils", "static", "manifest.json"
+    )
+else:
+    VITE_MANIFEST_PATH = os.path.join(os.sep, "static", "manifest.json")
