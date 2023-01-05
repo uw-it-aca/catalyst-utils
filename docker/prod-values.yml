@@ -51,6 +51,9 @@ ingress:
     nginx.ingress.kubernetes.io/proxy-body-size: "100M"
     nginx.ingress.kubernetes.io/configuration-snippet: |
       if ($host != 'archive.catalyst.uw.edu') {
+        if ($uri = '/webq/survey/shawkey/357671') {
+          return 301 https://docs.google.com/forms/d/e/1FAIpQLScPAvEH3tXUNJBIX7qTNcNrvYl1XXCbrAPuQ599CDEyOdFFvQ/viewform
+        }
         return 301 $scheme://itconnect.uw.edu/learn/tools/catalyst-web-tools/retirement/;
       }
 lifecycle:
