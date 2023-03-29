@@ -49,17 +49,13 @@ memcached:
 gcsCredentials:
   mounted: true
   secretName: test.catalyst.uw.edu-gcs-credentials
-mountedSecrets:
-  enabled: true
-  mountPath: /ssl
-  secretName: test.catalyst.uw.edu-openssl-conf
 cronjob:
   enabled: false
 certs:
   mounted: true
-  certPath: /certs/test.catalyst.uw.edu-uwca.cert
-  keyPath: /certs/test.catalyst.uw.edu-uwca.key
-  secretName: test.catalyst.uw.edu-uwca-certs
+  certPath: /certs/test.catalyst.uw.edu-ic.cert
+  keyPath: /certs/test.catalyst.uw.edu-ic.key
+  secretName: test.catalyst.uw.edu-ic-certs
 environmentVariables:
   - name: ENV
     value: test
@@ -72,20 +68,12 @@ environmentVariables:
   - name: GWS_TIMEOUT
     value: "10"
 
-  - name: CATALYST_ENV
-    value: EVAL
-  - name: CATALYST_TIMEOUT
-    value: "300"
-
   - name: AUTH
     value: SAML
   - name: SAML_ENTITY_ID
     value: https://test.catalyst.uw.edu/saml2
   - name: CLUSTER_CNAME
     value: test.catalyst.uw.edu
-
-  - name: OPENSSL_CONF
-    value: /ssl/openssl.cnf
 
 externalSecrets:
   enabled: true
@@ -114,13 +102,6 @@ externalSecrets:
       data:
         - name: credentials.json
           property: credentials.json
-    - name: test.catalyst.uw.edu-uwca-certs
-      externalKey: catalyst/test/uwca-certs
-      data:
-        - name: test.catalyst.uw.edu-uwca.cert
-          property: test.catalyst.uw.edu-uwca.cert
-        - name: test.catalyst.uw.edu-uwca.key
-          property: test.catalyst.uw.edu-uwca.key
     - name: test.catalyst.uw.edu-ic-certs
       externalKey: catalyst/test/ic-certs
       data:
@@ -133,11 +114,6 @@ externalSecrets:
       data:
         - name: uw-idp-cert
           property: cert
-    - name: test.catalyst.uw.edu-openssl-conf
-      externalKey: openssl-conf
-      data:
-        - name: openssl.cnf
-          property: openssl.cnf
 
 environmentVariablesSecrets:
   djangoSecret:
