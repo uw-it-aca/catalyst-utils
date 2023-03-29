@@ -91,10 +91,6 @@ memcached:
 gcsCredentials:
   mounted: true
   secretName: archive.catalyst.uw.edu-gcs-credentials
-mountedSecrets:
-  enabled: true
-  mountPath: /ssl
-  secretName: archive.catalyst.uw.edu-openssl-conf
 cronjob:
   enabled: true
   jobs:
@@ -122,9 +118,9 @@ cronjob:
           memory: 64Mi
 certs:
   mounted: true
-  certPath: /certs/apps.catalyst.uw.edu-uwca.cert
-  keyPath: /certs/apps.catalyst.uw.edu-uwca.key
-  secretName: archive.catalyst.uw.edu-uwca-certs
+  certPath: /certs/apps.catalyst.uw.edu-ic.cert
+  keyPath: /certs/apps.catalyst.uw.edu-ic.key
+  secretName: archive.catalyst.uw.edu-ic-certs
 environmentVariables:
   - name: ENV
     value: prod
@@ -137,20 +133,12 @@ environmentVariables:
   - name: GWS_TIMEOUT
     value: "10"
 
-  - name: CATALYST_ENV
-    value: PROD
-  - name: CATALYST_TIMEOUT
-    value: "300"
-
   - name: AUTH
     value: SAML
   - name: SAML_ENTITY_ID
     value: https://archive.catalyst.uw.edu/saml2
   - name: CLUSTER_CNAME
     value: archive.catalyst.uw.edu
-
-  - name: OPENSSL_CONF
-    value: /ssl/openssl.cnf
 
 externalSecrets:
   enabled: true
@@ -179,13 +167,6 @@ externalSecrets:
       data:
         - name: credentials.json
           property: credentials.json
-    - name: archive.catalyst.uw.edu-uwca-certs
-      externalKey: catalyst/prod/uwca-certs
-      data:
-        - name: apps.catalyst.uw.edu-uwca.cert
-          property: apps.catalyst.uw.edu-uwca.cert
-        - name: apps.catalyst.uw.edu-uwca.key
-          property: apps.catalyst.uw.edu-uwca.key
     - name: archive.catalyst.uw.edu-ic-certs
       externalKey: catalyst/prod/ic-certs
       data:
@@ -198,11 +179,6 @@ externalSecrets:
       data:
         - name: uw-idp-cert
           property: cert
-    - name: archive.catalyst.uw.edu-openssl-conf
-      externalKey: openssl-conf
-      data:
-        - name: openssl.cnf
-          property: openssl.cnf
 
 environmentVariablesSecrets:
   djangoSecret:
