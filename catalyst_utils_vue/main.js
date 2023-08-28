@@ -1,18 +1,26 @@
 import { createApp } from "vue";
 import { createPinia } from "pinia";
-import { Vue3Mq, MqResponsive } from "vue3-mq";
-
 import App from "./app.vue";
 import router from "./router";
-import VueGtag from "vue-gtag";
+
+// import axdd-components
+import AxddComponents from "axdd-components";
+
+import VueGtag from "vue-gtag-next";
+import { Vue3Mq, MqResponsive } from "vue3-mq";
 
 // bootstrap js
 import "bootstrap";
+import "bootstrap-icons/font/bootstrap-icons.css";
 
-// custom bootstrap theming
+// bootstrap js + bootstrap-icons
+import "bootstrap";
+import "bootstrap-icons/font/bootstrap-icons.css";
+
+// bootstrap (axdd) and axdd-components
 import "./css/custom.scss";
+import "axdd-components/dist/style.css";
 
-const pinia = createPinia();
 const app = createApp(App);
 
 // MARK: google analytics data stream measurement_id
@@ -21,23 +29,16 @@ const debugMode = document.body.getAttribute("data-django-debug");
 
 app.config.productionTip = false;
 
-// vue-router
-app.use(router);
-
-// vue-gtag (w/ vue-router auto-tracking)
-app.use(
-  VueGtag,
-  {
-    isEnabled: debugMode == "false",
-    property: {
-      id: gaCode,
-      params: {
-        anonymize_ip: true,
-      },
+// vue-gtag-next
+app.use(VueGtag, {
+  isEnabled: debugMode == "false",
+  property: {
+    id: gaCode,
+    params: {
+      anonymize_ip: true,
     },
   },
-  router
-);
+});
 
 // vue-mq (media queries)
 app.use(Vue3Mq, {
@@ -45,7 +46,13 @@ app.use(Vue3Mq, {
 });
 app.component("mq-responsive", MqResponsive);
 
-// pinia (fk. vuex) state management
+// pinia (vuex) state management
+const pinia = createPinia();
 app.use(pinia);
+
+// axdd-components
+app.use(AxddComponents);
+
+app.use(router);
 
 app.mount("#app");
