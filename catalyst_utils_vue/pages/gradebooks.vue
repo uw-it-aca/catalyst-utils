@@ -108,9 +108,9 @@ import {
   TabsItem,
   TabsPanel,
 } from "axdd-components";
-import Layout from "../layout.vue";
-import Gradebook from "../components/gradebook.vue";
-import TableLoading from "../components/table-loading.vue";
+import Layout from "@/layout.vue";
+import Gradebook from "@/components/gradebook.vue";
+import TableLoading from "@/components/table-loading.vue";
 
 export default {
   name: "PagesGradebooksComp",
