@@ -61,11 +61,8 @@
 </template>
 
 <script>
-
-
 export default {
-  components: {
-  },
+  components: {},
   props: {
     pageTitle: {
       type: String,
