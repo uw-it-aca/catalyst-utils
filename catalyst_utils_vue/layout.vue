@@ -61,14 +61,8 @@
 </template>
 
 <script>
-import { Sidebar, Profile } from "axdd-components";
-
 export default {
-  name: "LayoutComp",
-  components: {
-    "axdd-sidebar": Sidebar,
-    "axdd-profile": Profile,
-  },
+  components: {},
   props: {
     pageTitle: {
       type: String,

@@ -100,17 +100,9 @@
 </template>
 
 <script>
-import {
-  Card,
-  CardHeading,
-  TabsList,
-  TabsDisplay,
-  TabsItem,
-  TabsPanel,
-} from "axdd-components";
-import Layout from "../layout.vue";
-import Gradebook from "../components/gradebook.vue";
-import TableLoading from "../components/table-loading.vue";
+import Layout from "@/layout.vue";
+import Gradebook from "@/components/gradebook.vue";
+import TableLoading from "@/components/table-loading.vue";
 
 export default {
   name: "PagesGradebooksComp",
@@ -118,12 +110,6 @@ export default {
     layout: Layout,
     gradebook: Gradebook,
     "table-loading": TableLoading,
-    "axdd-card": Card,
-    "axdd-card-heading": CardHeading,
-    "axdd-tabs-list": TabsList,
-    "axdd-tabs-display": TabsDisplay,
-    "axdd-tabs-item": TabsItem,
-    "axdd-tabs-panel": TabsPanel,
   },
   data() {
     return {

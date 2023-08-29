@@ -25,7 +25,7 @@ setup(
         'django-userservice~=3.1',
         'django-storages[google]>=1.10',
         'uw-memcached-clients~=1.0',
-        'UW-RestClients-Core~=1.3',
+        'UW-RestClients-Core~=1.4',
         'UW-RestClients-GWS~=2.3',
         'UW-RestClients-PWS~=2.1',
         'UW-RestClients-Catalyst~=1.1',

@@ -1,6 +1,6 @@
 ARG DJANGO_CONTAINER_VERSION=1.4.1
 
-FROM gcr.io/uwit-mci-axdd/django-container:${DJANGO_CONTAINER_VERSION} as app-prebundler-container
+FROM us-docker.pkg.dev/uwit-mci-axdd/containers/django-container:${DJANGO_CONTAINER_VERSION} as app-prebundler-container
 
 USER root
 
@@ -17,7 +17,7 @@ RUN chmod u+x /scripts/app_start.sh
 RUN /app/bin/pip install -r requirements.txt
 RUN /app/bin/pip install mysqlclient
 
-FROM node:14.18.1-stretch AS node-bundler
+FROM node:lts-bullseye AS node-bundler
 
 ADD ./package.json /app/
 WORKDIR /app/
@@ -35,7 +35,7 @@ COPY --chown=acait:acait --from=node-bundler /app/catalyst_utils/static /app/cat
 
 RUN /app/bin/python manage.py collectstatic --noinput
 
-FROM gcr.io/uwit-mci-axdd/django-test-container:${DJANGO_CONTAINER_VERSION} as app-test-container
+FROM us-docker.pkg.dev/uwit-mci-axdd/containers/django-test-container:${DJANGO_CONTAINER_VERSION} as app-test-container
 
 ENV NODE_PATH=/app/lib/node_modules
 COPY --from=app-container /app/ /app/

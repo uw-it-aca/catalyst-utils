@@ -61,7 +61,7 @@
 </template>
 
 <script>
-import { formatDate } from "../helpers/utils";
+import { formatDate } from "@/helpers/utils";
 
 export default {
   name: "SurveyComp",
