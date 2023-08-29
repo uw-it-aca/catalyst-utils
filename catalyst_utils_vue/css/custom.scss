@@ -135,36 +135,13 @@ $utilities: (
   font-family: "Encode Sans Condensed", sans-serif !important;
 }
 
-// MARK: adds alert-theme-color support
-// https://getbootstrap.com/docs/5.2/components/alerts/#sass-mixin
-@mixin alert-variant($background, $border, $color) {
-  --#{$prefix}alert-color: #{$color};
-  --#{$prefix}alert-bg: #{$background};
-  --#{$prefix}alert-border-color: #{$border};
-
-  @if $enable-gradients {
-    background-image: var(--#{$prefix}gradient);
-  }
-
-  .alert-link {
-    color: shade-color($color, 20%);
-  }
-}
-
-// https://getbootstrap.com/docs/5.2/components/alerts/#sass-loop
-@each $state, $value in $theme-colors {
-  $alert-background: shift-color($value, $alert-bg-scale);
-  $alert-border: shift-color($value, $alert-border-scale);
-  $alert-color: shift-color($value, $alert-color-scale);
-
-  @if contrast-ratio($alert-background, $alert-color) < $min-contrast-ratio {
-    $alert-color: mix(
-      $value,
-      color-contrast($alert-background),
-      abs($alert-color-scale)
-    );
-  }
+// https://getbootstrap.com/docs/5.3/components/alerts/#sass-loop
+// Generate contextual modifier classes for colorizing the alert
+@each $state in map-keys($theme-colors) {
   .alert-#{$state} {
-    @include alert-variant($alert-background, $alert-border, $alert-color);
+    --#{$prefix}alert-color: var(--#{$prefix}#{$state}-text-emphasis);
+    --#{$prefix}alert-bg: var(--#{$prefix}#{$state}-bg-subtle);
+    --#{$prefix}alert-border-color: var(--#{$prefix}#{$state}-border-subtle);
+    --#{$prefix}alert-link-color: var(--#{$prefix}#{$state}-text-emphasis);
   }
 }
