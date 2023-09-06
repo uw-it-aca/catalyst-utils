@@ -32,10 +32,10 @@ externalService:
   enabled: true
   name: catalyst-db-service
   type: ClusterIP
-  serviceAddress: 172.18.0.232
-  servicePort: 3306
+  serviceAddress: 172.18.1.198
+  servicePort: 5432
 database:
-  engine: mysql
+  engine: postgres
   name: catalyst_utils_test
   hostname: catalyst-db-service
   secretName: test.catalyst.uw.edu-sql-secrets
