@@ -175,12 +175,13 @@ class PeopleInCrowd(models.Model):
     Unmanaged read-only PeopleInCrowd, data is sourced from
     solstice.PeopleInCrowd table
     """
-    crowd_id = models.IntegerField(primary_key=True)
+    crowd_id = models.IntegerField()
     person = models.ForeignKey(Person, on_delete=models.CASCADE)
 
     class Meta:
         managed = False
         db_table = 'PeopleInCrowd'
+        unique_together = (('crowd_id', 'person'),)
 
 
 class GroupWrapperManager(models.Manager):
@@ -429,7 +430,7 @@ class Survey(models.Model):
     copied_appearance = models.BooleanField(null=True)
     copied_custom_name = models.BooleanField(null=True)
     copied_notification = models.BooleanField(null=True)
-    notification_copied_settings = models.BooleanField(null=True)
+    notification_copied_settings = models.CharField(max_length=10, blank=True, null=True)
     object_auth_id = models.IntegerField(blank=True, null=True)
     allows_backtracking = models.BooleanField(null=True)
     allows_saveforlater = models.BooleanField(null=True)
@@ -445,7 +446,7 @@ class Survey(models.Model):
     display_results_summary_stats = models.BooleanField(null=True)
     display_results_summary_while_published = models.BooleanField(null=True)
     display_results_summary_custom_interval = models.BooleanField(null=True)
-    display_results_summary_interval_length = models.BooleanField(null=True)
+    display_results_summary_interval_length = models.IntegerField(null=True)
     display_results_summary_interval_scale = models.CharField(
         max_length=3, blank=True, null=True)
     is_research_confidential = models.BooleanField(null=True)
