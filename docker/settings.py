@@ -40,6 +40,7 @@ else:
     CATALYST_SUPPORT_GROUP = os.getenv('SUPPORT_GROUP',
                                        'u_acadev_catalyst_support-admins')
     CATALYST_ADMIN_GROUP = os.getenv('ADMIN_GROUP', 'u_acadev_catalyst_admins')
+    CSRF_TRUSTED_ORIGINS = ['https://' + os.getenv('CLUSTER_CNAME')]
 
 USERSERVICE_VALIDATION_MODULE = 'catalyst_utils.dao.person.is_netid'
 USERSERVICE_OVERRIDE_AUTH_MODULE = 'catalyst_utils.views.can_override_user'
