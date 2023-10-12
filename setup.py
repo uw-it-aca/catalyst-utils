@@ -23,7 +23,7 @@ setup(
     install_requires=[
         'Django~=4.2',
         'django-userservice~=3.1',
-        'django-storages[google]>=1.10',
+        'django-storages[google]',
         'uw-memcached-clients~=1.0',
         'UW-RestClients-Core~=1.4',
         'UW-RestClients-GWS~=2.3',
