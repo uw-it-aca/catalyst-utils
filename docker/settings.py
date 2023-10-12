@@ -22,7 +22,6 @@ TEMPLATES[0]['OPTIONS']['context_processors'] += [
 
 if os.getenv('ENV', 'localdev') == 'localdev':
     DEBUG = True
-    DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
     MEDIA_ROOT = os.getenv('MEDIA_ROOT', '/app/data')
     MIGRATION_MODULES = {
         'catalyst_utils': 'catalyst_utils.test_migrations',
@@ -31,12 +30,21 @@ if os.getenv('ENV', 'localdev') == 'localdev':
     CATALYST_ADMIN_GROUP = 'u_test_group'
 else:
     RESTCLIENTS_DAO_CACHE_CLASS = 'catalyst_utils.cache.RestClientsCache'
-    DEFAULT_FILE_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
-    GS_PROJECT_ID = os.getenv('STORAGE_PROJECT_ID', '')
-    GS_BUCKET_NAME = os.getenv('STORAGE_BUCKET_NAME', '')
-    GS_LOCATION = os.path.join(os.getenv('STORAGE_DATA_ROOT', ''))
-    GS_CREDENTIALS = service_account.Credentials.from_service_account_file(
-        '/gcs/credentials.json')
+    STORAGES = {
+        'default': {
+            'BACKEND': 'storages.backends.gcloud.GoogleCloudStorage',
+            'OPTIONS': {
+                'project_id': os.getenv('STORAGE_PROJECT_ID', ''),
+                'bucket_name': os.getenv('STORAGE_BUCKET_NAME', ''),
+                'location': os.path.join(os.getenv('STORAGE_DATA_ROOT', '')),
+                'credentials': service_account.Credentials.from_service_account_file(
+                    '/gcs/credentials.json'),
+            }
+        },
+        'staticfiles': {
+            'BACKEND': 'django.contrib.staticfiles.storage.StaticFilesStorage',
+        },
+    }
     CATALYST_SUPPORT_GROUP = os.getenv('SUPPORT_GROUP',
                                        'u_acadev_catalyst_support-admins')
     CATALYST_ADMIN_GROUP = os.getenv('ADMIN_GROUP', 'u_acadev_catalyst_admins')
