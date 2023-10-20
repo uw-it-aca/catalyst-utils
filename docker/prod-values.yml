@@ -118,8 +118,8 @@ cronjob:
           memory: 64Mi
 certs:
   mounted: true
-  certPath: /certs/apps.catalyst.uw.edu-ic.cert
-  keyPath: /certs/apps.catalyst.uw.edu-ic.key
+  certPath: /certs/archive.catalyst.uw.edu-ic.cert
+  keyPath: /certs/archive.catalyst.uw.edu-ic.key
   secretName: archive.catalyst.uw.edu-ic-certs
 environmentVariables:
   - name: ENV
