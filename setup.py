@@ -38,7 +38,7 @@ setup(
     description='UW application that supports catalyst',
     long_description=README,
     url='https://github.com/uw-it-aca/catalyst-utils',
-    author="UW-IT AXDD",
+    author="UW-IT T&LS",
     author_email="aca-it@uw.edu",
     classifiers=[
         'Environment :: Web Environment',
