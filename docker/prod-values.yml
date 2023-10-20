@@ -92,7 +92,7 @@ gcsCredentials:
   mounted: true
   secretName: archive.catalyst.uw.edu-gcs-credentials
 cronjob:
-  enabled: true
+  enabled: false
   jobs:
     - name: update-person-attr
       schedule: "*/20 15-23 * * *"
