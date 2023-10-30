@@ -54,6 +54,7 @@ class SurveyModelTest(TestCase):
     def test_json_data(self):
         survey = Survey.objects.get(survey_id=1)
         self.assertEqual(survey.json_data(), {
+            'id': 1,
             'created_date': '2018-01-01T00:00:00+00:00',
             'html_url': 'https://catalyst.uw.edu/webq/survey/javerage/1',
             'name': 'Survey Test',
@@ -66,6 +67,7 @@ class SurveyModelTest(TestCase):
 
         survey = Survey.objects.get(survey_id=2)
         self.assertEqual(survey.json_data(), {
+            'id': 2,
             'created_date': '2017-01-01T00:00:00+00:00',
             'html_url': 'https://catalyst.uw.edu/webq/survey/javerage/2',
             'name': 'Class Survey',

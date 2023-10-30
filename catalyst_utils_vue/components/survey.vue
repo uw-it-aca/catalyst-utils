@@ -2,6 +2,7 @@
   <table class="table mb-0">
     <thead class="small">
       <tr>
+        <th scope="col">Survey ID</th>
         <th scope="col" class="w-50">Name</th>
         <th scope="col">&nbsp;</th>
         <th scope="col">Created</th>
@@ -10,6 +11,7 @@
     </thead>
     <tbody class="table-group-divider">
       <tr v-for="(survey, index) in surveys" :key="index">
+        <td>{{ survey.id }}</td>
         <td>
           <div>
             <span v-if="survey.name == null" class="">null</span>

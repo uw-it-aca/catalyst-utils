@@ -547,6 +547,7 @@ class Survey(models.Model):
 
     def json_data(self):
         return {
+            'id': self.survey_id,
             'name': self.name,
             'created_date': self.creation_date.isoformat(),
             'html_url': 'https://catalyst.uw.edu/webq/survey/{}/{}'.format(
