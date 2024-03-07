@@ -1,4 +1,4 @@
-# Copyright 2023 UW-IT, University of Washington
+# Copyright 2024 UW-IT, University of Washington
 # SPDX-License-Identifier: Apache-2.0
 
 
@@ -562,7 +562,7 @@ class Survey(models.Model):
         }
 
     def update_attr(self):
-        data = {'last_updated': datetime.utcnow().replace(tzinfo=timezone.utc)}
+        data = {'last_updated': datetime.now(timezone.utc)}
         try:
             data.update(get_survey_attr(self))
             data['update_status'] = 200
@@ -593,8 +593,7 @@ class Survey(models.Model):
             self.surveyattr.export_status = ex.status
             logger.info('Survey export failed: {}'.format(ex))
 
-        self.surveyattr.last_exported = datetime.utcnow().replace(
-            tzinfo=timezone.utc)
+        self.surveyattr.last_exported = datetime.now(timezone.utc)
         self.surveyattr.job_id = None
         self.surveyattr.save()
 
@@ -723,7 +722,7 @@ class Gradebook(models.Model):
             data = {'update_status': ex.status}
             logger.info('Gradebook update failed: {}'.format(ex))
 
-        data['last_updated'] = datetime.utcnow().replace(tzinfo=timezone.utc)
+        data['last_updated'] = datetime.now(timezone.utc)
         attr, created = GradebookAttr.objects.update_or_create(
             gradebook=self, defaults=data)
         if created:
@@ -738,8 +737,7 @@ class Gradebook(models.Model):
             self.gradebookattr.export_status = ex.status
             logger.info('Gradebook export failed: {}'.format(ex))
 
-        self.gradebookattr.last_exported = datetime.utcnow().replace(
-            tzinfo=timezone.utc)
+        self.gradebookattr.last_exported = datetime.now(timezone.utc)
         self.gradebookattr.save()
 
     @staticmethod
