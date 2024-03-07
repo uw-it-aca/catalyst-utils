@@ -33,6 +33,7 @@ setup(
         'UW-Django-SAML2~=1.8',
         'Django-SupportTools~=3.6',
         'Django-Persistent-Message~=1.3',
+        'lxml<5',
     ],
     license='Apache License, Version 2.0',
     description='UW application that supports catalyst',
