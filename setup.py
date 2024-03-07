@@ -30,7 +30,7 @@ setup(
         'UW-RestClients-PWS~=2.1',
         'UW-RestClients-Catalyst~=1.1',
         'UW-RestClients-Django-Utils~=2.3',
-        'UW-Django-SAML2~=1.7',
+        'UW-Django-SAML2~=1.8',
         'Django-SupportTools~=3.6',
         'Django-Persistent-Message~=1.3',
     ],
