@@ -20,7 +20,7 @@ class FileDAOFunctionsTest(TestCase):
 
     def test_read_file(self):
         self.assertEqual(read_file(self.test_path).encode(), self.test_data)
-        self.assertRaises(ObjectDoesNotExist, read_file, 'test.csv')
+        self.assertRaises(FileNotFoundError, read_file, 'test.csv')
 
     def test_write_file(self):
         new_data = b'New test data'

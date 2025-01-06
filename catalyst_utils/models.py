@@ -430,7 +430,8 @@ class Survey(models.Model):
     copied_appearance = models.BooleanField(null=True)
     copied_custom_name = models.BooleanField(null=True)
     copied_notification = models.BooleanField(null=True)
-    notification_copied_settings = models.CharField(max_length=10, blank=True, null=True)
+    notification_copied_settings = models.CharField(
+        max_length=10, blank=True, null=True)
     object_auth_id = models.IntegerField(blank=True, null=True)
     allows_backtracking = models.BooleanField(null=True)
     allows_saveforlater = models.BooleanField(null=True)
