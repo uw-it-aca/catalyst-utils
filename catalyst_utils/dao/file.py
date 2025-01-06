@@ -10,9 +10,6 @@ import os
 
 
 def read_file(path):
-    if not default_storage.exists(path):
-        raise ObjectDoesNotExist()
-
     with default_storage.open(path, mode='r') as f:
         content = f.read()
 
@@ -32,7 +29,7 @@ def build_archive(paths):
         filename = os.path.basename(path)
         try:
             zip_file.writestr(filename, read_file(path), zipfile.ZIP_DEFLATED)
-        except ObjectDoesNotExist:
+        except FileNotFoundError:
             pass
 
     zip_file.close()
