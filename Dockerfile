@@ -1,6 +1,6 @@
-ARG DJANGO_CONTAINER_VERSION=2.0.2
+ARG DJANGO_CONTAINER_VERSION=2.0.5
 
-FROM us-docker.pkg.dev/uwit-mci-axdd/containers/django-container:${DJANGO_CONTAINER_VERSION} as app-prebundler-container
+FROM us-docker.pkg.dev/uwit-mci-axdd/containers/django-container:${DJANGO_CONTAINER_VERSION} AS app-prebundler-container
 
 USER root
 
@@ -35,7 +35,7 @@ COPY --chown=acait:acait --from=node-bundler /app/catalyst_utils/static /app/cat
 
 RUN /app/bin/python manage.py collectstatic --noinput
 
-FROM us-docker.pkg.dev/uwit-mci-axdd/containers/django-test-container:${DJANGO_CONTAINER_VERSION} as app-test-container
+FROM us-docker.pkg.dev/uwit-mci-axdd/containers/django-test-container:${DJANGO_CONTAINER_VERSION} AS app-test-container
 
 ENV NODE_PATH=/app/lib/node_modules
 COPY --from=app-container /app/ /app/
