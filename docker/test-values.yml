@@ -39,8 +39,10 @@ database:
   name: catalyst_utils_test
   hostname: catalyst-db-service
   secretName: test.catalyst.uw.edu-sql-secrets
-repo: catalyst
+repo: catalyst-utils
 instance: test
+namespace:
+  enabled: true
 memcached:
   enabled: true
   replicaCount: 1
