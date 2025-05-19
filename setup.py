@@ -32,7 +32,7 @@ setup(
         'uw-restclients-django-utils~=2.3',
         'uw-django-saml2~=1.8',
         'django-supporttools~=3.6',
-        'django-persistent-message~=1.3'
+        'django-persistent-message==1.3.2'
     ],
     license='Apache License, Version 2.0',
     description='UW application that supports catalyst',
