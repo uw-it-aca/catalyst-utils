@@ -81,8 +81,10 @@ database:
   name: catalyst_utils_prod
   hostname: catalyst-db-service
   secretName: archive.catalyst.uw.edu-sql-secrets
-repo: catalyst
+repo: catalyst-utils
 instance: prod
+namespace:
+  enabled: true
 memcached:
   enabled: true
   replicaCount: 2
