@@ -21,7 +21,7 @@ setup(
     packages=['catalyst_utils'],
     include_package_data=True,
     install_requires=[
-        'django~=4.2',
+        'django~=5.2',
         'django-userservice~=3.2',
         'django-storages[google]',
         'uw-memcached-clients~=1.0',
@@ -38,7 +38,7 @@ setup(
     description='UW application that supports catalyst',
     long_description=README,
     url='https://github.com/uw-it-aca/catalyst-utils',
-    author="UW-IT T&LS",
+    author="UW-IT Student & Educational Technology Services",
     author_email="aca-it@uw.edu",
     classifiers=[
         'Environment :: Web Environment',
