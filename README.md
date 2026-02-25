@@ -7,7 +7,7 @@ A set of utilities for supporting Catalyst at the University of Washington.
 
 ## System Requirements
 
-- Python (3+)
+- Python (3.12)
 - Docker
 - Node
 
