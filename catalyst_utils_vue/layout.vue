@@ -13,39 +13,10 @@
         :signout-url="signOutUrl"
       ></axdd-profile>
     </template>
-    <template #navigation>
-      <ul class="nav flex-column mb-5">
-        <li class="nav-item mb-1">
-          <router-link
-            class="nav-link text-light bg-dark-purple-hover rounded me-1 px-2 py-1"
-            active-class="bg-dark-purple"
-            :to="'/surveys'"
-            ><i class="bi bi-check-lg me-2"></i>WebQ Surveys</router-link
-          >
-        </li>
-        <li class="nav-item mb-1">
-          <router-link
-            class="nav-link text-light bg-dark-purple-hover rounded me-1 px-2 py-1"
-            active-class="bg-dark-purple"
-            :to="'/gradebooks'"
-            ><i class="bi bi-percent me-2"></i>GradeBooks</router-link
-          >
-        </li>
-      </ul>
-    </template>
     <template #aside>
       <p class="text-light-gray bg-dark-purple rounded-3 p-3 small">
-        Welcome to the Catalyst Archive tool!
-        <br /><br />
-        Catalyst WebQ and GradeBook retired on June 16, 2022. This self-service
-        archive enables you to download your WebQ surveys and responses, and
-        GradeBook Excel files.
-        <br /><br />
-        <a
-          href="https://itconnect.uw.edu/learn/tools/catalyst-web-tools/catalyst-archive/"
-          target="blank"
-          >Learn more</a
-        >
+        Catalyst WebQ was retired on June 16, 2022. This self-service
+        archive enables downloading your WebQ surveys and responses.
       </p>
     </template>
     <template #main>

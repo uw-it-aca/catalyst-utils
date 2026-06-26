@@ -54,7 +54,7 @@ ingress:
         return 301 https://docs.google.com/forms/d/e/1FAIpQLScPAvEH3tXUNJBIX7qTNcNrvYl1XXCbrAPuQ599CDEyOdFFvQ/viewform;
       }
       if ($host != 'archive.catalyst.uw.edu') {
-        return 301 $scheme://itconnect.uw.edu/learn/tools/catalyst-web-tools/retirement/;
+        return 301 $scheme://archive.catalyst.uw.edu;
       }
 lifecycle:
   enabled: true
@@ -119,10 +119,7 @@ cronjob:
           cpu: 25m
           memory: 64Mi
 certs:
-  mounted: true
-  certPath: /certs/archive.catalyst.uw.edu-ic.cert
-  keyPath: /certs/archive.catalyst.uw.edu-ic.key
-  secretName: archive.catalyst.uw.edu-ic-certs
+  mounted: false
 environmentVariables:
   - name: ENV
     value: prod
@@ -169,13 +166,6 @@ externalSecrets:
       data:
         - name: credentials.json
           property: credentials.json
-    - name: archive.catalyst.uw.edu-ic-certs
-      externalKey: catalyst/prod/ic-certs
-      data:
-        - name: archive.catalyst.uw.edu-ic.cert
-          property: archive.catalyst.uw.edu-ic.cert
-        - name: archive.catalyst.uw.edu-ic.key
-          property: archive.catalyst.uw.edu-ic.key
     - name: archive.catalyst.uw.edu-uw-idp-cert
       externalKey: idp-cert
       data:
@@ -195,10 +185,6 @@ environmentVariablesSecrets:
     name: STORAGE_PROJECT_ID
     secretName: archive.catalyst.uw.edu-shared-secrets
     secretKey: storage-project-id
-  samlSPCert:
-    name: SP_CERT
-    secretName: archive.catalyst.uw.edu-ic-certs
-    secretKey: archive.catalyst.uw.edu-ic.cert
   samlIDPCert:
     name: IDP_CERT
     secretName: archive.catalyst.uw.edu-uw-idp-cert

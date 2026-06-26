@@ -5,12 +5,9 @@
 from django.conf import settings
 from django.urls import re_path
 from django.views.generic import TemplateView
-
 from catalyst_utils.views.pages import HomeView
-from catalyst_utils.views.api import (
-    SurveyList, GradebookList, SurveyFile, GradebookFile)
+from catalyst_utils.views.api import SurveyList, SurveyFile
 
-# start with an empty url array
 urlpatterns = []
 
 # add debug routes for developing error pages
@@ -24,13 +21,8 @@ if settings.DEBUG:
 
 # add the app urls
 urlpatterns += [
-    re_path(r'^api/v1/gradebook$', GradebookList.as_view(),
-            name='gradebook-list'),
-    re_path(r'^api/v1/gradebook/(?P<gradebook_id>[\d]+)/file$',
-            GradebookFile.as_view(), name='gradebook-file'),
     re_path(r'^api/v1/survey$', SurveyList.as_view(), name='survey-list'),
     re_path(r'^api/v1/survey/(?P<survey_id>[\d]+)/file$',
             SurveyFile.as_view(), name='survey-file'),
-    re_path(r'^(gradebooks|surveys)$', HomeView.as_view()),
     re_path(r'^$', HomeView.as_view()),
 ]

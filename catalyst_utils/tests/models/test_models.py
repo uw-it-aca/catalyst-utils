@@ -125,7 +125,6 @@ class GradebookModelTest(TestCase):
             'html_url': 'https://catalyst.uw.edu/gradebook/javerage/1',
             'name': 'CHEM 201 Gradebook',
             'participant_count': 25,
-            'download_url': '/api/v1/gradebook/1/file',
             'owner': {'login_name': 'javerage', 'name': 'Jamesy McJamesy'}})
 
         gradebook = Gradebook.objects.get(gradebook_id=2)
@@ -134,5 +133,4 @@ class GradebookModelTest(TestCase):
             'html_url': 'https://catalyst.uw.edu/gradebook/javerage/2',
             'name': 'CHEM 202 A Gradebook',
             'participant_count': 40,
-            'download_url': '/api/v1/gradebook/2/file',
             'owner': {'login_name': 'javerage', 'name': 'Jamesy McJamesy'}})
