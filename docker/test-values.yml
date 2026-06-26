@@ -13,8 +13,6 @@ ingress:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt
     nginx.ingress.kubernetes.io/ssl-ciphers: "ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES128-SHA256"
-    nginx.ingress.kubernetes.io/client-body-buffer-size: "16K"
-    nginx.ingress.kubernetes.io/proxy-body-size: "100M"
 lifecycle:
   enabled: true
   preStop:
@@ -54,10 +52,7 @@ gcsCredentials:
 cronjob:
   enabled: false
 certs:
-  mounted: true
-  certPath: /certs/test.catalyst.uw.edu-ic.cert
-  keyPath: /certs/test.catalyst.uw.edu-ic.key
-  secretName: test.catalyst.uw.edu-ic-certs
+  mounted: false
 environmentVariables:
   - name: ENV
     value: test
@@ -104,13 +99,6 @@ externalSecrets:
       data:
         - name: credentials.json
           property: credentials.json
-    - name: test.catalyst.uw.edu-ic-certs
-      externalKey: catalyst/test/ic-certs
-      data:
-        - name: test.catalyst.uw.edu-ic.cert
-          property: test.catalyst.uw.edu-ic.cert
-        - name: test.catalyst.uw.edu-ic.key
-          property: test.catalyst.uw.edu-ic.key
     - name: test.catalyst.uw.edu-uw-idp-cert
       externalKey: idp-cert
       data:
@@ -130,10 +118,6 @@ environmentVariablesSecrets:
     name: STORAGE_PROJECT_ID
     secretName: test.catalyst.uw.edu-shared-secrets
     secretKey: storage-project-id
-  samlSPCert:
-    name: SP_CERT
-    secretName: test.catalyst.uw.edu-ic-certs
-    secretKey: test.catalyst.uw.edu-ic.cert
   samlIDPCert:
     name: IDP_CERT
     secretName: test.catalyst.uw.edu-uw-idp-cert

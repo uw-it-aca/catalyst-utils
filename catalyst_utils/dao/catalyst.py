@@ -3,11 +3,11 @@
 
 
 from django.utils import timezone
-from uw_catalyst.gradebook import (
-    get_participants_for_gradebook, get_gradebook_export)
-from uw_catalyst.survey import (
-    get_survey, get_survey_export, get_survey_results,
-    get_survey_code_translation)
+# from uw_catalyst.gradebook import (
+#     get_participants_for_gradebook, get_gradebook_export)
+# from uw_catalyst.survey import (
+#    get_survey, get_survey_export, get_survey_results,
+#    get_survey_code_translation)
 from catalyst_utils.dao.file import write_file
 from restclients_core.exceptions import DataFailureException
 from dateutil.parser import parse
