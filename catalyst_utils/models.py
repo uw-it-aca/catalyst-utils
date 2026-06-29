@@ -711,8 +711,6 @@ class Gradebook(models.Model):
                 self.owner.login_name, self.gradebook_id),
             'owner': self.owner.json_data(),
             'participant_count': self.participant_count or 0,
-            'download_url': reverse('gradebook-file', kwargs={
-                'gradebook_id': self.gradebook_id}),
         }
 
     def update_attr(self):
