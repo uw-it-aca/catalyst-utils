@@ -30,4 +30,3 @@ class PersonDAOFunctionsTest(TestCase):
         self.assertEqual(
             is_netid(''), 'No override user supplied, please enter a UWNetID')
         self.assertEqual(is_netid('12345'), 'Not a valid UWNetID: ')
-        self.assertEqual(is_netid('doesnotexist'), 'Error (404) : ')

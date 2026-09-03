@@ -56,6 +56,17 @@ ingress:
       if ($host != 'archive.catalyst.uw.edu') {
         return 301 $scheme://archive.catalyst.uw.edu;
       }
+
+gateway:
+  enabled: true
+  hostnames:
+    - archive.catalyst.uw.edu
+    - catalyst.uw.edu
+    - catalyst.washington.edu
+    - catalysttools.washington.edu
+    - solstice.uw.edu
+  redirectToFirstHostname: true
+
 lifecycle:
   enabled: true
   preStop:
