@@ -2,11 +2,13 @@
 # SPDX-License-Identifier: Apache-2.0
 
 
-from django.core.management.base import BaseCommand, CommandError
-from django.core.files.storage import default_storage
-from catalyst_utils.models import Survey, Gradebook
-from logging import getLogger
 import csv
+from logging import getLogger
+
+from django.core.files.storage import default_storage
+from django.core.management.base import BaseCommand
+
+from catalyst_utils.models import Gradebook, Survey
 
 logger = getLogger(__name__)
 
@@ -25,7 +27,7 @@ class Command(BaseCommand):
         csv.register_dialect('unix_newline', lineterminator='\n')
         header = ['uwnetid', 'first_name', 'last_name', 'last_login_date']
 
-        outfile = default_storage.open('{}_users.csv'.format(app), 'w')
+        outfile = default_storage.open(f'{app}_users.csv', 'w')
         writer = csv.writer(outfile, dialect='unix_newline')
         writer.writerow(header)
 

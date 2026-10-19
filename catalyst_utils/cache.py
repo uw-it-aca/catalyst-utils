@@ -3,7 +3,6 @@
 
 
 from memcached_clients import RestclientPymemcacheClient
-import re
 
 ONE_MINUTE = 60
 ONE_HOUR = 60 * 60

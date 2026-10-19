@@ -3,9 +3,9 @@
 
 
 from django.test import TestCase, override_settings
+from restclients_core.exceptions import InvalidNetID
 from uw_pws.util import fdao_pws_override
-from uw_gws.utilities import fdao_gws_override
-from restclients_core.exceptions import DataFailureException, InvalidNetID
+
 from catalyst_utils.dao.person import get_person_data, is_netid
 
 
