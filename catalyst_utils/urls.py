@@ -5,8 +5,9 @@
 from django.conf import settings
 from django.urls import re_path
 from django.views.generic import TemplateView
+
+from catalyst_utils.views.api import SurveyFile, SurveyList
 from catalyst_utils.views.pages import HomeView
-from catalyst_utils.views.api import SurveyList, SurveyFile
 
 urlpatterns = []
 

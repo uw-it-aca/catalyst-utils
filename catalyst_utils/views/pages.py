@@ -2,12 +2,12 @@
 # SPDX-License-Identifier: Apache-2.0
 
 
-from django.urls import reverse
-from django.views.generic import TemplateView
-from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
-from userservice.user import UserService
+from django.urls import reverse
+from django.utils.decorators import method_decorator
+from django.views.generic import TemplateView
 from persistent_message.models import Message
+from userservice.user import UserService
 
 
 @method_decorator(login_required, name='dispatch')

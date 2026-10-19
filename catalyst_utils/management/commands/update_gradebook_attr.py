@@ -2,9 +2,11 @@
 # SPDX-License-Identifier: Apache-2.0
 
 
-from django.core.management.base import BaseCommand, CommandError
-from catalyst_utils.models import Gradebook
 from logging import getLogger
+
+from django.core.management.base import BaseCommand
+
+from catalyst_utils.models import Gradebook
 
 logger = getLogger(__name__)
 

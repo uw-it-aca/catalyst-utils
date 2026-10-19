@@ -2,13 +2,15 @@
 # SPDX-License-Identifier: Apache-2.0
 
 
+from datetime import datetime
+from unittest import mock
+
 from django.test import TestCase
 from django.utils import timezone
-from catalyst_utils.models import Person, Survey, Gradebook
-from uw_pws.util import fdao_pws_override
 from uw_gws.utilities import fdao_gws_override
-from datetime import datetime
-import mock
+from uw_pws.util import fdao_pws_override
+
+from catalyst_utils.models import Gradebook, Person, Survey
 
 
 @fdao_pws_override

@@ -2,11 +2,13 @@
 # SPDX-License-Identifier: Apache-2.0
 
 
-from django.test import TestCase, override_settings
-from django.core.files.storage import default_storage
-from django.core.exceptions import ObjectDoesNotExist
-from catalyst_utils.dao.file import read_file, write_file, build_archive
 from io import BytesIO
+
+from django.core.exceptions import ObjectDoesNotExist
+from django.core.files.storage import default_storage
+from django.test import TestCase, override_settings
+
+from catalyst_utils.dao.file import build_archive, read_file, write_file
 
 
 @override_settings(MEDIA_ROOT='/app')

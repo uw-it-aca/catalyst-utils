@@ -2,20 +2,27 @@
 # SPDX-License-Identifier: Apache-2.0
 
 
-from django.db import models, transaction
-from django.conf import settings
-from django.urls import reverse
-from django.utils import timezone
-from catalyst_utils.dao.person import get_person_data
-from catalyst_utils.dao.group import get_group_members
-from catalyst_utils.dao.catalyst import (
-    get_gradebook_attr, export_gradebook, get_survey_attr, export_survey,
-    export_survey_responses, export_survey_code_translation)
-from restclients_core.exceptions import DataFailureException
-from dateutil.relativedelta import relativedelta
+import re
 from datetime import datetime
 from logging import getLogger
-import re
+
+from dateutil.relativedelta import relativedelta
+from django.conf import settings
+from django.db import models, transaction
+from django.urls import reverse
+from django.utils import timezone
+from restclients_core.exceptions import DataFailureException
+
+from catalyst_utils.dao.catalyst import (
+    export_gradebook,
+    export_survey,
+    export_survey_code_translation,
+    export_survey_responses,
+    get_gradebook_attr,
+    get_survey_attr,
+)
+from catalyst_utils.dao.group import get_group_members
+from catalyst_utils.dao.person import get_person_data
 
 logger = getLogger(__name__)
 NETID_ADMIN_GROUP = 'u_netid_{}_admins'
@@ -28,8 +35,7 @@ class PersonManager(models.Manager):
             try:
                 person.update_admins()
             except DataFailureException as ex:
-                logger.info('Update netid admins failed for {}: {}'.format(
-                    person.login_name, ex))
+                logger.info(f'Update netid admins failed for {person.login_name}: {ex}')
 
     def update_person_attr(self):
         limit = getattr(settings, 'PERSON_UPDATE_LIMIT', 250)
@@ -77,7 +83,7 @@ class Person(models.Model):
             if created:
                 self.personattr = attr
         except DataFailureException as ex:
-            logger.info('Person update failed: {}'.format(ex))
+            logger.info(f'Person update failed: {ex}')
 
     @transaction.atomic
     def update_admins(self):
@@ -87,7 +93,7 @@ class Person(models.Model):
             for uwnetid in get_group_members(group_id):
                 try:
                     person = Person.objects.get(login_name=uwnetid)
-                    pg, _ = PersonGroup.objects.get_or_create(
+                    _pg, _ = PersonGroup.objects.get_or_create(
                         group_id=group_id, person=person)
                     members.append(person)
                 except Person.DoesNotExist:
@@ -152,7 +158,7 @@ class Person(models.Model):
 
         return {
             'login_name': self.login_name,
-            'name': '{} {}'.format(name, surname),
+            'name': f'{name} {surname}',
         }
 
     def csv_data(self):
@@ -195,8 +201,7 @@ class GroupWrapperManager(models.Manager):
                 'group_id', flat=True):
             source_keys.append(key)
 
-        return super(GroupWrapperManager, self).get_queryset().filter(
-            source_key__in=source_keys)
+        return super().get_queryset().filter(source_key__in=source_keys)
 
     def by_netid_admin(self, person):
         owners = []
@@ -255,7 +260,7 @@ class GroupWrapper(models.Model):
         for uwnetid in get_group_members(self.source_key, effective=True):
             try:
                 person = Person.objects.get(login_name=uwnetid)
-                pg, _ = PersonGroup.objects.get_or_create(
+                _pg, _ = PersonGroup.objects.get_or_create(
                     group_id=self.source_key, person=person)
                 members.append(person)
             except Person.DoesNotExist:
@@ -517,22 +522,19 @@ class Survey(models.Model):
 
     @property
     def export_path(self):
-        return '/survey/{}/{}/export.zip'.format(
-            self.person.login_name, self.survey_id)
+        return f'/survey/{self.person.login_name}/{self.survey_id}/export.zip'
 
     @property
     def responses_path(self):
-        return '/survey/{}/{}/responses.csv'.format(
-            self.person.login_name, self.survey_id)
+        return f'/survey/{self.person.login_name}/{self.survey_id}/responses.csv'
 
     @property
     def code_translation_path(self):
-        return '/survey/{}/{}/code_translation.csv'.format(
-            self.person.login_name, self.survey_id)
+        return f'/survey/{self.person.login_name}/{self.survey_id}/code_translation.csv'
 
     @property
     def filename(self):
-        return '{}-{}.zip'.format(self.person.login_name, self.name)
+        return f'{self.person.login_name}-{self.name}.zip'
 
     def is_administrator(self, person):
         if person == self.owner:
@@ -551,8 +553,7 @@ class Survey(models.Model):
             'id': self.survey_id,
             'name': self.name,
             'created_date': self.creation_date.isoformat(),
-            'html_url': 'https://catalyst.uw.edu/webq/survey/{}/{}'.format(
-                self.person.login_name, self.survey_id),
+            'html_url': f'https://catalyst.uw.edu/webq/survey/{self.person.login_name}/{self.survey_id}',
             'owner': self.person.json_data(),
             'question_count': self.question_count or 0,
             'response_count': self.response_count or 0,
@@ -569,7 +570,7 @@ class Survey(models.Model):
             data['update_status'] = 200
         except DataFailureException as ex:
             data['update_status'] = ex.status
-            logger.info('Survey update failed: {}'.format(ex))
+            logger.info(f'Survey update failed: {ex}')
         finally:
             attr, created = SurveyAttr.objects.update_or_create(
                 survey=self, defaults=data)
@@ -579,20 +580,18 @@ class Survey(models.Model):
     def export(self):
         try:
             self.update_attr()
-            if self.question_count:
-                if (self.surveyattr.last_exported is None or
-                        self.surveyattr.last_exported < self.last_modified):
-                    export_survey(self)
-            if self.response_count:
-                if (self.surveyattr.last_exported is None or
-                        self.surveyattr.last_exported < self.last_response):
-                    export_survey_responses(self)
-                    if self.is_research_confidential:
-                        export_survey_code_translation(self)
+            if self.question_count and (self.surveyattr.last_exported is None or
+                    self.surveyattr.last_exported < self.last_modified):
+                export_survey(self)
+            if self.response_count and (self.surveyattr.last_exported is None or
+                    self.surveyattr.last_exported < self.last_response):
+                export_survey_responses(self)
+                if self.is_research_confidential:
+                    export_survey_code_translation(self)
             self.surveyattr.export_status = 200
         except DataFailureException as ex:
             self.surveyattr.export_status = ex.status
-            logger.info('Survey export failed: {}'.format(ex))
+            logger.info(f'Survey export failed: {ex}')
 
         self.surveyattr.last_exported = datetime.now(timezone.utc)
         self.surveyattr.job_id = None
@@ -684,12 +683,11 @@ class Gradebook(models.Model):
 
     @property
     def export_path(self):
-        return '/gradebook/{}/{}/export.xls'.format(
-            self.owner.login_name, self.gradebook_id)
+        return f'/gradebook/{self.owner.login_name}/{self.gradebook_id}/export.xls'
 
     @property
     def filename(self):
-        return '{}-{}.xls'.format(self.owner.login_name, self.name)
+        return f'{self.owner.login_name}-{self.name}.xls'
 
     def is_administrator(self, person):
         if person == self.owner:
@@ -707,8 +705,7 @@ class Gradebook(models.Model):
         return {
             'name': self.name,
             'created_date': self.create_date.isoformat(),
-            'html_url': 'https://catalyst.uw.edu/gradebook/{}/{}'.format(
-                self.owner.login_name, self.gradebook_id),
+            'html_url': f'https://catalyst.uw.edu/gradebook/{self.owner.login_name}/{self.gradebook_id}',
             'owner': self.owner.json_data(),
             'participant_count': self.participant_count or 0,
         }
@@ -719,7 +716,7 @@ class Gradebook(models.Model):
             data['update_status'] = 200
         except DataFailureException as ex:
             data = {'update_status': ex.status}
-            logger.info('Gradebook update failed: {}'.format(ex))
+            logger.info(f'Gradebook update failed: {ex}')
 
         data['last_updated'] = datetime.now(timezone.utc)
         attr, created = GradebookAttr.objects.update_or_create(
@@ -734,7 +731,7 @@ class Gradebook(models.Model):
                 self.gradebookattr.export_status = 200
         except DataFailureException as ex:
             self.gradebookattr.export_status = ex.status
-            logger.info('Gradebook export failed: {}'.format(ex))
+            logger.info(f'Gradebook export failed: {ex}')
 
         self.gradebookattr.last_exported = datetime.now(timezone.utc)
         self.gradebookattr.save()

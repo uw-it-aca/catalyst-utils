@@ -3,8 +3,9 @@
 
 
 from django.test import TestCase
-from uw_gws.utilities import fdao_gws_override
 from uw_gws.exceptions import InvalidGroupID
+from uw_gws.utilities import fdao_gws_override
+
 from catalyst_utils.dao.group import get_group_members
 
 
