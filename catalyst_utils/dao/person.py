@@ -3,9 +3,9 @@
 
 
 from django.conf import settings
-from uw_pws import PWS
+from restclients_core.exceptions import DataFailureException
 from uw_gws import GWS
-from restclients_core.exceptions import DataFailureException, InvalidNetID
+from uw_pws import PWS
 
 pws = PWS()
 gws = GWS()

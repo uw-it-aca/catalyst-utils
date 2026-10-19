@@ -2,11 +2,12 @@
 # SPDX-License-Identifier: Apache-2.0
 
 
-from django.core.files.storage import default_storage
-from django.core.exceptions import ObjectDoesNotExist
-from io import BytesIO
-import zipfile
 import os
+import zipfile
+from io import BytesIO
+
+from django.core.exceptions import ObjectDoesNotExist
+from django.core.files.storage import default_storage
 
 
 def read_file(path):

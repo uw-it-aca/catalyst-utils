@@ -2,8 +2,8 @@
 # SPDX-License-Identifier: Apache-2.0
 
 
-from uw_gws import GWS
 from restclients_core.exceptions import DataFailureException
+from uw_gws import GWS
 
 
 def get_group_members(group_id, effective=False):

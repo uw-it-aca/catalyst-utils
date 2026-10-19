@@ -2,17 +2,19 @@
 # SPDX-License-Identifier: Apache-2.0
 
 
-from django.http import HttpResponse
-from django.views import View
-from django.utils.decorators import method_decorator
-from django.contrib.auth.decorators import login_required
-from django.core.exceptions import ObjectDoesNotExist
-from catalyst_utils.models import Person, Survey, Gradebook
-from catalyst_utils.dao.file import read_file, build_archive
-from userservice.user import UserService
-from logging import getLogger
 import json
 import re
+from logging import getLogger
+
+from django.contrib.auth.decorators import login_required
+from django.core.exceptions import ObjectDoesNotExist
+from django.http import HttpResponse
+from django.utils.decorators import method_decorator
+from django.views import View
+from userservice.user import UserService
+
+from catalyst_utils.dao.file import build_archive, read_file
+from catalyst_utils.models import Gradebook, Person, Survey
 
 logger = getLogger(__name__)
 
@@ -33,7 +35,9 @@ class APIView(View):
                             content_type='application/json')
 
     @staticmethod
-    def error_response(status, message='', content={}):
+    def error_response(status, message='', content=None):
+        if content is None:
+            content = {}
         content['error'] = str(message)
         return HttpResponse(json.dumps(content),
                             status=status,

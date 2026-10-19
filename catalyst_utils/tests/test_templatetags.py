@@ -3,8 +3,10 @@
 
 
 import re
+
 from django.test import TestCase
-from catalyst_utils.templatetags.vite import vite_styles, vite_scripts
+
+from catalyst_utils.templatetags.vite import vite_scripts, vite_styles
 
 
 class ViteTestClass(TestCase):
