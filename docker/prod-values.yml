@@ -1,12 +1,3 @@
-resources:
-  limits:
-    cpu: 250m
-    memory: 768Mi
-  requests:
-    cpu: 25m
-    memory: 512Mi
-targetAverageUtilization: 100
-
 gateway:
   enabled: true
   hostnames:
@@ -21,12 +12,6 @@ gateway:
     tokens: 10
     tokensPerFill: 10
     fillInterval: 1s
-
-# Disabled:
-# if ($uri = '/webq/survey/shawkey/357671') {
-  # return 301 https://docs.google.com/forms/d/e/1FAIpQLScPAvEH3tXUNJBIX7qTNcNrvYl1XXCbrAPuQ599CDEyOdFFvQ/viewform;
-# }
-
 lifecycle:
   enabled: true
   preStop:
@@ -34,7 +19,7 @@ lifecycle:
 autoscaling:
   enabled: true
   minReplicas: 2
-  maxReplicas: 5
+  maxReplicas: 6
 affinity:
    podsSpanNodes: true
 readiness:
